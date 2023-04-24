@@ -125,9 +125,9 @@ end
 
 %% files
 num_sites = 0; 
- for i = 1:1 %(size(ND2files,1)-1)
-%filepath = [ND2dir, filesep, ND2files{i+1}]; 
-filepath = [ND2dir, filesep, ND2files{i}]; 
+ for i = 1:(size(ND2files,1)-1)
+filepath = [ND2dir, filesep, ND2files{i+1}]; 
+%filepath = [ND2dir, filesep, ND2files{i}]; 
 counter =0; 
 
 
@@ -193,7 +193,7 @@ end
 if makeTiffStacks == 1
     
     
- for row=1:1 % (size(ND2files,1)-1)
+ for row=1: (size(ND2files,1)-1)
     
     for col = 1
         for site = num_sites
@@ -260,10 +260,10 @@ end
 %load([bgdir,filesep,'alignment parameters pX pY.mat']);
 
 k=0;
-for row=1:1 % (size(ND2files,1)-1)
+for row=1: (size(ND2files,1)-1)
 %     
     for col=1
-        for site=1:16 % num_sites
+        for site=1: num_sites
 
             k=k+1;
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
@@ -271,8 +271,11 @@ for row=1:1 % (size(ND2files,1)-1)
     end
 end 
 
+%pick which one you need 
 for k=1:length(position)
   getFRETDataHCS_1chan(position{k},bgdir,rawdir,datadir,threshold); 
+  getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,threshold)
+  getFRETDataHCS_4chan(position{k},bgdir,rawdir,datadir,threshold)
 end
 disp('done!');
 clc; clear; 
@@ -324,8 +327,8 @@ save([datadir,filesep,'bleachingcurve.mat'],'fitpara');
 %% corrected FRET data 
 for k=1:length(position)
    
-   correctBleachingExp2(position{k},fitpara, datadir, fitpara_mRuby);
+   correctBleachingExp2_FRET(position{k},fitpara, datadir);
+   % correctBleachingExp2(position{k},fitpara, datadir, fitpara_mRuby);
      %correctBleachingExp2_cyto_ratio(position{k}, datadir, fitpara_mRuby, fitpara_cyto);
-   % correctBleachingExp2_drugtrials(position{k}, datadir);
-end
+end 
 

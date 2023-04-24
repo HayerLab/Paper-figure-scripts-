@@ -118,6 +118,8 @@ for k=20
  % and 4th channel if you want 
 getFRETDataHCS_stacked(k,rawdir,datadir); 
 getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
+getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
+
 
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby

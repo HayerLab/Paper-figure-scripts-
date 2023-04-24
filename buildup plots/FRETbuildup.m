@@ -8,9 +8,9 @@
 clc; clear; 
 close all; 
 
-root  = 'F:\Seph\data\230210_40x_2x2_Rho_myosin'; 
+root  = 'F:\Seph\data\data_200116 - Trial 3 Rho, Myosin'; 
 event = 4; 
-rawdir = ([root, filesep,'cropped',filesep, '10']); 
+rawdir = ([root, filesep,'cropped',filesep,'cell_10']); 
 datadir =([root, filesep,'FRET buildup - retractions_myosin_new', filesep, num2str(event)]); 
 
 if  ~exist(datadir)
@@ -22,7 +22,7 @@ depths =[3,6,10,15,20,25];
 FRET_depths = cell(2,6);
 myosin_depths = cell(2,6); 
 
-load([rawdir, filesep,'edge_vels', filesep,  'edge vel mapping_3',filesep,'Protrusion and FRET values.mat'],'protvalsWindowF'); 
+load([rawdir, filesep,  'edge vel mapping_3',filesep,'Protrusion and FRET values.mat'],'protvalsWindowF'); 
 
 for row = 1: size(protvalsWindowF,1)
         for col = 1:size(protvalsWindowF,2)-1
@@ -34,7 +34,7 @@ protval_map = temporary;
 
 for i=1:size(depths, 2)
    
-    load([rawdir, filesep,strcat( 'edge_vels', filesep, 'edge vel mapping_',num2str(depths(1,i))),filesep,'Protrusion and FRET values.mat'],'fretvalsF','myosinF')
+    load([rawdir, filesep,strcat( 'edge vel mapping_',num2str(depths(1,i))),filesep,'Protrusion and FRET values.mat'],'fretvalsF','myosinF')
     
     depth =  num2str(depths(1,i)); 
     
@@ -65,8 +65,8 @@ colormap(f,cmap);
 %input rough estimate of time start and coordinate window start here 
 % adjust as necessary
 hold on; 
-coor_start = 140;
-time_start=75;
+coor_start = 10;
+time_start=55;
 
 coor_end = coor_start +15;
 time_end = time_start+60; 
@@ -80,6 +80,8 @@ end
 rectangle('Position',[time_start,coor_start,time_end-time_start,coor_end-coor_start],'LineWidth',2); 
 
 hold off; 
+
+%%
 
 f2 = figure; 
 
@@ -181,10 +183,10 @@ hold off;
 
 
 
- saveas(f, [datadir,filesep,'Vel Map.png']); 
- saveas(f2,[datadir,filesep,'retraction']); 
+% saveas(f, [datadir,filesep,'Vel Map.png']); 
+% saveas(f2,[datadir,filesep,'retraction']); 
 % 
- save(strcat(datadir,'\','retraction_statistics.mat'),'time_start','time_end','coor_start','coor_end','FRET_temp','vel_arr','myosin_temp', 'align_pt');
+% save(strcat(datadir,'\','retraction_statistics.mat'),'time_start','time_end','coor_start','coor_end','FRET_temp','vel_arr','myosin_temp', 'align_pt');
  %
 %%
 vel_arr = vel_avg(1,align_pt-10:align_pt+30); 

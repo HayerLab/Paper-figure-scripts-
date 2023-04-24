@@ -47,6 +47,8 @@ for i=1:4
     
 end
 
+%make sure to manually edit the for loop and the num2str(i-4) etc so that
+
 for i=5:24
     
     load([root2, filesep, num2str(i-4), filesep, 'retraction_statistics.mat']); 
