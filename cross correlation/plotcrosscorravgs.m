@@ -44,8 +44,8 @@ for loop=1:size(cells,2)
     load([root,filesep,fileKey,filesep,'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvalsF','protvalsWindowF','myosinF','myosin', 'cytoF')
  
 % This maps velocity vector from 1-2 with frame 2 of protein expression, etc    
-    edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
-  %  edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
+    %edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
+    edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
   protExp_arr=cytoF(:,start:end);%here change either FRET or myosin
     
  edgeVel_arr(isnan(edgeVel_arr))=0;
@@ -53,22 +53,22 @@ for loop=1:size(cells,2)
     
  %velocity vector created by averaging vectors before and after protein
  %expression frame 
-%     edgeVel_arr =protvalsWindowF;  
-%     temporary = NaN(180,size(protvalsWindowF,2)-1);
-%     for row = 1: size(protvalsWindowF,1)
-%         for col = 1:size(protvalsWindowF,2)-1
-%           temporary(row,col)=(protvalsWindowF(row,col)+protvalsWindowF(row,col+1))/2;
-%         end 
-%     end 
-%     edgeVel_arr_adjusted = temporary(:,start-1:end); 
-%     protExp_arr=fretvalsF(:,start:end-1); %because edge Velocity map now 2 frames smaller than protein expression (first and last frame cut off);
-%     
-%    protExp_arr(isnan(protExp_arr))=0; 
-%     
+    edgeVel_arr =protvalsWindowF;  
+    temporary = NaN(180,size(protvalsWindowF,2)-1);
+    for row = 1: size(protvalsWindowF,1)
+        for col = 1:size(protvalsWindowF,2)-1
+          temporary(row,col)=(protvalsWindowF(row,col)+protvalsWindowF(row,col+1))/2;
+        end 
+    end 
+    edgeVel_arr_adjusted = temporary(:,start-1:end); 
+    protExp_arr=fretvalsF(:,start:end-1); %because edge Velocity map now 2 frames smaller than protein expression (first and last frame cut off);
+    
+   protExp_arr(isnan(protExp_arr))=0; 
+    
     
     %using CLT to shift each distribution to a normal distribution
-    % Z_edge=( (edgeVel_arr-nanmean(edgeVel_arr(:))) / std(edgeVel_arr(:)));
-    Z_edge=( (edgeVel_arr-nanmean(edgeVel_arr(:))) / std(edgeVel_arr(:)));
+     Z_edge=( (edgeVel_arr-nanmean(edgeVel_arr(:))) / std(edgeVel_arr(:)));
+   % Z_edge=( (edgeVel_arr-nanmean(edgeVel_arr(:))) / std(edgeVel_arr(:)));
    
      Z_prot=( (protExp_arr-nanmean(protExp_arr(:))) / std(protExp_arr(:)));
      
