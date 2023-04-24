@@ -52,27 +52,8 @@ w=figure;
 imagesc(protval_map,[-13,13]);title('Edge Velocity');
 colormap(w,cmap);
 
-%% just to see if 1 is close to the cell average 
-% array=nan(1,27000); 
-% counter =1; 
-% FRET_table=FRET_depths{2,2};
-% for d =1:size(protval_map,1)
-%    for a = time_start:time_end        %size(protval_map,2)
-%      
-%      if abs(protval_map(d,a)) <3 
-%          array(1,counter)=FRET_table(d,a);     
-%      end
-%      
-%      counter= counter+1; 
-%    end 
-% end 
-% f5=figure; 
-% hold on;
-% array=array(~isnan(array));
-%  h=histogram(array); 
- 
- %xline(stats.mu - stats.sd); 
- %xline(stats.mu + stats.sd); 
+
+
  
 %% specify rectangle dimensions 
 close all; 
@@ -81,6 +62,8 @@ f = figure;
 imagesc(protval_map,[-13,13]);title('Edge Velocity');
 colormap(f,cmap);
 
+%input rough estimate of time start and coordinate window start here 
+% adjust as necessary
 hold on; 
 coor_start = 140;
 time_start=75;
@@ -112,7 +95,9 @@ end
 
 
 hold on; 
-%x = [time_start:1:time_end]; 
+
+% what your x axis will be in frames - can adjsut to -20:1:20, etc.
+% depending on what you want 
 x = [-15:1:30]; 
 
 
@@ -155,6 +140,8 @@ xlabel('Timepoints');
 myosin_temp=cell(2,6); 
 for z =1:6
 myosin_temp{1,z}=depths(1,z); 
+% here make sure the align_pt-1-15:time_start+align_pt-1+30 matches your x
+% axis 
 myosin_temp{2,z} = myosin_depths{2,z}(coor_start:coor_end,time_start+align_pt-1-15:time_start+align_pt-1+30); 
 myosin_temp{2,z}(isnan(myosin_temp{2,z}))=0; 
 for w=1:size(myosin_temp{2,z},2)
