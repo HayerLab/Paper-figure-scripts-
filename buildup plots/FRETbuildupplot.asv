@@ -39,7 +39,7 @@ for i=1:4
     FRET(i,:) = FRET_avg; 
     
     for w=1:size(myosin_temp{2,depth_myosin},2)
-        myosin_avg(1,w) =mean(myosin_temp{2,depth_myosin}(:,w));     
+        myosin_avg(1,w) =mean(myosin_temp{2,5}(:,w));     
     end 
 
     myosin(i,:) = myosin_avg; 
@@ -59,8 +59,8 @@ for i=5:24
       
     
     % here specify edge depth you want to plot 
-    for w=1:size(FRET_temp{2,depth_FRET},2)
-        FRET_avg(1,w) =mean(FRET_temp{2,depth_FRET}(:,w));     
+    for w=1:size(FRET_temp{2,2},2)
+        FRET_avg(1,w) =mean(FRET_temp{2,2}(:,w));     
     end 
 
    
@@ -69,8 +69,8 @@ for i=5:24
    
   
 % %     
-    for w=1:size(myosin_temp{2,depth_myosin},2)
-        myosin_avg(1,w) =mean(myosin_temp{2,depth_myosin}(:,w));     
+    for w=1:size(myosin_temp{2,5},2)
+        myosin_avg(1,w) =mean(myosin_temp{2,5}(:,w));     
     end 
 
     myosin(i,:) = myosin_avg; 
@@ -87,14 +87,14 @@ for i=25:30
     
     
     % here specify edge depth you want to plot 
-    for w=1:size(FRET_temp{2,depth_FRET},2)
-        FRET_avg(1,w) =mean(FRET_temp{2,depth_FRET}(:,w));     
+    for w=1:size(FRET_temp{2,2},2)
+        FRET_avg(1,w) =mean(FRET_temp{2,2}(:,w));     
     end 
 
     FRET(i,:) = FRET_avg; 
     
-    for w=1:size(myosin_temp{2,depth_myosin},2)
-        myosin_avg(1,w) =mean(myosin_temp{2,depth_myosin}(:,w));     
+    for w=1:size(myosin_temp{2,5},2)
+        myosin_avg(1,w) =mean(myosin_temp{2,5}(:,w));     
     end 
 
     myosin(i,:) = myosin_avg; 
@@ -111,8 +111,8 @@ end
 %     
 %     
 %     % here specify edge depth you want to plot 
-%     for w=1:size(FRET_temp{2,depth_FRET},2)
-%         FRET_avg(1,w) =mean(FRET_temp{2,depth_FRET}(:,w));     
+%     for w=1:size(FRET_temp{2,2},2)
+%         FRET_avg(1,w) =mean(FRET_temp{2,2}(:,w));     
 %     end 
 % 
 %     FRET(i,:) = FRET_avg; 
@@ -121,8 +121,8 @@ end
 %end 
 % 
 
-
- for k = 1:46 %  adjust here to length of yourt x axis 
+%velocities = velocities(:,6:46); 
+ for k = 1:46 % -20:20 lags, respectively 
      
      % fitting normal dist to each timepoint 
     pd = fitdist(velocities(:,k),'Normal'); 
