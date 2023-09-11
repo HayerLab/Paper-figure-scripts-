@@ -60,7 +60,7 @@ bgWidth=x_bgMax-x_1pct; % estimates the width of the background peak
 %Determine threshold for distinction between foreground/background (most important part of the code here)
 % if frameNum <=9
 
-threshSeg=(x_bgMax+(1.45)*bgWidth);% number here adjustable: if having trouble with segmentation adjust based on fg/bg separation%xline(threshSeg,'--'); % again just for visualization 
+threshSeg=(x_bgMax+(3)*bgWidth);% number here adjustable: if having trouble with segmentation adjust based on fg/bg separation%xline(threshSeg,'--'); % again just for visualization 
 %   else 
  %  threshSeg=(x_bgMax+(3)*bgWidth);
 %   end 

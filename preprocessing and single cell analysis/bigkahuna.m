@@ -14,19 +14,19 @@
 clc; 
 clear; 
 
-root= 'E:\seph backup\230417_Cpd31_LIS'; 
+root= 'F:\230908'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
 
-% channels = {'CFP'; 'FRET'}; 
-% channel = ["FRET"; "CFP"]; 
-% channel1= {'CFP' 'FRET'}; 
+ channels = {'CFP'; 'FRET'}; 
+ channel = ["FRET"; "CFP"]; 
+ channel1= {'CFP' 'FRET'}; 
 
 
- channels = { 'mCit'}; 
- channel = [ "mCit"]; 
- channel1= { 'mCit'}; 
+%  channels = {'mCit'}; 
+%  channel = ["mCit"]; 
+%  channel1= {'mCit'}; 
 
 threshold = 4; % for threshold based segmentation
 frames = 150; 
