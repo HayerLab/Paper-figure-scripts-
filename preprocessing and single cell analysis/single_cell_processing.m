@@ -1,16 +1,19 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'E:\seph backup\LOK SLK ERM KD';
+ root = 'F:\230908 - TNBC Rho imaging';
  
  tiffDir = ([root, filesep,'tiff_stacks']); 
  
- cellDir = ([root, filesep, 'cropped',filesep,'siERM', num2str(cell)]); 
-     if ~exist(cellDir)
-         mkdir(cellDir); 
-     end      
+%  cellDir = ([root, filesep, 'cropped',filesep,'siERM', num2str(cell)]); 
+%      if ~exist(cellDir)
+%          mkdir(cellDir); 
+%      end      
      
-cropdir=[root,filesep,'cropped\siNT'];
+cropdir=[root,filesep,'cropped\WT'];
+if ~exist(cropdir)
+         mkdir(cropdir); 
+     end  
 bgpath=[root,filesep,'background'];
    
     %% crop cell files and accompanying background 
@@ -20,19 +23,28 @@ bgpath=[root,filesep,'background'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    
-cell= 1;
-filekey = '1_1_14';  
+cell= 7;
+filekey = '1_1_7'; 
 
+
+ cellDir = ([cropdir,filesep, num2str(cell)]); 
+     if ~exist(cellDir)
+         mkdir(cellDir); 
+     end   
+     
+     
 bgCFP = ([root, filesep, 'background\AVG_bgCFP.tif']); 
 bgFRET = ([root, filesep, 'background\AVG_bgFRET.tif']);
           
 FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
 CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
+
+bg_FRET_image = double(readTIFFstack(bgFRET)); 
+bg_CFP_image = double(readTIFFstack(bgCFP)); 
      
             cropSite = 0;
 
-            
-     
+                     
          FRET_stack=double(readTIFFstack(FRET));
          
          FRET_stack_1 = FRET_stack(:,:,1); 
@@ -45,23 +57,32 @@ CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]);
       [stackFRET, cropArea] = serimcropold(FRET_stack,mean(FRET_stack,3));
       
                 
-      Stack2TIFF(stackFRET, ['FRET.tif']);
+      Stack2TIFF(stackFRET, [cellDir, filesep,'FRET.tif']);
                     
                     stackCFP = readFileToStack(CFP); 
                     stackCFP = imcrop3(stackCFP, [cropArea(1), cropArea(2), 1,...
-                    cropArea(3), cropArea(4), size(stack,3)-1]);                    
-                    Stack2TIFF(stackCFP, ['CFP.tif']);
+                    cropArea(3), cropArea(4), size(stackFRET,3)-1]);                    
+                    Stack2TIFF(stackCFP, [cellDir, filesep, 'CFP.tif']);
+            
+    
+                    FRET_bg_crop = imcrop(uint16(bg_FRET_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+                   % saveas(FRET_bg_crop, [cellDir, filesep, 'FRET_bg.tif']); 
+                    imwrite(FRET_bg_crop,[cellDir, filesep, 'FRET_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+                    
+                     CFP_bg_crop = imcrop(bg_CFP_image, [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+                 %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
+            imwrite(uint16(CFP_bg_crop),[cellDir, filesep, 'CFP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
             
                     
-            close(fg);
+                    close(fg);
             clear stack;
   
   
-    close(uifig);
+    
     
 %% background alignment 
     
-for i= 1:20
+for i=7
 
 channels={'CFP' 'FRET'};
  
@@ -71,7 +92,7 @@ channels={'CFP' 'FRET'};
     %note: need to change numbers here depending on if you have an extra
     %channel like myosin- changes order of files in cropped folder
     CFP_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{1}]));
-    FRET_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{2}]));
+    FRET_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{3}]));
   
     
 alignStack(:,:,2)=(FRET_stack(:,:,75)); % choose arbitrary framenumber, here 75, to generate the alignment parameters 
@@ -83,7 +104,11 @@ subplot(1,2,2); imagesc(dyMat1); colorbar
 
 save([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
 
-
+alignStack = []; 
+CFP_stack= []; 
+FRET_stack = []; 
+dxMat1=[]; 
+dyMat1 = []; 
 end 
 
 
@@ -102,8 +127,8 @@ load([bleachdir,filesep,'bleachingcurve.mat']);
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=20
-    rawdir=[root,filesep,'cropped', filesep,'siNT', filesep, strcat( num2str(k))]; 
+for k=7
+    rawdir=[root,filesep,'cropped', filesep,'WT', filesep, strcat( num2str(k))]; 
     load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
@@ -116,18 +141,18 @@ for k=20
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-getFRETDataHCS_stacked(k,rawdir,datadir); 
-getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
-getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
+getFRETDataHCS_stacked(k,rawdir,datadir,1.2); 
+% getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
+% getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
 
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
- correctBleachingExp2_stacked( fitpara, datadir); %fitparamRuby  % does FRET, and mRuby
- correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
-correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
+%  correctBleachingExp2_stacked( fitpara, datadir); %fitparamRuby  % does FRET, and mRuby
+%  correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
+% correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  
-    disp(cellNum);
+    
 end
 disp('done!');
 

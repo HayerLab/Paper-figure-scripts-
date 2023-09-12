@@ -16,7 +16,7 @@ function [] = writeTiffStacks(root, channels,row, col, numsites,timeFrames)
 %  outputs: 
 % tiff stack to data directory specified below 
 
-rawdir=[root,filesep,'raw-run2_sites7-12'];
+rawdir=[root,filesep,'raw'];
 datadir=[root,filesep,'tiff_stacks'];
 
 if ~exist(datadir)
@@ -26,7 +26,7 @@ end
 
 for s = 1:size(channels,1)
     
-for i = 7 %1:numsites
+for i =1:numsites
 
      for j = 1:timeFrames
 

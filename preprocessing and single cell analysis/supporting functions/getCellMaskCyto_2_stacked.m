@@ -1,4 +1,4 @@
-function [maskFinal, cellCoors] = getCellMaskCyto_2_stacked(image, minCellSize, frameNum,s)
+function [maskFinal, cellCoors] = getCellMaskCyto_2_stacked(image, minCellSize, frameNum,s, threshold)
 % getMask returns a binary mask based on image and minCellSize
 % Uses a histogram-based thresholding
 % Stores centroid and area of detected objects
@@ -60,7 +60,7 @@ bgWidth=x_bgMax-x_1pct; % estimates the width of the background peak
 %Determine threshold for distinction between foreground/background (most important part of the code here)
 % if frameNum <=9
 
-threshSeg=(x_bgMax+(3)*bgWidth);% number here adjustable: if having trouble with segmentation adjust based on fg/bg separation%xline(threshSeg,'--'); % again just for visualization 
+threshSeg=(x_bgMax+(threshold)*bgWidth);% number here adjustable: if having trouble with segmentation adjust based on fg/bg separation%xline(threshSeg,'--'); % again just for visualization 
 %   else 
  %  threshSeg=(x_bgMax+(3)*bgWidth);
 %   end 
@@ -126,8 +126,8 @@ mask_filled1 = ~background; % added this to take out little flickers inside cell
 mem_mask2 = imopen(mask_filled1,strel('disk',1)); %get rid of tiny fibers
 maskFinal = mask_filled1 & mem_mask2; 
 
-             thisMask=imerode(maskFinal,strel('disk',2));
-            thisMask=imdilate(thisMask,strel('disk',2));
+             thisMask=imerode(maskFinal,strel('disk',1));
+            thisMask=imdilate(thisMask,strel('disk',1));
             % thisMask2=bwareaopen(thisMask,300);
 
 maskFinal= bwareaopen(thisMask,minCellSize); %maskFinal

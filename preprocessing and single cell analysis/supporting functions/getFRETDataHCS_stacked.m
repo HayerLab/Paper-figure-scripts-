@@ -1,4 +1,4 @@
-function getFRETDataHCS_stacked(cellNum,rawdir,datadir)
+function getFRETDataHCS_stacked(cellNum,rawdir,datadir, threshold)
 
 
 % Used non built-in subfunctions: 
@@ -19,8 +19,8 @@ load([rawdir,filesep,'alignment parameters pX pY.mat'],'pX','pY');
 
 %%%%%% Call background images
 binning=1; % relevant if alingment images and data images were acquired using distinct binning settings
-CFPbg_raw=double(imread([rawdir,filesep,'bgCFP.tif']));
-FRETbg_raw=double(imread([rawdir,filesep,'bgFRET.tif']));
+CFPbg_raw=double(imread([rawdir,filesep,'CFP_bg.tif']));
+FRETbg_raw=double(imread([rawdir,filesep,'FRET_bg.tif']));
 
 bg1(:,:,1)=CFPbg_raw; bg1(:,:,2)=FRETbg_raw;
 bg2=dualviewAlignFromFittedSurface(bg1,pX,pY,binning);
@@ -33,7 +33,7 @@ cellFiles=getFilenames([rawdir],'.tif');
 
 %check here order of cellFiles!!! 
  CFP_stack=double(readTIFFstack([rawdir,filesep,cellFiles{1}]));
- FRET_stack=double(readTIFFstack([rawdir,filesep,cellFiles{2}]));
+ FRET_stack=double(readTIFFstack([rawdir,filesep,cellFiles{3}]));
  
  
   
@@ -60,7 +60,7 @@ for frameNum=1:size(CFP_stack,3)
     %%%%%% Get mask from raw FRET image
     
     s= cellNum; 
-   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),1000, frameNum,s); % see here if its better taking away the imCFPbg
+   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),1000, frameNum,s, threshold); % see here if its better taking away the imCFPbg
    
     maskFinal{frameNum}=mask;
    cellCoors{frameNum}=cellCoorsTemp;
@@ -89,6 +89,10 @@ end
 
 for frameNum= 1:length(imRatio_raw)
    bleach_raw(frameNum)=nanmean(vect(imRatio_raw{frameNum}));
+   % if you want to see imRatio data right away
+   imRatio_intermediate{frameNum} = imRatio_raw{frameNum}./ bleach_raw(frameNum); 
+   tempRATIOforstack=ratio2RGB( imRatio_intermediate{frameNum},[0.7 1.3]);
+   imwrite(tempRATIOforstack,[datadir,filesep,'Rho_prelim.tif'],'WriteMode','append','Compression','none');
 end
 save([datadir,filesep,'RatioData_raw.mat'],'maskFinal','cellCoors','imRatio_raw','imFRETOutline','-v7.3'); 
 save([datadir,filesep,'Bleach_raw.mat'],'bleach_raw'); 
