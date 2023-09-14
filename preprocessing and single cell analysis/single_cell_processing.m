@@ -114,21 +114,21 @@ end
 
 %% FRET data 
 
-clc; clear; 
-root = 'E:\seph backup\LOK SLK ERM KD';
-cellNum=1;% for now manually select cell folder 
-
-bleachdir=([root,filesep,'data']);
-bgdir=[root,filesep,'background'];
-load([bleachdir,filesep,'bleachingcurve.mat']);
+% clc; clear; 
+% root = 'E:\seph backup\LOK SLK ERM KD';
+% cellNum=1;% for now manually select cell folder 
+% 
+% bleachdir=([root,filesep,'data']);
+% bgdir=[root,filesep,'background'];
+% load([bleachdir,filesep,'bleachingcurve.mat']);
 %load([bleachdir,filesep,'bleachingcurve_mRuby.mat']);
 % load([bleachdir,filesep,'bleachingcurve_cyto.mat']);
 
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=7
-    rawdir=[root,filesep,'cropped', filesep,'WT', filesep, strcat( num2str(k))]; 
+for k=2
+    rawdir=[root,filesep,'cropped', filesep,'WT-practise', filesep, strcat( num2str(k))]; 
     load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
@@ -141,7 +141,7 @@ for k=7
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-getFRETDataHCS_stacked(k,rawdir,datadir,1.2); 
+getFRETDataHCS_stacked(k,rawdir,datadir,1.5); % last number the threshold for segmentation
 % getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
 % getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
