@@ -15,9 +15,9 @@
 clc; 
 clear; 
 
-root= 'F:\230908 - TNBC Rho imaging'; 
+root= 'F:\omaima practise'; 
 
-% if you want to create Tiff Stacks 
+% if you want to create Tiff Stacks =1 if you dont =0; 
 makeTiffStacks = 1; 
 
  channels = {'CFP'; 'FRET'}; 
@@ -30,7 +30,7 @@ makeTiffStacks = 1;
 %  channel1= {'mCit'}; 
 
 threshold = 4; % for threshold based segmentation
-frames = 45; 
+frames = 120; 
 
 bgdir = [root, filesep, 'background']; 
 if  ~exist(bgdir)
@@ -258,6 +258,7 @@ save([bgdir,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1
 end 
 
 %% generate raw FRET Data baby 
+%only do this section if you want FRET movies of the entire field of view 
 
 %load([bgdir,filesep,'alignment parameters pX pY.mat']);
 

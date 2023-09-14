@@ -10,7 +10,7 @@ clear; clc;
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped\WT'];
+cropdir=[root,filesep,'cropped\WT-practise'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
@@ -23,8 +23,8 @@ bgpath=[root,filesep,'background'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    
-cell= 7;
-filekey = '1_1_7'; 
+cell= 3;
+filekey = '1_1_2'; 
 
 
  cellDir = ([cropdir,filesep, num2str(cell)]); 
@@ -82,7 +82,7 @@ bg_CFP_image = double(readTIFFstack(bgCFP));
     
 %% background alignment 
     
-for i=7
+for i=1:3
 
 channels={'CFP' 'FRET'};
  
