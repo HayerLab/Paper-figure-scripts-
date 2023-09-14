@@ -10,6 +10,7 @@
 % order so the code sorts them properly 
 % Seph Marshall Feb 2023
 
+%hi omaima
 %% setup and initialization. 
 clc; 
 clear; 
@@ -58,7 +59,7 @@ if  ~exist(TIFFdir)
     mkdir(TIFFdir)
 end 
 end 
-%% background shit 
+%% background 
  ND2files = getFilenames([ND2dir],'.nd2');
 % 
 bgfilepath = [ND2dir, filesep, ND2files{1}]; 
@@ -135,7 +136,7 @@ finfo = nd2finfo(filepath);
 num_sites = finfo.img_seq_count/frames;  
 
 for timept = 1:frames
-for row = 2
+for row = i
     for col = 1
         for site =1:num_sites
        
@@ -193,7 +194,7 @@ end
 if makeTiffStacks == 1
     
     
- for row= 2 % 1: (size(ND2files,1)-1)
+ for row= 1: (size(ND2files,1)-1)
     
     for col = 1
         for site = num_sites
@@ -255,6 +256,7 @@ subplot(1,2,2); imagesc(dyMat1); colorbar
 
 save([bgdir,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
 end 
+
 %% generate raw FRET Data baby 
 
 %load([bgdir,filesep,'alignment parameters pX pY.mat']);
