@@ -1,9 +1,9 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\230908 - TNBC Rho imaging';
+ root = 'F:\230816';
  
- tiffDir = ([root, filesep,'tiff_stacks']); 
+ tiffDir = ([root, filesep,'TIFF Stacks']); 
  
 %  cellDir = ([root, filesep, 'cropped',filesep,'siERM', num2str(cell)]); 
 %      if ~exist(cellDir)
@@ -14,7 +14,7 @@ cropdir=[root,filesep,'cropped\WT'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
-bgpath=[root,filesep,'background'];
+bgpath=[root,filesep,'background1'];
    
     %% crop cell files and accompanying background 
 % currently configured for just FRET and CFP, add in channels as needed 
@@ -23,7 +23,7 @@ bgpath=[root,filesep,'background'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    
-cell= 7;
+cell= 12;
 filekey = '1_1_7'; 
 
 
@@ -33,11 +33,16 @@ filekey = '1_1_7';
      end   
      
      
-bgCFP = ([root, filesep, 'background\AVG_bgCFP.tif']); 
-bgFRET = ([root, filesep, 'background\AVG_bgFRET.tif']);
+%bgCFP = ([root, filesep, 'background\AVG_bgCFP.tif']); 
+bgCFP = ([bgpath, filesep, 'AVG-BG-CFP.tif']); 
+%bgFRET = ([root, filesep, 'background\AVG_bgFRET.tif']);
+bgFRET = ([bgpath, filesep, 'AVG-BG-YFP-FRET.tif']);
           
-FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
-CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
+% FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
+% CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
+
+FRET = ([tiffDir,filesep, strcat('230816-03-04-WT-CTRLD-YFP-FRET.tif')]);  
+CFP= ([tiffDir,filesep, strcat('230816-03-04-WT-CTRLD-CFP.tif')]); 
 
 bg_FRET_image = double(readTIFFstack(bgFRET)); 
 bg_CFP_image = double(readTIFFstack(bgCFP)); 
@@ -74,15 +79,15 @@ bg_CFP_image = double(readTIFFstack(bgCFP));
             imwrite(uint16(CFP_bg_crop),[cellDir, filesep, 'CFP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
             
                     
-                    close(fg);
+                    %close(fg);
             clear stack;
-  
+  close all; 
   
     
     
 %% background alignment 
     
-for i=7
+for i=1:12
 
 channels={'CFP' 'FRET'};
  
@@ -95,8 +100,8 @@ channels={'CFP' 'FRET'};
     FRET_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{3}]));
   
     
-alignStack(:,:,2)=(FRET_stack(:,:,75)); % choose arbitrary framenumber, here 75, to generate the alignment parameters 
-alignStack(:,:,1)=(CFP_stack(:,:,75));
+alignStack(:,:,2)=(FRET_stack(:,:,60)); % choose arbitrary framenumber, here 75, to generate the alignment parameters 
+alignStack(:,:,1)=(CFP_stack(:,:,60));
 [pX,pY,dxMat1,dyMat1]=dualviewComputeAlignmentFromGridImages(alignStack);
 figure;
 subplot(1,2,1); imagesc(dxMat1); colorbar

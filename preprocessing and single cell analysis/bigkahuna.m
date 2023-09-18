@@ -14,7 +14,7 @@
 clc; 
 clear; 
 
-root= 'F:\230908 - TNBC Rho imaging'; 
+root= 'F:\20230914-Hs578t-ROSA-KO-MOESIN-WITHOUT u46'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
@@ -29,7 +29,7 @@ makeTiffStacks = 1;
 %  channel1= {'mCit'}; 
 
 threshold = 4; % for threshold based segmentation
-frames = 45; 
+frames = 120; 
 
 bgdir = [root, filesep, 'background']; 
 if  ~exist(bgdir)
@@ -135,7 +135,7 @@ finfo = nd2finfo(filepath);
 num_sites = finfo.img_seq_count/frames;  
 
 for timept = 1:frames
-for row = 2
+for row = i
     for col = 1
         for site =1:num_sites
        
@@ -193,7 +193,7 @@ end
 if makeTiffStacks == 1
     
     
- for row= 2 % 1: (size(ND2files,1)-1)
+ for row= 1: (size(ND2files,1)-1)
     
     for col = 1
         for site = num_sites
