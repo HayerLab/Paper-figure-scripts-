@@ -10,7 +10,7 @@ clear; clc;
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped\WT'];
+cropdir=[root,filesep,'cropped\cpd31'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
@@ -22,8 +22,8 @@ bgpath=[root,filesep,'background1'];
 % run this section as many times as needed, just change the cell number 
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
-   
-cell= 12;
+   clc; 
+cell= 4;
 filekey = '1_1_7'; 
 
 
@@ -41,8 +41,8 @@ bgFRET = ([bgpath, filesep, 'AVG-BG-YFP-FRET.tif']);
 % FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
 % CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
 
-FRET = ([tiffDir,filesep, strcat('230816-03-04-WT-CTRLD-YFP-FRET.tif')]);  
-CFP= ([tiffDir,filesep, strcat('230816-03-04-WT-CTRLD-CFP.tif')]); 
+FRET = ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-YFP-FRET.tif')]);  
+CFP= ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-CFP.tif')]); 
 
 bg_FRET_image = double(readTIFFstack(bgFRET)); 
 bg_CFP_image = double(readTIFFstack(bgCFP)); 
@@ -132,7 +132,7 @@ load([bleachdir,filesep,'bleachingcurve.mat']);
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=7
+for k=2:12
     rawdir=[root,filesep,'cropped', filesep,'WT', filesep, strcat( num2str(k))]; 
     load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
@@ -146,7 +146,7 @@ for k=7
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-getFRETDataHCS_stacked(k,rawdir,datadir,1.2); 
+getFRETDataHCS_stacked(k,rawdir,datadir,2.5); 
 % getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
 % getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
@@ -154,7 +154,7 @@ getFRETDataHCS_stacked(k,rawdir,datadir,1.2);
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
 %  correctBleachingExp2_stacked( fitpara, datadir); %fitparamRuby  % does FRET, and mRuby
-%  correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
+  %correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
 % correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  
     

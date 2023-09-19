@@ -33,7 +33,7 @@ IntStep=ceil((PixMinMax(2)-PixMinMax(1))/300);
  
  
 
-if frameNum ==1 %& s ==1
+if frameNum ==1 && s ==1
  figure; plot(xi,f); hold on;  
   end 
 [pks,locs]=findpeaks(f,xi);
@@ -46,7 +46,7 @@ if frameNum ==1 %& s ==1
 log_pks=pks>0.001; 
 pks=pks(log_pks); locs=locs(log_pks);
 
- if frameNum ==1 %& s ==1
+ if frameNum ==1 && s ==1
         plot((locs),pks,'k^','markerfacecolor',[1 0 0]);
  end 
 x_bgMax=locs(1,1); % picks the first peak (x-value of first peak)
@@ -54,7 +54,7 @@ x_bgMax=locs(1,1); % picks the first peak (x-value of first peak)
 x_1pct=xi(ind); % returns the corresponding intensity value
 bgWidth=x_bgMax-x_1pct; % estimates the width of the background peak
 
- if frameNum ==1 & s ==1
+ if frameNum ==1 && s ==1
       xline(x_bgMax+bgWidth); % to see how effective the estimation above of bg width is 
  end 
 %Determine threshold for distinction between foreground/background (most important part of the code here)
@@ -64,7 +64,7 @@ threshSeg=(x_bgMax+(threshold)*bgWidth);% number here adjustable: if having trou
 %   else 
  %  threshSeg=(x_bgMax+(3)*bgWidth);
 %   end 
-if frameNum ==1 %& s ==1
+if frameNum ==1 && s ==1
           xline(threshSeg, '--'); 
           pause; 
                  hold off;
