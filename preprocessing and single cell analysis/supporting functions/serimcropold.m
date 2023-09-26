@@ -7,7 +7,7 @@ if nargin < 2
     ref = series;
 end
 ok = 'n';
-figure;
+%figure;
 
 while ok == 'n'
   %  colormap(hot(256));

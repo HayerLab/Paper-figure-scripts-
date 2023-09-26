@@ -1,16 +1,16 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\230816';
+ root = 'F:\230914 - Y2 motility 1';
  
- tiffDir = ([root, filesep,'TIFF Stacks']); 
+ tiffDir = ([root, filesep,'tiff_stacks']); 
  
 %  cellDir = ([root, filesep, 'cropped',filesep,'siERM', num2str(cell)]); 
 %      if ~exist(cellDir)
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped\cpd31'];
+cropdir=[root,filesep,'cropped\cntrl_LIS'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
@@ -23,8 +23,8 @@ bgpath=[root,filesep,'background1'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    clc; 
-cell= 4;
-filekey = '1_1_7'; 
+cell=26;
+filekey = '1_1_20'; 
 
 
  cellDir = ([cropdir,filesep, num2str(cell)]); 
@@ -33,16 +33,16 @@ filekey = '1_1_7';
      end   
      
      
-%bgCFP = ([root, filesep, 'background\AVG_bgCFP.tif']); 
-bgCFP = ([bgpath, filesep, 'AVG-BG-CFP.tif']); 
-%bgFRET = ([root, filesep, 'background\AVG_bgFRET.tif']);
-bgFRET = ([bgpath, filesep, 'AVG-BG-YFP-FRET.tif']);
+bgCFP = ([root, filesep, 'background\AVG_bgCFP.tif']); 
+%bgCFP = ([bgpath, filesep, 'AVG-BG-CFP.tif']); 
+bgFRET = ([root, filesep, 'background\AVG_bgFRET.tif']);
+%bgFRET = ([bgpath, filesep, 'AVG-BG-YFP-FRET.tif']);
           
-% FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
-% CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
+ FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
+ CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
 
-FRET = ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-YFP-FRET.tif')]);  
-CFP= ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-CFP.tif')]); 
+%FRET = ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-YFP-FRET.tif')]);  
+%CFP= ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-CFP.tif')]); 
 
 bg_FRET_image = double(readTIFFstack(bgFRET)); 
 bg_CFP_image = double(readTIFFstack(bgCFP)); 
@@ -87,7 +87,7 @@ bg_CFP_image = double(readTIFFstack(bgCFP));
     
 %% background alignment 
     
-for i=1:12
+parfor i=1:26
 
 channels={'CFP' 'FRET'};
  
@@ -107,7 +107,7 @@ figure;
 subplot(1,2,1); imagesc(dxMat1); colorbar
 subplot(1,2,2); imagesc(dyMat1); colorbar
 
-save([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
+parsave([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],pX,pY,dxMat1,dyMat1);
 
 alignStack = []; 
 CFP_stack= []; 
@@ -115,6 +115,7 @@ FRET_stack = [];
 dxMat1=[]; 
 dyMat1 = []; 
 end 
+
 
 
 %% FRET data 
@@ -132,8 +133,8 @@ load([bleachdir,filesep,'bleachingcurve.mat']);
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=2:12
-    rawdir=[root,filesep,'cropped', filesep,'WT', filesep, strcat( num2str(k))]; 
+for k= [15, 19, 20, 23, 24, 26, 32, 33]
+    rawdir=[root,filesep,'cropped', filesep,'cntrl_LIS', filesep, strcat( num2str(k))]; 
     load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
@@ -146,7 +147,7 @@ for k=2:12
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-getFRETDataHCS_stacked(k,rawdir,datadir,2.5); 
+getFRETDataHCS_stacked(k,rawdir,datadir,2); 
 % getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
 % getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
@@ -160,4 +161,9 @@ getFRETDataHCS_stacked(k,rawdir,datadir,2.5);
     
 end
 disp('done!');
+
+%% stupid little function to let you save in a parrallel loop 
+function parsave(fname, w,x,y,z)
+  save(fname, 'w', 'x', 'y', 'z')
+end
 

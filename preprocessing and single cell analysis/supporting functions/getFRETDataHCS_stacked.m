@@ -15,15 +15,17 @@ function getFRETDataHCS_stacked(cellNum,rawdir,datadir, threshold)
 if ~exist([datadir,filesep,'RatioData_raw.mat'])
 %%%%%% Set up
 
-load([rawdir,filesep,'alignment parameters pX pY.mat'],'pX','pY');
-
+%load([rawdir,filesep,'alignment parameters pX pY.mat'],'pX','pY');
+load([rawdir,filesep,'alignment parameters pX pY.mat'],'w','x');
 %%%%%% Call background images
 binning=1; % relevant if alingment images and data images were acquired using distinct binning settings
 CFPbg_raw=double(imread([rawdir,filesep,'CFP_bg.tif']));
 FRETbg_raw=double(imread([rawdir,filesep,'FRET_bg.tif']));
 
 bg1(:,:,1)=CFPbg_raw; bg1(:,:,2)=FRETbg_raw;
-bg2=dualviewAlignFromFittedSurface(bg1,pX,pY,binning);
+%bg2=dualviewAlignFromFittedSurface(bg1,pX,pY,binning);
+bg2=dualviewAlignFromFittedSurface(bg1,w,x,binning);
+
 CFPbg=bg2(:,:,1);
 FRETbg=bg2(:,:,2);
 
@@ -46,9 +48,13 @@ for frameNum=1:size(CFP_stack,3)
 
     %%%%%% Align CFP/FRET images
     imstack(:,:,1)=imCFP_raw; imstack(:,:,2)=imFRET_raw;
-    imaligned=dualviewAlignFromFittedSurface(imstack,pX,pY,1);
+   % imaligned=dualviewAlignFromFittedSurface(imstack,pX,pY,1);
+    imaligned=dualviewAlignFromFittedSurface(imstack,w,x,1);
     imCFP_raw=imaligned(:,:,1);
     imFRET_raw=imaligned(:,:,2);
+    
+    % setting any NaNs due to alignment to zero here
+    imFRET_raw(isnan(imFRET_raw))=0; 
     
     %%%%%% Background-subtract CFP/FRET images
     bgmask=getBGMask(imCFP_raw+imFRET_raw);
@@ -58,7 +64,7 @@ for frameNum=1:size(CFP_stack,3)
  imFRETbg=subBG(imFRET_raw,bgmask,FRETbg);
  
     %%%%%% Get mask from raw FRET image
-    
+  imFRETbg(isnan(imFRETbg))=0; 
     s= cellNum; 
    [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),1000, frameNum,s, threshold); % see here if its better taking away the imCFPbg
    

@@ -14,7 +14,7 @@
 clc; 
 clear; 
 
-root= 'F:\20230914-Hs578t-ROSA-KO-MOESIN-WITHOUT u46'; 
+root= 'F:\230914 - Y2 motility 1'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
@@ -193,7 +193,7 @@ end
 if makeTiffStacks == 1
     
     
- for row= 1: (size(ND2files,1)-1)
+ for row= 1:(size(ND2files,1)-1)
     
     for col = 1
         for site = num_sites

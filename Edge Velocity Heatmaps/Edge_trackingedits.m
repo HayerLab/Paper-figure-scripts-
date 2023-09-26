@@ -14,24 +14,24 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [7];   
+cells = [1,2,3,4,5,6,7,8,9,10,11,12,16,17,18,21,22,24,25,27,28,29,30,31,33,35,36,37,38,39,40];   
 
 for place=1:size(cells,2)
-cells = [7];  
+cells = [1,2,3,4,5,6,7,8,9,10,11,12,16,17,18,21,22,24,25,27,28,29,30,31,33,35,36,37,38,39,40];  
 
 
 %for zwster = 1:6
 
 %clear; close all; clc;
  %for 20x no binning, or 40x 2x2 bin etc. 0.325 um/px
-depths = [3,6,10,15,20,25]; 
+depths = [3]; % 6,10,15,20,25]; 
 
 % for 60x, 2x2 binning
 %depths = [5,9,15,23,30,38]; 
  
-root='C:\Users\gmarsh8\OneDrive - McGill University\research paper\results good_Feb2023\Fig 5\good cell examples for ezrin probe\-ex1';
-rawdir=([root,filesep,'output']); %'cropped',filesep,  strcat('cell_',num2str(cells(1,place))),filesep,
-datadir=([root,filesep,'edge_vels2', filesep,  strcat('edge vel mapping_',num2str(6))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
+root='F:\230914 - Y2 motility 1';
+rawdir=([root,filesep,'cropped',filesep,'cntrl_LIS',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
+datadir=([root,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(3))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
     mkdir(datadir)
 end 
@@ -43,10 +43,10 @@ edgeOversamplingParam=5;                            % How many times more points
 nPointsParam=nFretWindows*edgeOversamplingParam;    % Number of points to track on the cell edge
 pdSmoothing=10;%was 10                                      % Used with imclose to make the selection of points for tracking less dependent on noise or wrinkles in the cell edge
 
-edgeDepthDist= 6;  %depths(1, zwster);   % Number of pixels deep for the windows for computing FRET values.
+edgeDepthDist= 3;  %depths(1, zwster);   % Number of pixels deep for the windows for computing FRET values.
 
 startFrame=1;
-endFrame=150;
+endFrame=120;
 
 binning=1;            %only change if binning is changed while using same objective magnification!!
 
@@ -56,7 +56,7 @@ binning=1;            %only change if binning is changed while using same object
 % Load previously determined sequence of masks
 
 
-load([rawdir,filesep,'RatioData.mat']);
+load([rawdir,filesep,'RatioData_raw.mat']);
 %load([rawdir,filesep,'CytoRatioData.mat']);
 
 % perform tracking of mask centroid
@@ -198,8 +198,8 @@ for imnum=start:start+size(thisTraj,1) -1
             for k=1:size(windowCoors{index},1)
                 
                  fretvals(k,index)=mean(imRatio{index+empty_count}(labelMask{index}==k));
-               myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
-                 cyto(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
+               %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
+               %  cyto(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
           
             
           
@@ -236,8 +236,8 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
    % filtered protrusion values
 protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
 fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
-myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
-cytoF=ndnanfilter(cyto,fspecial('disk',2),'replicate');
+% myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
+% cytoF=ndnanfilter(cyto,fspecial('disk',2),'replicate');
 
 
 
