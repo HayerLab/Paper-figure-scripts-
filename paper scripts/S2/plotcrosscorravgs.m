@@ -2,7 +2,7 @@
 
 %% use this section to get the averages out of an entire set 
 clc; clear; 
-root='D:\221207_40x 2x2 bin_RhoB_ezrin_cyto\cropped';
+root='F:\old data\data_210225 -  Trial 1 RhoA, RhoA2G\RhoA2G\cropped';
 %removed 2 and 35 here to test whats going on 
 %cells=[6,7,9,10,12,13,14,15,16,17,18]; %trial 1
 %cells = [2,3,5,6,7,8,9,11,12,13]; % trial 2
@@ -17,7 +17,7 @@ root='D:\221207_40x 2x2 bin_RhoB_ezrin_cyto\cropped';
  %cells =[2,3,4,5,6,7,8,9,10,11,12,13,14,16,28,20,21,23,24,26,27,28,29];
 % cells= [1,2,3,4,5,6,7,8,9,10,11,13,14,15,16]; 
 % no longer necessary - see google sheets for summary 
-cells = [3];
+cells = [1,2,3,4,5,6,7,8,9,10,11,13,14,15,16];
 %cells = [10,15,19]; 
 %startarr = [40,30,35]; 
 %startarr = [40,40,40,50,40,50,30,35,40,40,30]; %trial 1
@@ -27,7 +27,7 @@ cells = [3];
 %startarr= [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]; 
 %startarr =[2,2,2,30,2,2,2,2];% rac trial 1 
 %startarr=[30,45,40,40,40,60,50,45,50,40]; 
-startarr= [2]; 
+%startarr= [2,2,2,2,2,2,2,2,2,2,2]; 
 cell_arr=cell(1,size(cells,2),1);
 
 %%
@@ -39,36 +39,36 @@ for loop=1:size(cells,2)
     
     fileKey=strcat(num2str(cells(1,loop)));
     
-    start = startarr(1,loop);
+    start =  2; %startarr(1,loop);
     
-    load([root,filesep,fileKey,filesep,'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvalsF','protvalsWindowF','myosinF','myosin', 'cytoF')
+    load([root,filesep,fileKey, filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvalsF','protvalsWindowF'); %'myosinF','myosin', 'cytoF')
  
 % This maps velocity vector from 1-2 with frame 2 of protein expression, etc    
-    edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
-  %  edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
-  protExp_arr=cytoF(:,start:end);%here change either FRET or myosin
+    %edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
+    edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
+  protExp_arr=fretvalsF(:,start:end);%here change either FRET or myosin
     
  edgeVel_arr(isnan(edgeVel_arr))=0;
   protExp_arr(isnan(protExp_arr))=0; 
     
  %velocity vector created by averaging vectors before and after protein
  %expression frame 
-%     edgeVel_arr =protvalsWindowF;  
-%     temporary = NaN(180,size(protvalsWindowF,2)-1);
-%     for row = 1: size(protvalsWindowF,1)
-%         for col = 1:size(protvalsWindowF,2)-1
-%           temporary(row,col)=(protvalsWindowF(row,col)+protvalsWindowF(row,col+1))/2;
-%         end 
-%     end 
-%     edgeVel_arr_adjusted = temporary(:,start-1:end); 
-%     protExp_arr=fretvalsF(:,start:end-1); %because edge Velocity map now 2 frames smaller than protein expression (first and last frame cut off);
-%     
-%    protExp_arr(isnan(protExp_arr))=0; 
-%     
+    edgeVel_arr =protvalsWindowF;  
+    temporary = NaN(180,size(protvalsWindowF,2)-1);
+    for row = 1: size(protvalsWindowF,1)
+        for col = 1:size(protvalsWindowF,2)-1
+          temporary(row,col)=(protvalsWindowF(row,col)+protvalsWindowF(row,col+1))/2;
+        end 
+    end 
+    edgeVel_arr_adjusted = temporary(:,start-1:end); 
+    protExp_arr=fretvalsF(:,start:end-1); %because edge Velocity map now 2 frames smaller than protein expression (first and last frame cut off);
+    
+   protExp_arr(isnan(protExp_arr))=0; 
+    
     
     %using CLT to shift each distribution to a normal distribution
     % Z_edge=( (edgeVel_arr-nanmean(edgeVel_arr(:))) / std(edgeVel_arr(:)));
-    Z_edge=( (edgeVel_arr-nanmean(edgeVel_arr(:))) / std(edgeVel_arr(:)));
+    Z_edge=( (edgeVel_arr_adjusted-nanmean(edgeVel_arr_adjusted(:))) / std(edgeVel_arr_adjusted(:)));
    
      Z_prot=( (protExp_arr-nanmean(protExp_arr(:))) / std(protExp_arr(:)));
      
@@ -107,7 +107,7 @@ for loop=1:size(cells,2)
   
 end 
 
-%save(['F:\Seph\research paper\supplementals\RhoA_RhoA2G\Edge Vel. RhoA T4 depth 3.mat'],'cell_arr');
+save(['C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\Fig 2\RhoA2G\compiled Xcorr depth 1.95 um\Edge Vel. RhoA2G T1 depth 6.mat'],'cell_arr');
    
 %%
 
@@ -130,7 +130,7 @@ f1=figure;
 
 hold on; 
 %grid on; 
-    title('RhoB vs. Ezrin XCorr');
+    title('Edge Vel Vs. RhoA2G XCorr');
     xlabel('Lag (min)','FontWeight','bold');
     ylabel('Correlation Coefficient', 'FontWeight','bold'); 
     xline(0, '--'); 

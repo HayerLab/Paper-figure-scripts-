@@ -10,9 +10,9 @@ clear; clc;
 
 close all; 
 
-root = 'F:\Seph\research paper\Fig 4\F4 good copy\Rho-myosin xcorrs'; 
+root = 'C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\Fig 2\RhoA2G\compiled Xcorr depth 1.95 um'; 
 
-load([root, filesep,'RhoM T3 xcor_depth15.mat']); 
+load([root, filesep,'Edge Vel. RhoA2G T1 depth 6.mat']); 
 
 averages_T1 = cell_arr; 
 
@@ -24,7 +24,7 @@ end
 
 cell_arr =[]; 
 
-load([root, filesep,'RhoM T2 xcor_depth15.mat'])
+load([root, filesep,'Edge Vel. RhoA2G T2 depth 6.mat'])
 
 averages_T2 = cell_arr; 
 
@@ -34,6 +34,17 @@ for d = 1:size(averages_T2,2)
    
 end 
 
+cell_arr =[]; 
+
+load([root, filesep,'Edge Vel. RhoA2G T4 depth 6.mat'])
+
+averages_T4= cell_arr; 
+
+for d = 1:size(averages_T4,2)
+    
+      plotting_table(d+ size(averages_T1,2)+size(averages_T2,2),:) = averages_T4{1,d};
+   
+end 
 stats_arr = zeros(3,41); 
 
  for k = 1:41 % -20:20 lags, respectively 
@@ -55,7 +66,7 @@ stats_arr = zeros(3,41);
 f1 = figure; 
 
 hold on;
-ylim([-0.4 0.6]);
+ylim([-0.7 0.4]);
 xline(0,'--'); 
 yline(0,'--'); 
 for x= 1:size(plotting_table,1)
@@ -89,7 +100,7 @@ xticklabels({'-8' '' '-6' '' '-4' '' '-2' '' '0' '' '2' '' '4' '' '6' '' '8'});
 
 
 
- saveas(f1,[root,filesep,'Rho myosin_xcorr_n=27_depth15.svg']); 
+ saveas(f1,[root,filesep,'Edge vel RhoA2G_xcorr_n=40_depth6.svg']); 
 % 
 % saveas(f2,[root,filesep,'Rho_avg+SEM_n=27_depth6.svg']); 
 

@@ -1,7 +1,7 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\230914 - Y2 motility 1';
+ root = 'F:\230919 - Y2motility 2';
  
  tiffDir = ([root, filesep,'tiff_stacks']); 
  
@@ -10,11 +10,11 @@ clear; clc;
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped\cntrl_LIS'];
+cropdir=[root,filesep,'cropped\20uM_Y2'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
-bgpath=[root,filesep,'background1'];
+bgpath=[root,filesep,'background'];
    
     %% crop cell files and accompanying background 
 % currently configured for just FRET and CFP, add in channels as needed 
@@ -23,8 +23,8 @@ bgpath=[root,filesep,'background1'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    clc; 
-cell=26;
-filekey = '1_1_20'; 
+cell=27;
+filekey = '2_1_20'; 
 
 
  cellDir = ([cropdir,filesep, num2str(cell)]); 
@@ -87,7 +87,7 @@ bg_CFP_image = double(readTIFFstack(bgCFP));
     
 %% background alignment 
     
-parfor i=1:26
+parfor i=1:27
 
 channels={'CFP' 'FRET'};
  
@@ -133,7 +133,7 @@ load([bleachdir,filesep,'bleachingcurve.mat']);
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k= [15, 19, 20, 23, 24, 26, 32, 33]
+for k= 13
     rawdir=[root,filesep,'cropped', filesep,'cntrl_LIS', filesep, strcat( num2str(k))]; 
     load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
@@ -147,7 +147,7 @@ for k= [15, 19, 20, 23, 24, 26, 32, 33]
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-getFRETDataHCS_stacked(k,rawdir,datadir,2); 
+getFRETDataHCS_stacked(k,rawdir,datadir,2.5); 
 % getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
 % getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 

@@ -139,8 +139,8 @@ mask_filled1 = ~background; % added this to take out little flickers inside cell
 mem_mask2 = imopen(mask_filled1,strel('disk',1)); %get rid of tiny fibers
 maskFinal = mask_filled1 & mem_mask2; 
 
-         %    thisMask=imerode(maskFinal,strel('disk',1));
-          %  thisMask=imdilate(thisMask,strel('disk',1));
+            % thisMask=imerode(maskFinal,strel('disk',1));
+            %thisMask=imdilate(thisMask,strel('disk',1));
             % thisMask2=bwareaopen(thisMask,300);
 
 maskFinal= bwareaopen(maskFinal,minCellSize); %thisMask

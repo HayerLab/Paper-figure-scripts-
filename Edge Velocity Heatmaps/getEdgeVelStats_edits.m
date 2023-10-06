@@ -28,7 +28,7 @@ function [protrusions,retractions,image]=getEdgeVelStats_edits(celldir, uniform_
 %% Filter out small junk
 root= celldir;
 %root='F:\Seph\data\FRET tutorial\cropped\cell_19\edge vel mapping_3';
-load('F:\Seph\code\supporting_functions\trackingcode\CMAP_blue_grey_yellow.mat','cmap');
+load('CMAP_blue_grey_yellow.mat');
 load([root,filesep,'Protrusion and FRET Values.mat'],'protvalsWindowF'); %'fretvalsF'); 
 
 edgemap=protvalsWindowF;
@@ -118,6 +118,9 @@ for k=1:size(protrusions,1)
   
 end
 
+% filter out events less than 5 frames, they tend to be mistakes anyways 
+protrusions= protrusions(arrayfun(@(x) x.frameRange >= 5, protrusions));
+
 save([root,filesep,'protrusionlist.mat'],'protrusions');
 
 for k=1:size(retractions,1)
@@ -154,10 +157,14 @@ for k=1:size(retractions,1)
   
 end
 
-
+retractions= retractions(arrayfun(@(x) x.frameRange >= 5, retractions));
 save([root,filesep,'retractionlist.mat'],'retractions');
-%% mapping protrusions/retractions to location on edge velocity map 
 
+
+
+
+%% mapping protrusions/retractions to location on edge velocity map 
+% 
 % hold on; 
 % axis tight; 
 % axis ij;
@@ -193,5 +200,5 @@ save([root,filesep,'retractionlist.mat'],'retractions');
 % end 
 % 
 % hold off; 
-
+end 
 % 

@@ -14,10 +14,10 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [1,2,3,4,5,6,7,8,9,10,11,12,16,17,18,21,22,24,25,27,28,29,30,31,33,35,36,37,38,39,40];   
+cells = [26];   
 
 for place=1:size(cells,2)
-cells = [1,2,3,4,5,6,7,8,9,10,11,12,16,17,18,21,22,24,25,27,28,29,30,31,33,35,36,37,38,39,40];  
+cells = [26];    
 
 
 %for zwster = 1:6
@@ -29,9 +29,9 @@ depths = [3]; % 6,10,15,20,25];
 % for 60x, 2x2 binning
 %depths = [5,9,15,23,30,38]; 
  
-root='F:\230914 - Y2 motility 1';
-rawdir=([root,filesep,'cropped',filesep,'cntrl_LIS',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
-datadir=([root,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(3))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
+root='F:\230919 - Y2motility 2';
+rawdir=([root,filesep,'cropped',filesep,'20uM_Y2',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
+datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(3))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
     mkdir(datadir)
 end 
@@ -62,12 +62,12 @@ load([rawdir,filesep,'RatioData_raw.mat']);
 % perform tracking of mask centroid
 % min(cellfun(@(x) size(x,1),cellCoors))    % changed it from min to max ? 
 %% %% delete flash glitch frames that mess FRET data - if needed 
-% % % 
-% flashFrame=75:100; 
-% maskFinal(flashFrame)=[];
-% imFRETOutline(flashFrame)=[];
-% imRatio(flashFrame)=[];
-% cellCoors(flashFrame)=[]; 
+% % % % 
+flashFrame=1:29; 
+maskFinal(flashFrame)=[];
+imFRETOutline(flashFrame)=[];
+imRatio_raw(flashFrame)=[];
+cellCoors(flashFrame)=[]; 
 % % im_mRuby(flashFrame) = []; 
 % % % 
 % flashFrame=114; 
@@ -197,7 +197,7 @@ for imnum=start:start+size(thisTraj,1) -1
          
             for k=1:size(windowCoors{index},1)
                 
-                 fretvals(k,index)=mean(imRatio{index+empty_count}(labelMask{index}==k));
+                 fretvals(k,index)=mean(imRatio_raw{index+empty_count}(labelMask{index}==k));
                %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
                %  cyto(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
           
@@ -229,7 +229,7 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
  
  % make it per minute so can compare different length movies 
  distance = distance/(size(imFRETOutline,2)*(2/3))
- avg_cell_area = cell_area/size(imRatio,2)
+ avg_cell_area = cell_area/size(imRatio_raw,2)
  
  %% filtered protusionvalues
  
@@ -287,15 +287,15 @@ protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWin
 %% Plot maps - with thresholds
 close all;
 
-protthresh=5;
-retthresh=-5;
+protthresh=2.5;
+retthresh=-2.5;
 f1=figure; 
 
 
 hold on;
 % load custom parula colour map for protrusion/retraction visualization
-load('F:\Seph\code\supporting_functions\trackingcode\CMAP_blue_grey_yellow.mat'); 
-
+%load('F:\Seph\code\supporting_functions\trackingcode\CMAP_blue_grey_yellow.mat'); 
+load('CMAP_blue_grey_yellow.mat');
 % do this if imaging done at different time interval than 25s
 cmap_15s =cmap; 
 % cmap_15s(35:39,:)=[]; %adjusting "grey range" depending on thresholds
@@ -338,7 +338,7 @@ colormap(ax3,cmap);
   xticklabels({'0','10','20','30','40','50' '60'});
 %protvalsWindowFHigh=protvalsWindowF>protthresh;
 
- ax4=subplot(2,2,4);imagesc(cytoF,[0.3 1.7]); title ('ezxrin');
+ ax4=subplot(2,2,4);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
  %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
@@ -357,7 +357,7 @@ saveas(f1,strcat(datadir,'\','edge_velocity_mapM.fig'))
 save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance','avg_cell_area','fretvals','fretvalsF') ; %'myosin','myosinF'); % 'cyto', 'cytoF');
 
 
-close all; clc;
+%close all; clc;
 
 %end 
 clear; clc; 

@@ -14,7 +14,7 @@
 clc; 
 clear; 
 
-root= 'F:\230914 - Y2 motility 1'; 
+root= 'F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
