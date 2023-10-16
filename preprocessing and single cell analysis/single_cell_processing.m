@@ -1,7 +1,7 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\230919 - Y2motility 2';
+ root = 'F:\old data\data_210324 - Trial 1 60x, Rho Myosin';
  
  tiffDir = ([root, filesep,'tiff_stacks']); 
  
@@ -10,7 +10,7 @@ clear; clc;
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped\20uM_Y2'];
+cropdir=[root,filesep,'cropped'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
@@ -120,21 +120,21 @@ end
 
 %% FRET data 
 
-clc; clear; 
-root = 'E:\seph backup\LOK SLK ERM KD';
+clc;
+root = 'F:\old data\data_210324 - Trial 1 60x, Rho Myosin';
 cellNum=1;% for now manually select cell folder 
 
 bleachdir=([root,filesep,'data']);
 bgdir=[root,filesep,'background'];
 load([bleachdir,filesep,'bleachingcurve.mat']);
-%load([bleachdir,filesep,'bleachingcurve_mRuby.mat']);
+load([bleachdir,filesep,'bleachingcurve_mRuby.mat']);
 % load([bleachdir,filesep,'bleachingcurve_cyto.mat']);
 
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k= 13
-    rawdir=[root,filesep,'cropped', filesep,'cntrl_LIS', filesep, strcat( num2str(k))]; 
+for k= 3
+    rawdir=[root,filesep,'cropped',  filesep, strcat( num2str(k))]; 
     load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
@@ -147,14 +147,14 @@ for k= 13
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-getFRETDataHCS_stacked(k,rawdir,datadir,2.5); 
-% getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
+%getFRETDataHCS_stacked(k,rawdir,datadir,2.5); 
+ getFRETDataHCS_stacked_3chan(k,rawdir,datadir,15); % FRET, CFP, mRuby
 % getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
 
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
-%  correctBleachingExp2_stacked( fitpara, datadir); %fitparamRuby  % does FRET, and mRuby
+  correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
   %correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
 % correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  

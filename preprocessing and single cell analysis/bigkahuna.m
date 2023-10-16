@@ -196,7 +196,7 @@ if makeTiffStacks == 1
  for row= 1:(size(ND2files,1)-1)
     
     for col = 1
-        for site = num_sites
+        for site = 20; 
             
           
            
@@ -225,7 +225,7 @@ for row=1:(size(ND2files,1)-1)
     
    
     for col=1
-        for site=1:num_sites
+        for site=1:20
             k=k+1;
             shot=[num2str(row),'_',num2str(col),'_',num2str(site)];
             CFP_temp=imread([rawdir,filesep,shot,'_CFP_4.tif']);
@@ -260,10 +260,10 @@ end
 %load([bgdir,filesep,'alignment parameters pX pY.mat']);
 
 k=0;
-for row=1: (size(ND2files,1)-1)
+for row=1:1 % (size(ND2files,1)-1)
 %     
     for col=1
-        for site=1: num_sites
+        for site=1:20 % num_sites
 
             k=k+1;
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
@@ -273,9 +273,10 @@ end
 
 %pick which one you need 
 for k=1:length(position)
-  getFRETDataHCS_1chan(position{k},bgdir,rawdir,datadir,threshold); 
-  getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,threshold)
-  getFRETDataHCS_4chan(position{k},bgdir,rawdir,datadir,threshold)
+  %getFRETDataHCS_1chan(position{k},bgdir,rawdir,datadir,threshold); 
+  getFRETDataHCS(position{k},bgdir,rawdir,datadir); 
+  %getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,threshold)
+  %getFRETDataHCS_4chan(position{k},bgdir,rawdir,datadir,threshold)
 end
 disp('done!');
 clc; clear; 

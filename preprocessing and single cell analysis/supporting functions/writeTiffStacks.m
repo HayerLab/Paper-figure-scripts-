@@ -26,7 +26,7 @@ end
 
 for s = 1:size(channels,1)
     
-for i =1:numsites
+for i =9:numsites
 
      for j = 1:timeFrames
 

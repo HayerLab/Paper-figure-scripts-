@@ -2,15 +2,15 @@
 %SM December 2022 
 clear; clc; 
 
-root = 'F:\Seph\data\230313_20x_2x2_Rho_thrombin_NSC\data'; 
-datadir= 'F:\Seph\data\230313_20x_2x2_Rho_thrombin_NSC\data'; 
+root = 'F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA\data'; 
+datadir= 'F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA\data'; 
 %datadir1 = ([datadir, filesep, 'data']); 
 %% control scection
 k = 0; 
 for row =1
     for col=1
-        for site=25:34
-
+        for site=1:20
+ 
             k=k+1;
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
         end
@@ -39,13 +39,15 @@ for i= 1:size(position,2)
    %  mean_m = mean(average_m); 
         
         colorRange1 = [0.7 1.3]; 
-        colorRange2 = [0 3]; 
+        %colorRange2 = [0 3]; 
        
         %correct the images by normalizing them to pre-drug addition
         %averages 
+        mean_array=zeros(1,120); 
     for j=1:size(imRatio_raw,2)
             temp = imRatio_raw{1,j};
             FRET_norm{1,j}=temp./mean_FRET;
+            mean_array(1,j) = nanmean(FRET_norm{1,j}, 'all'); 
             tempest= FRET_norm{1,j}; 
 %             temp2 = im_mRuby_raw{1,j}; 
 %             mRuby_norm{1,j} = temp2./mean_m; 
@@ -57,12 +59,14 @@ for i= 1:size(position,2)
 %             tempmRubyforstack(tempmRubyforstack < 0) = 0; 
     
          
-            imwrite(tempRATIOforstack,[datadir,filesep, position{i},  '_Rho-FRET_',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
+          imwrite(tempRATIOforstack,[datadir,filesep, position{i},  '_Rho-FRET_',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
       %     imwrite(tempmRubyforstack,[datadir1, filesep, position{1,1}, '_mRuby_',num2str(colorRange2(1)),'_',num2str(colorRange2(2)),'.tif'],'WriteMode','append','Compression','none');    %
     end
 
-       % save([datadir,filesep,'data',filesep, position{1},'_RatioData.mat'],'FRET_norm', 'mRuby_norm', 'colorRange1', 'colorRange2');
+      
 end 
+
+save([datadir,filesep, position{i},'_RatioData_norm_1-10.mat'],'FRET_norm','mean_array', 'colorRange1'); %'mRuby_norm'; 
         
 %% specify ROI of interest of larger image 
 

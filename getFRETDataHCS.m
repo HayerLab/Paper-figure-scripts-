@@ -104,8 +104,9 @@ for frameNum=1:length(CFP_files)
     
    
     
-   
-    
+   CFP_raw{frameNum}=imCFP; 
+   FRET_raw{frameNum}=imFRET; 
+ 
     
     %%%%%% Generate and write files for raw ratio and outlined objects
    % tempRATIO=ratio2RGB(imRatio_raw{frameNum},colorRange);
@@ -122,6 +123,6 @@ for frameNum=1:length(imRatio_raw)
 end
 save([datadir,filesep,position,'_RatioData_raw.mat'],'maskFinal','cellCoors','imRatio_raw','imFRETOutline','-v7.3');  
 
-save([datadir,filesep,position,'_Bleach_raw.mat'],'bleach_raw'); % 'CFP_raw','FRET_raw'); 
+save([datadir,filesep,position,'_Bleach_raw.mat'],'bleach_raw', 'CFP_raw','FRET_raw'); 
 end  
 
