@@ -1,11 +1,11 @@
-clear; clc; 
+%clear; clc; 
 
 root = 'F:\Seph\research paper\Fig 1'; 
 f1 = figure; 
 hold on; 
-load('F:\Seph\code\supporting_functions\trackingcode\CMAP_blue_grey_yellow.mat');
+%load('F:\Seph\code\supporting_functions\trackingcode\CMAP_blue_grey_yellow.mat');
 
-load('F:\Seph\data\data_210127 - Trial 4 Rac\cropped\16\edge vel mapping_6\Protrusion and FRET Values.mat');
+%load('F:\Seph\data\data_210127 - Trial 4 Rac\cropped\16\edge vel mapping_6\Protrusion and FRET Values.mat');
 
 %ax1=subplot(1,2,1);imagesc(protvalsWindowF,[-13,13]);title(' (i) Edge Velocity');
 imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
@@ -17,15 +17,16 @@ xticklabels({'0','10','20','30', '40','50', '60'});
 yticks([50 100 150])
 yticklabels({'50','100','150'}); 
 
-ax =gca; 
-ax.FontSize =10; 
-%ax.FontWeight= 'bold'; 
-ax.TitleFontSizeMultiplier = 1.5;
+% ax =gca; 
+% ax.FontSize =10; 
+% %ax.FontWeight= 'bold'; 
+% ax.TitleFontSizeMultiplier = 1.5;
 
 axis ij; 
 
 ylim([0 180]); 
-xlim([0 145])
+xlim([0 130])
+ set(f1, 'Renderer', 'painters');
 
 %saveas(f1,strcat(root,'\','E_i.svg'))
 
@@ -40,17 +41,18 @@ yticks([50 100 150])
 yticklabels({'50','100','150'}); 
 
 
-ax =gca; 
-ax.FontSize =10; 
-%ax.FontWeight= 'bold'; 
-ax.TitleFontSizeMultiplier = 1.5;
+% ax =gca; 
+% ax.FontSize =10; 
+% %ax.FontWeight= 'bold'; 
+% ax.TitleFontSizeMultiplier = 1.5;
 
 
 axis ij; 
 
 ylim([0 180]); 
-xlim([0 145])
+xlim([0 130])
 
+ set(f2, 'Renderer', 'painters');
 % set(gca,'YColor', 'none'); 
 
 

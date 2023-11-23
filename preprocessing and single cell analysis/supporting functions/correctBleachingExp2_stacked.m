@@ -41,15 +41,15 @@ for frameNum=1:length(imRatio_raw)
     imRatio{frameNum}=imRatio_raw{frameNum}./(normfact*corr_norm(frameNum));
  colorRange = [0.7 1.3]; 
  
- colorRange3 = [0.4 1.6]; 
+ %colorRange3 = [0.4 1.6]; 
   %  imRatio{frameNum}=tempRATIO_corr;
    % added this in to make some max intensity projections 
    %tempRATIO_corr(tempRATIO_corr <1.1) = 0; 
     tempRATIOforstack=ratio2RGB( imRatio{frameNum},colorRange);%Cdc42
-    tempRATIOforstack2=ratio2RGB( imRatio{frameNum},colorRange3);%Cdc42
+    %tempRATIOforstack2=ratio2RGB( imRatio{frameNum},colorRange3);%Cdc42
     
    
-  %imwrite(tempRATIOforstack,[datadir,filesep,  'Rho-FRET','.tif'],'WriteMode','append','Compression','none');
+  imwrite(tempRATIOforstack,[datadir,filesep,  'Rho-FRET_0.7_1.3','.tif'],'WriteMode','append','Compression','none');
   % imwrite(tempRATIOforstack2,[datadir,filesep,  'Rho-FRET_[0.4 1.6]','.tif'],'WriteMode','append','Compression','none');
  %  imwrite(tempRATIOforstack,[datadir,filesep, 'Rho-FRET','max intensity proj2','.tif'],'WriteMode','append','Compression','none');
    
@@ -103,7 +103,7 @@ im_mRuby{frameNum}=im_mRuby_raw{frameNum}./(normfact_m*corr_norm_m(frameNum));
     
    tempmRubyforstack(tempmRubyforstack < 0) = 0.001; 
     
- %  imwrite(tempmRubyforstack,[datadir,filesep, 'mRuby_[0,3]','.tif'],'WriteMode','append','Compression','none');
+ imwrite(tempmRubyforstack,[datadir,filesep, 'mRuby_[0,3]','.tif'],'WriteMode','append','Compression','none');
   disp(num2str(frameNum)); 
 % %    
 %    

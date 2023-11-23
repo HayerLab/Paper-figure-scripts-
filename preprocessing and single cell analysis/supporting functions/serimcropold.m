@@ -12,7 +12,7 @@ ok = 'n';
 while ok == 'n'
   %  colormap(hot(256));
    % imshow((double(mean(ref,3))))
-    imshow(ref, [0 1500])
+    imshow(ref, [0 1000])
     axis image;
     title('Please select the region of interest','FontSize',18);
     [~, rect] = imcrop;

@@ -14,14 +14,16 @@
 clc; 
 clear; 
 
-root= 'F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA'; 
+root= 'F:\231113_RhoB_ezrin_ WTvsT567_10umNOC'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
-
- channels = {'CFP'; 'FRET'}; 
- channel = ["FRET"; "CFP"]; 
- channel1= {'CFP' 'FRET'}; 
+channels = {'cyto'; 'mRuby'};
+% channels = {'CFP'; 'FRET'}; %'mRuby'; 'blank'}; 
+channel = ["mRuby"; "cyto"];
+ %channel = ["FRET"; "CFP"]; % "mRuby";"blank"]; 
+channel1= {'cyto' 'mRuby'};
+% channel1= {'CFP' 'FRET'}; % 'mRuby'}; 
 
 
 %  channels = {'mCit'}; 
@@ -29,7 +31,7 @@ makeTiffStacks = 1;
 %  channel1= {'mCit'}; 
 
 threshold = 4; % for threshold based segmentation
-frames = 120; 
+frames = 180; 
 
 bgdir = [root, filesep, 'background']; 
 if  ~exist(bgdir)
@@ -84,9 +86,9 @@ for row = 1
         end 
             
        if size(channels, 1) ==2
-         [FRET, CFP]= nd2read_hayer_2chan(bgfilepath,finfo, counter,1); 
-         imwrite(CFP,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-         imwrite(FRET,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         [mRuby, cyto]= nd2read_hayer_2chan(bgfilepath,finfo, counter,1); 
+         imwrite(cyto,[bgdir,filesep,shot,'_cyto_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         imwrite(mRuby,[bgdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
        
        if size (channels,1) == 3
@@ -125,8 +127,8 @@ end
 
 %% files
 num_sites = 0; 
- for i = 1:(size(ND2files,1)-1)
-filepath = [ND2dir, filesep, ND2files{i+1}]; 
+ for i =1 % :(size(ND2files,1)-1)
+filepath = [ND2dir, filesep, ND2files{i+1}];
 %filepath = [ND2dir, filesep, ND2files{i}]; 
 counter =0; 
 
@@ -135,7 +137,7 @@ finfo = nd2finfo(filepath);
 num_sites = finfo.img_seq_count/frames;  
 
 for timept = 1:frames
-for row = i
+for row =  i %: %i
     for col = 1
         for site =1:num_sites
        
@@ -148,9 +150,9 @@ for row = i
         end 
             
        if size(channels, 1) ==2
-         [FRET, CFP]= nd2read_hayer_2chan(filepath,finfo, counter,1); 
-         imwrite(CFP,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-         imwrite(FRET,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         [mRuby, cyto]= nd2read_hayer_2chan(filepath,finfo, counter,1); 
+         imwrite(cyto,[rawdir,filesep,shot,'_cyto_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         imwrite(mRuby,[rawdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
        
        if size (channels,1) == 3
@@ -193,10 +195,10 @@ end
 if makeTiffStacks == 1
     
     
- for row= 1:(size(ND2files,1)-1)
+ for row=1 % 1:(size(ND2files,1)-1)
     
     for col = 1
-        for site = 20; 
+        for site =16
             
           
            
@@ -221,11 +223,11 @@ CFPStack=[];
 FRETStack=[];
 
 k=0;
-for row=1:(size(ND2files,1)-1)
+for row=1 % (size(ND2files,1)-1)
     
    
     for col=1
-        for site=1:20
+        for site=1:16
             k=k+1;
             shot=[num2str(row),'_',num2str(col),'_',num2str(site)];
             CFP_temp=imread([rawdir,filesep,shot,'_CFP_4.tif']);
@@ -260,12 +262,17 @@ end
 %load([bgdir,filesep,'alignment parameters pX pY.mat']);
 
 k=0;
-for row=1:1 % (size(ND2files,1)-1)
+for row=1 % (size(ND2files,1)-1)
 %     
     for col=1
-        for site=1:20 % num_sites
+        for site=4:16 % num_sites
 
+%             if row ==1 && site ==8 
+%     continue; 
+% end 
+            
             k=k+1;
+            
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
         end
     end
@@ -274,12 +281,12 @@ end
 %pick which one you need 
 for k=1:length(position)
   %getFRETDataHCS_1chan(position{k},bgdir,rawdir,datadir,threshold); 
-  getFRETDataHCS(position{k},bgdir,rawdir,datadir); 
-  %getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,threshold)
+getFRETDataHCS(position{k},bgdir,rawdir,datadir,1.8); 
+  %getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,5)
   %getFRETDataHCS_4chan(position{k},bgdir,rawdir,datadir,threshold)
 end
 disp('done!');
-clc; clear; 
+%clc; clear; 
 
 %% bleaching correction
 
@@ -290,7 +297,7 @@ for k=1:length(position)
 end
 bleach_mean=nanmedian(bleach_raw_all,2);
 plot(1:length(bleach_mean),bleach_raw_all);hold on
-plot(1:length(bleach_mean),bleach_mean,'linewidth',5);
+plot(1:length(bleach_mean),bleach_mean,'linewidth',3);
 
 title('Bleaching Curve'); 
 xlabel('TimePoint');
@@ -300,30 +307,26 @@ timepts=1:length(bleach_mean);
 fitpara=fit(timepts',bleach_mean,'exp2');
 corr=feval(fitpara,1:length(bleach_mean));
 plot(1:length(bleach_mean),corr,'g');
-axis([0 100 0.7 1.5]);
+axis([0 150 0.7 1.5]);
 
 save([datadir,filesep,'bleachingcurve.mat'],'fitpara');
 
-% bleach_raw_all=[];
-% for k=1:length(position)
-%     load([datadir,filesep,position{k},'_Bleach_raw.mat']);
-%     bleach_raw_all(:,k)=bleach_raw_mRuby/nanmedian(bleach_raw_mRuby);
-% end
-% bleach_mean=nanmedian(bleach_raw_all,2);
-% plot(1:length(bleach_mean),bleach_raw_all);hold on
-% plot(1:length(bleach_mean),bleach_mean,'linewidth',3);
-% 
-% title('Bleaching Curve'); 
-% xlabel('TimePoint');
-% ylabel('Mean Intensity');
-% 
-% timepts=1:length(bleach_mean);
-% fitpara_mRuby=fit(timepts',bleach_mean,'exp2');
-% corr=feval(fitpara_mRuby,1:length(bleach_mean));
-% plot(1:length(bleach_mean),corr,'g');
-% axis([0 120 0 3]);
-% 
-%  save([datadir,filesep,'bleachingcurve_mRuby.mat'],'fitpara_mRuby');
+bleach_raw_all=[]; for k=1:length(position)
+    load([datadir,filesep,position{k},'_Bleach_raw.mat']);
+    bleach_raw_all(:,k)=bleach_raw_mRuby/nanmedian(bleach_raw_mRuby);
+end
+bleach_mean=nanmedian(bleach_raw_all,2);
+plot(1:length(bleach_mean),bleach_raw_all);hold on
+plot(1:length(bleach_mean),bleach_mean,'linewidth',3);
+
+title('Bleaching Curve'); xlabel('TimePoint'); ylabel('Mean Intensity');
+
+timepts=1:length(bleach_mean);
+fitpara_mRuby=fit(timepts',bleach_mean,'exp2');
+corr=feval(fitpara_mRuby,1:length(bleach_mean));
+plot(1:length(bleach_mean),corr,'g'); axis([0 150 0 3]);
+
+ save([datadir,filesep,'bleachingcurve_mRuby.mat'],'fitpara_mRuby');
 
 %% corrected FRET data 
 for k=1:length(position)

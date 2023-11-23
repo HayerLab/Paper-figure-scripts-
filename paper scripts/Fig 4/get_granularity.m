@@ -2,14 +2,14 @@
 %SM December 2022 
 clear; clc; 
 
-root = 'F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA\data'; 
-datadir= 'F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA\data'; 
+root = 'F:\20231012-Hs587t-ROSA-WT-KO-MOESIN_U46619_TRT_VS_cntrl\data'; 
+datadir= 'F:\20231012-Hs587t-ROSA-WT-KO-MOESIN_U46619_TRT_VS_cntrl\data'; 
 %datadir1 = ([datadir, filesep, 'data']); 
-%% control scection
+ %% control scection
 k = 0; 
-for row =1
+for row =2
     for col=1
-        for site=1:20
+        for site=1:10
  
             k=k+1;
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
@@ -17,11 +17,14 @@ for row =1
     end
 end
  
+%position = {1,2,3,4,5,6}; 
 for i= 1:size(position,2)
+    
+   % datadir = ([root, filesep, num2str(position{i}), filesep,'output']); 
     
      average =[]; 
      average_m = []; 
-     load([root, filesep, position{i}, '_RatioData_raw.mat'])
+     load([root, filesep,position{i},  '_RatioData_raw.mat'])
      
  
  % number of control frames you have before drug addition
@@ -38,7 +41,7 @@ for i= 1:size(position,2)
      mean_FRET = mean(average);
    %  mean_m = mean(average_m); 
         
-        colorRange1 = [0.7 1.3]; 
+        colorRange1 = [0.5 1.5]; 
         %colorRange2 = [0 3]; 
        
         %correct the images by normalizing them to pre-drug addition
@@ -48,25 +51,25 @@ for i= 1:size(position,2)
             temp = imRatio_raw{1,j};
             FRET_norm{1,j}=temp./mean_FRET;
             mean_array(1,j) = nanmean(FRET_norm{1,j}, 'all'); 
-            tempest= FRET_norm{1,j}; 
+         %   tempest= FRET_norm{1,j}; 
 %             temp2 = im_mRuby_raw{1,j}; 
 %             mRuby_norm{1,j} = temp2./mean_m; 
 %             tempest1= mRuby_norm{1,j}; 
             
            
-            tempRATIOforstack=ratio2RGB(tempest,colorRange1);%Cdc42
+            tempRATIOforstack=ratio2RGB(FRET_norm{1,j},colorRange1);%Cdc42
 %             tempmRubyforstack=ratio2RGB(tempest1,colorRange2);%Cdc42
 %             tempmRubyforstack(tempmRubyforstack < 0) = 0; 
     
          
-          imwrite(tempRATIOforstack,[datadir,filesep, position{i},  '_Rho-FRET_',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
+          imwrite(tempRATIOforstack,[datadir,filesep,position{i},  '_Rho-FRET_',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
       %     imwrite(tempmRubyforstack,[datadir1, filesep, position{1,1}, '_mRuby_',num2str(colorRange2(1)),'_',num2str(colorRange2(2)),'.tif'],'WriteMode','append','Compression','none');    %
     end
-
+%save([datadir,filesep,position{i},  '_RatioData_norm_1-10.mat'],'FRET_norm','mean_array', 'colorRange1'); %'mRuby_norm'; 
       
 end 
 
-save([datadir,filesep, position{i},'_RatioData_norm_1-10.mat'],'FRET_norm','mean_array', 'colorRange1'); %'mRuby_norm'; 
+%save([datadir,filesep, position{i},'_RatioData_norm_1-10.mat'],'FRET_norm','mean_array', 'colorRange1'); %'mRuby_norm'; 
         
 %% specify ROI of interest of larger image 
 

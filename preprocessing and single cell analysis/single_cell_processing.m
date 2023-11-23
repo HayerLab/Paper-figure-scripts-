@@ -1,7 +1,7 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\old data\data_210324 - Trial 1 60x, Rho Myosin';
+ root = 'F:\old data\230210_40x_2x2_Rho_myosin';
  
  tiffDir = ([root, filesep,'tiff_stacks']); 
  
@@ -23,8 +23,8 @@ bgpath=[root,filesep,'background'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    clc; 
-cell=27;
-filekey = '2_1_20'; 
+cell=22;
+filekey = '2_1_8'; 
 
 
  cellDir = ([cropdir,filesep, num2str(cell)]); 
@@ -37,15 +37,18 @@ bgCFP = ([root, filesep, 'background\AVG_bgCFP.tif']);
 %bgCFP = ([bgpath, filesep, 'AVG-BG-CFP.tif']); 
 bgFRET = ([root, filesep, 'background\AVG_bgFRET.tif']);
 %bgFRET = ([bgpath, filesep, 'AVG-BG-YFP-FRET.tif']);
+bgmRuby=([root, filesep, 'background\AVG_bgmRuby.tif']);
           
  FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
  CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
+  mRuby= ([tiffDir,filesep, strcat(filekey,'_mRuby_stacked.tif')]); 
 
 %FRET = ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-YFP-FRET.tif')]);  
 %CFP= ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-CFP.tif')]); 
 
 bg_FRET_image = double(readTIFFstack(bgFRET)); 
 bg_CFP_image = double(readTIFFstack(bgCFP)); 
+bg_mRuby_image = double(readTIFFstack(bgmRuby)); 
      
             cropSite = 0;
 
@@ -64,20 +67,28 @@ bg_CFP_image = double(readTIFFstack(bgCFP));
                 
       Stack2TIFF(stackFRET, [cellDir, filesep,'FRET.tif']);
                     
-                    stackCFP = readFileToStack(CFP); 
-                    stackCFP = imcrop3(stackCFP, [cropArea(1), cropArea(2), 1,...
-                    cropArea(3), cropArea(4), size(stackFRET,3)-1]);                    
-                    Stack2TIFF(stackCFP, [cellDir, filesep, 'CFP.tif']);
+       stackCFP = readFileToStack(CFP); 
+       stackCFP = imcrop3(stackCFP, [cropArea(1), cropArea(2), 1,...
+       cropArea(3), cropArea(4), size(stackFRET,3)-1]);                    
+       Stack2TIFF(stackCFP, [cellDir, filesep, 'CFP.tif']);
+       
+       stackmRuby = readFileToStack(mRuby); 
+       stackmRuby = imcrop3(stackmRuby, [cropArea(1), cropArea(2), 1,...
+       cropArea(3), cropArea(4), size(stackFRET,3)-1]);                    
+       Stack2TIFF(stackmRuby, [cellDir, filesep, 'mRuby.tif']);
             
     
                     FRET_bg_crop = imcrop(uint16(bg_FRET_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
                    % saveas(FRET_bg_crop, [cellDir, filesep, 'FRET_bg.tif']); 
                     imwrite(FRET_bg_crop,[cellDir, filesep, 'FRET_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
                     
-                     CFP_bg_crop = imcrop(bg_CFP_image, [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+                     CFP_bg_crop = imcrop(uint16(bg_CFP_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
                  %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
-            imwrite(uint16(CFP_bg_crop),[cellDir, filesep, 'CFP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+            imwrite(CFP_bg_crop,[cellDir, filesep, 'CFP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
             
+              mRuby_bg_crop = imcrop(uint16(bg_mRuby_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+                 %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
+            imwrite(mRuby_bg_crop,[cellDir, filesep, 'mRuby_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
                     
                     %close(fg);
             clear stack;
@@ -87,7 +98,7 @@ bg_CFP_image = double(readTIFFstack(bgCFP));
     
 %% background alignment 
     
-parfor i=1:27
+ parfor i=4  %par
 
 channels={'CFP' 'FRET'};
  
@@ -108,6 +119,8 @@ subplot(1,2,1); imagesc(dxMat1); colorbar
 subplot(1,2,2); imagesc(dyMat1); colorbar
 
 parsave([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],pX,pY,dxMat1,dyMat1);
+%save([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
+
 
 alignStack = []; 
 CFP_stack= []; 
@@ -121,21 +134,22 @@ end
 %% FRET data 
 
 clc;
-root = 'F:\old data\data_210324 - Trial 1 60x, Rho Myosin';
+root = 'F:\old data\230210_40x_2x2_Rho_myosin';
 cellNum=1;% for now manually select cell folder 
 
 bleachdir=([root,filesep,'data']);
 bgdir=[root,filesep,'background'];
 load([bleachdir,filesep,'bleachingcurve.mat']);
 load([bleachdir,filesep,'bleachingcurve_mRuby.mat']);
+load([bgpath, filesep, 'alignment parameters pX pY.mat']); 
 % load([bleachdir,filesep,'bleachingcurve_cyto.mat']);
 
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k= 3
+for k=1:22
     rawdir=[root,filesep,'cropped',  filesep, strcat( num2str(k))]; 
-    load([rawdir,filesep,'alignment parameters pX pY.mat']);
+    %load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
 
@@ -147,14 +161,14 @@ for k= 3
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-%getFRETDataHCS_stacked(k,rawdir,datadir,2.5); 
- getFRETDataHCS_stacked_3chan(k,rawdir,datadir,15); % FRET, CFP, mRuby
-% getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
+%getFRETDataHCS_stacked(k,rawdir,datadir,11); 
+ %getFRETDataHCS_stacked_3chan(k,rawdir,datadir,3.5, pX, pY); % FRET, CFP, mRuby
+% getFRETDataHCS_stacked_4_chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
 
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
-  correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
+ correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
   %correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
 % correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  

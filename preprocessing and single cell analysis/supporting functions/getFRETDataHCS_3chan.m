@@ -96,7 +96,7 @@ for frameNum=1:length(CFP_files)
    imRubybg=subBG(imRuby_raw,bgmask_mRuby,mRubybg);
    
    %%%%%% Get mask from raw FRET image
-    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,1500, frameNum, position); %+imCFPbg
+    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,1500, frameNum, position, threshold); %+imCFPbg
  
     maskFinal{frameNum}=mask;
     cellCoors{frameNum}=cellCoorsTemp;
@@ -118,7 +118,7 @@ for frameNum=1:length(CFP_files)
     
     
     %%%%%% Generate and write files for raw ratio and outlined objects
-    tempRATIO=ratio2RGB(imRatio_raw{frameNum},colorRange);
+   % tempRATIO=ratio2RGB(imRatio_raw{frameNum},colorRange);
     imFRETOutline{frameNum}=DrawMaskOutline(imFRET_raw,mask);
     
     imwrite(imFRETOutline{frameNum},[datadir,filesep,position,'_Outline_prelim.tif'],'WriteMode','append','Compression','none');

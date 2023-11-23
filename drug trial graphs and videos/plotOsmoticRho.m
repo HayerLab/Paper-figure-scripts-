@@ -3,11 +3,11 @@
 
 %% Control section 
 clc; clear; 
-control_root = 'F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA'; 
+control_root = 'F:\231109 - 20x_2bin_hs578t_u466_trt'; 
 %control_root1= 'F:\Seph\data\230313_20x_2x2_Rho_thrombin_NSC';
 %control_root2= 'F:\Seph\data\data_220104 - Trial 5 RhoB Myosin drug treatments';
 
-datadir =('F:\2023105-KomoesinMA-KOmoesin-U46-ROSA-U46-ROSA-MA\DRUG RESPOSNE GRAPHS');  
+datadir =('F:\231109 - 20x_2bin_hs578t_u466_trt\drug response graphs');  
 %cellFiles=getFilenames([control_root],'_RatioData.mat');
 
 control_arr=zeros(4,120); 
@@ -113,23 +113,19 @@ hypo_root = control_root;
 position = []; 
 k = 0; 
 
-hypo_arr=zeros(8,120); 
+hypo_arr=zeros(4, 120); 
 
 for row = 1
     
-    
     for col =1 
-        for site = 13:20
+        for site = 13:16
 %             
 %              
-%             if row ==1 && site <=10
+%             if  site ==15 || site ==16 
 %                 continue; 
 %             end 
 %             
-% %             
-            if row ==2 && site >=19
-                continue; 
-            end 
+% %      
 %           
           
             k=k+1; 
@@ -295,7 +291,7 @@ end
  
 stats_arrTREAT = zeros(3,120); 
 
- for k = 1:120 
+ for k = 1:120
      
      % fitting normal dist to each lag 
     pd = fitdist(hypo_arr(:,k),'Normal'); 
@@ -318,15 +314,16 @@ xlim([0 120]);
 
 
  xline(10,'--'); 
- ylim([0.8  1.7]);
+ ylim([0.8  1.5]);
  hold on; 
- title('Hs578t ROSA DORA RhoB Moesin KO, cntrl MA vs 20 nM U46619 @ 10 minutes'); 
+ %title('Hs578t ROSA DORA RhoB Moesin KO, cntrl MA vs 20 nM U46619 @ 10 minutes'); 
+  title('Hs578t ROSA DORA RhoB MoesinKO, cntrl MA vs 20 nM U46619 @ 10 minutes');
  xlabel('TimePoint (30s)'); 
  ylabel('Norm. Rho'); 
 
 for a=1:size(control_arr,1)
     plot([1:120],control_arr(a,:), 'Color','k','DisplayName','CNTRL'); 
-    
+   
 end 
 %     
 % for b=1:size(hyper_arr,1)
@@ -340,11 +337,11 @@ end
 hold off; 
 
 f2= figure; 
- title('RhoA,1 U Thrombin'); 
+ title('Hs578t ROSA DORA RhoB MoesinKO, cntrl MA vs 20 nM U46619 @ 10 minutes'); 
  xlabel('TimePoint (1 min)'); 
  ylabel('Norm. RhoA'); 
  hold on; 
- ylim([0.8 2.2]);
+ ylim([0.8 1.5]);
  xlim([0 120]);
 xline(5,'--'); 
 
@@ -373,8 +370,8 @@ plot(1:120,(stats_arrTREAT(3,:)),'Color',[1,0,0] );
 %     plot([1:100],hyper_arr(a,:), 'Color','r','DisplayName','Hyper-osmotic'); 
 % end 
  U46619 = hypo_arr; 
-   save([datadir,filesep,'CNTRL vs. 20uM U46619 @10_MoesinKO_[0.8 1.6 y axis].mat'],'control_arr', 'U46619', 'stats_arrCNTRL', 'stats_arrTREAT'); 
-   saveas(f1, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO_[0.8 1.6 y axis].fig'])); 
-    saveas(f1, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO_[0.8 1.6 y axis].svg'])); 
-%   saveas(f2, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5 avgSD[0.8 2.2 y axis].fig'])); 
-%   saveas(f2, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5 avgSD_[0.8 2.2 y axis].svg'])); 
+   save([datadir,filesep,'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis].mat'],'control_arr', 'U46619', 'stats_arrCNTRL', 'stats_arrTREAT'); 
+   saveas(f1, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis].fig'])); 
+    saveas(f1, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis].svg'])); 
+   saveas(f2, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis]avgSD.fig'])); 
+   saveas(f2, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis]avgSD.svg'])); 

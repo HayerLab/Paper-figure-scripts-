@@ -287,8 +287,8 @@ protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWin
 %% Plot maps - with thresholds
 close all;
 
-protthresh=2.5;
-retthresh=-2.5;
+protthresh=5;
+retthresh=-5;
 f1=figure; 
 
 
@@ -303,7 +303,7 @@ protvalrange=[round(prctile(protvalsWindow(:),1),1),round(prctile(protvalsWindow
 %fretvalsrange=[round(prctile(fretvals(:),1),1),round(prctile(fretvals(:),99),1)];
  %myosinrange=[round(prctile(myosin(:),1),1),round(prctile(myosin(:),99),1)];
 
-ax1=subplot(2,2,1);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
+ax1=subplot(2,2,3);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
 colormap(ax1,cmap);
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
@@ -312,7 +312,8 @@ colormap(ax1,cmap);
    xticks([0 24 48 71 95 120 144])
    xticklabels({'0','10','20','30','40','50' '60'});
 
-ax2=subplot(2,2,2);imagesc(fretvalsF,[0.6 1.4] );title('DORA RhoB');
+ax2=subplot(2,2,1);imagesc(fretvalsF,[0.7 1.3] );title('DORA RhoB');
+xlim([0 150]); 
  %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
 % colormap(ax2,cmap);
 %  rectangle('Position',[84,120,41,15],'LineWidth',2); 
@@ -321,24 +322,25 @@ ax2=subplot(2,2,2);imagesc(fretvalsF,[0.6 1.4] );title('DORA RhoB');
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
 %25 s intervals 
- xticks([0 24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50' '60'});
+ xticks([24 48 71 95 120 144])
+  xticklabels({'0','10','20','30','40','50'});
 
 
 
 protvalsWindowHigh=protvalsWindow>protthresh;
 
-ax3=subplot(2,2,3);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
+ax3=subplot(2,2,4);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
 colormap(ax3,cmap);
+xlim([0 150]); 
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
 %25 s intervals 
-  xticks([0 24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50' '60'});
+  xticks([ 24 48 71 95 120 144])
+  xticklabels({'0','10','20','30','40','50'});
 %protvalsWindowFHigh=protvalsWindowF>protthresh;
 
- ax4=subplot(2,2,4);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
+ ax4=subplot(2,2,2);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
  %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 

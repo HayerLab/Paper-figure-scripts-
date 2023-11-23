@@ -10,9 +10,9 @@ clear; clc;
 
 close all; 
 
-root = 'F:\Seph\research paper\Fig 4\F4 good copy\Rho-myosin xcorrs'; 
+root = 'C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\supp fig 4'; 
 
-load([root, filesep,'RhoM T3 xcor_depth15.mat']); 
+load([root, filesep,'RhoB vs Myosin depth 20.mat']); 
 
 averages_T1 = cell_arr; 
 
@@ -24,7 +24,7 @@ end
 
 cell_arr =[]; 
 
-load([root, filesep,'RhoM T2 xcor_depth15.mat'])
+load([root, filesep,'RhoB vs Myosin T2 depth 20.mat'])
 
 averages_T2 = cell_arr; 
 
@@ -55,9 +55,10 @@ stats_arr = zeros(3,41);
 f1 = figure; 
 
 hold on;
-ylim([-0.4 0.6]);
+ylim([-0.5 0.6]);
 xline(0,'--'); 
 yline(0,'--'); 
+axis square; 
 for x= 1:size(plotting_table,1)
     
     plot(-20:20,plotting_table(x,:));
@@ -74,7 +75,7 @@ xticklabels({'-8' '' '-6' '' '-4' '' '-2' '' '0' '' '2' '' '4' '' '6' '' '8'});
  f2= figure; 
  
  hold on; 
- ylim([-0.3 0.6]);
+ ylim([-0.3 0.5]);
 xline(0,'--'); 
 yline(0,'--'); 
 
@@ -88,8 +89,8 @@ xticklabels({'-8' '' '-6' '' '-4' '' '-2' '' '0' '' '2' '' '4' '' '6' '' '8'});
 
 
 
-
- saveas(f1,[root,filesep,'Rho myosin_xcorr_n=27_depth15.svg']); 
+save([root,filesep,'Rho myosin_xcorr_n=27_depth20_stats.mat'], 'stats_arr', 'plotting_table'); 
+saveas(f1,[root,filesep,'Rho myosin_xcorr_n=27_depth20.svg']); 
 % 
 % saveas(f2,[root,filesep,'Rho_avg+SEM_n=27_depth6.svg']); 
 

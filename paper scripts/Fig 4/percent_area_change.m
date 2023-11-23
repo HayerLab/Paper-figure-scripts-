@@ -183,6 +183,7 @@ violinplot(s);
 
 yticks(-100:10:40); 
 ylim([-100, 40]); 
+daspect([1 1 1]); 
 
 % 
   y = [ cntrl, Y2, ML7, Y2_ML7]; 
