@@ -1,7 +1,7 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\old data\230210_40x_2x2_Rho_myosin';
+ root = 'D:\221209 - 40x 2x2 bin_RhoB_cyto';
  
  tiffDir = ([root, filesep,'tiff_stacks']); 
  
@@ -98,17 +98,17 @@ bg_mRuby_image = double(readTIFFstack(bgmRuby));
     
 %% background alignment 
     
- parfor i=4  %par
+ for i=4  %par
 
 channels={'CFP' 'FRET'};
  
     cellPath=strcat(num2str(i));
-    cellFiles=getFilenames([cropdir,filesep,cellPath],'.tif');
+    cellFiles=getFilenames([cropdir,filesep,cellPath, filesep, 'drift_correct'],'.tif');
     
     %note: need to change numbers here depending on if you have an extra
     %channel like myosin- changes order of files in cropped folder
-    CFP_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{1}]));
-    FRET_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{3}]));
+    CFP_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{3}]));
+    FRET_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{4}]));
   
     
 alignStack(:,:,2)=(FRET_stack(:,:,60)); % choose arbitrary framenumber, here 75, to generate the alignment parameters 
@@ -118,8 +118,8 @@ figure;
 subplot(1,2,1); imagesc(dxMat1); colorbar
 subplot(1,2,2); imagesc(dyMat1); colorbar
 
-parsave([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],pX,pY,dxMat1,dyMat1);
-%save([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
+%parsave([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],pX,pY,dxMat1,dyMat1);
+save([cropdir,filesep,cellPath,filesep,'drift_correct', filesep, 'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
 
 
 alignStack = []; 
@@ -134,7 +134,7 @@ end
 %% FRET data 
 
 clc;
-root = 'F:\old data\230210_40x_2x2_Rho_myosin';
+root = 'D:\221209 - 40x 2x2 bin_RhoB_cyto';
 cellNum=1;% for now manually select cell folder 
 
 bleachdir=([root,filesep,'data']);
@@ -147,8 +147,8 @@ load([bgpath, filesep, 'alignment parameters pX pY.mat']);
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=1:22
-    rawdir=[root,filesep,'cropped',  filesep, strcat( num2str(k))]; 
+for k=4
+    rawdir=[root,filesep,'cropped',  filesep, strcat( num2str(k)), filesep, 'drift_correct']; 
     %load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
@@ -161,15 +161,15 @@ for k=1:22
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-%getFRETDataHCS_stacked(k,rawdir,datadir,11); 
+getFRETDataHCS_stacked(k,rawdir,datadir,4); 
  %getFRETDataHCS_stacked_3chan(k,rawdir,datadir,3.5, pX, pY); % FRET, CFP, mRuby
 % getFRETDataHCS_stacked_4_chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
 
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
- correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
-  %correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
+correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
+  %correctBleachingExp2_FRET_stacked(fitpara, datadir); %only does FRET
 % correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  
     

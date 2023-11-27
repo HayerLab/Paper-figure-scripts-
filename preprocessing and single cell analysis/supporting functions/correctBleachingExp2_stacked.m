@@ -29,7 +29,7 @@ corr_m=feval(fitpara_mRuby,timepts);
 corr_norm_m=corr_m./median(corr_m);
 % %plot(timepts,corr_norm);
 % 
-normfact_m=nanmedian(bleach_raw_mRuby);
+%normfact_m=nanmedian(bleach_raw_mRuby);
 
 
 
