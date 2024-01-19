@@ -2,8 +2,8 @@
 %SM December 2022 
 clear; clc; 
 
-root = 'F:\231109 - 20x_2bin_hs578t_u466_trt\data'; 
-datadir= 'F:\231109 - 20x_2bin_hs578t_u466_trt\data'; 
+root = 'F:\231113_RhoB_ezrin_ WTvsT567_10umNOC\cropped\WT\control\2\output'; 
+datadir= 'F:\231113_RhoB_ezrin_ WTvsT567_10umNOC\cropped\WT\control\2\output'; 
 %datadir1 = ([datadir, filesep, 'data']); 
 %% control scection
 k = 0; 
@@ -17,19 +17,21 @@ for row =1
     end
 end
  
-for i= 1:size(position,2)
+for i= 1 %1:size(position,2)
     
      average =[]; 
      average_m = []; 
-     load([root, filesep, position{i}, '_RatioData_raw.mat'])
+    % load([root, filesep, position{i}, '_RatioData_raw.mat'])
+     load([root, filesep, 'RatioData_raw.mat'])
      
  
  % number of control frames you have before drug addition
-     for k = 1:10
+     for k = 1:5
          
 
-        FRET_mean = nanmean(imRatio_raw{1,k}, 'all'); 
-        average = [average; FRET_mean];
+       % FRET_mean = nanmean(imRatio_raw{1,k}, 'all'); 
+      ezrin_mean = nanmean(imEzrin_raw{1,k}, 'all'); 
+        average = [average; ezrin_mean];
        % 
        % myosin_mean = nanmean(im_mRuby_raw{1,k}, 'all'); 
        %  average_m = [average_m;myosin_mean];
@@ -43,10 +45,17 @@ for i= 1:size(position,2)
        
         %correct the images by normalizing them to pre-drug addition
         %averages 
-    for j=1:size(imRatio_raw,2)
-            temp = imRatio_raw{1,j};
-            FRET_norm{1,j}=temp./mean_FRET;
-            tempest= FRET_norm{1,j}; 
+    for j=1:size(imEzrin_raw,2)      %size(imRatio_raw,2)
+    temp = imEzrin_raw{1,j};
+            ezrin_norm{1,j}=temp./mean_FRET;
+            tempest= ezrin_norm{1,j}; 
+        
+        
+%             temp = imRatio_raw{1,j};
+%             FRET_norm{1,j}=temp./mean_FRET;
+%             tempest= FRET_norm{1,j}; 
+            
+
             %temp2 = im_mRuby_raw{1,j}; 
             % mRuby_norm{1,j} = temp2./mean_m; 
             % tempest1= mRuby_norm{1,j}; 
@@ -57,7 +66,7 @@ for i= 1:size(position,2)
            % tempmRubyforstack(tempmRubyforstack < 0) = 0.01; 
     
          
-          imwrite(tempRATIOforstack,[datadir,filesep, position{i},  '_Rho-FRET_',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
+          imwrite(tempRATIOforstack,[datadir,filesep, position{i},  '_ezrin_',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
      %      imwrite(tempmRubyforstack,[datadir, filesep, position{1,1}, '_mRuby__redo',num2str(colorRange2(1)),'_',num2str(colorRange2(2)),'.tif'],'WriteMode','append','Compression','none');    %
     end
 

@@ -50,7 +50,7 @@ pks=pks(log_pks); locs=locs(log_pks);
         plot((locs),pks,'k^','markerfacecolor',[1 0 0]);
  end 
  
- if size(pks,2) ==1
+ %if size(pks,2) ==1
 x_bgMax=locs(1,1); % picks the first peak (x-value of first peak)
 [~,ind]=find(f>(0.01*pks(1)),1); % returns the first value of f greater than 0.5% of its max
 x_1pct=xi(ind); % returns the corresponding intensity value
@@ -74,16 +74,16 @@ if frameNum ==1  %&& s ==1
  end 
 % % 
 
- else 
-     threshSeg = locs(1,1) + (locs(1,2)-locs(1,1))/2; 
-     
-     if frameNum ==1  %&& s ==1
-          xline(threshSeg, '--'); 
-          pause; 
-                 hold off;
-% %               
- end 
- end 
+%  else 
+%      threshSeg = locs(1,1) + (locs(1,2)-locs(1,1))/2; 
+%      
+%      if frameNum ==1  %&& s ==1
+%           xline(threshSeg, '--'); 
+%           pause; 
+%                  hold off;
+% % %               
+%  end 
+% end 
 %% messy cell edge part 2 
 % uses average cell intensity instead of bg peak, and thresholds backwards
 % from this 

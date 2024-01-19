@@ -201,8 +201,7 @@ for imnum=start:start+size(thisTraj,1) -1
                %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
                %  cyto(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
           
-            
-          
+  
             end
            MaskThisCell{index}=thisMask;  
    
