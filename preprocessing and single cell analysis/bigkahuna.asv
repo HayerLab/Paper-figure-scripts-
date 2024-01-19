@@ -185,31 +185,48 @@ bg_gCAMP_image = double(readTIFFstack(bgmRuby));
 
  gCAMP_stack=double(readTIFFstack(gCAMP));
          
-        gCAMP_stack_1 = gCAMP_stack(:,:,1); 
+        cyto_stack_1 = cyto_stack(:,:,1); 
                
          fg = figure;
               
          axis image;  
              
             
-      [stackgCAMP, cropArea] = serimcropold(gCAMP_stack,mean(gCAMP_stack,3));
+      [stackcyto, cropArea] = serimcropold(cyto_stack,mean(cyto_stack,3));
       
                 
-      Stack2TIFF(stackgCAMP, [cellDir, filesep,'gCAMP.tif']);
+      Stack2TIFF(stackcyto, [cellDir, filesep,'FRET.tif']);
+                    
+%        stackCFP = readFileToStack(CFP); 
+%        stackCFP = imcrop3(stackCFP, [cropArea(1), cropArea(2), 1,...
+%        cropArea(3), cropArea(4), size(stackFRET,3)-1]);                    
+%        Stack2TIFF(stackCFP, [cellDir, filesep, 'CFP.tif']);
+       
+       stackmRuby = readFileToStack(mRuby); 
+       stackmRuby = imcrop3(stackmRuby, [cropArea(1), cropArea(2), 1,...
+       cropArea(3), cropArea(4), size(stackcyto,3)-1]);                    
+       Stack2TIFF(stackmRuby, [cellDir, filesep, 'mRuby.tif']);
             
     
-        gCAMP_bg_crop = imcrop(uint16(bg_gCAMP_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
-                 
-       imwrite(gCAMP_bg_crop,[cellDir, filesep, 'gCAMP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+%                     FRET_bg_crop = imcrop(uint16(bg_FRET_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+%                    % saveas(FRET_bg_crop, [cellDir, filesep, 'FRET_bg.tif']); 
+%                     imwrite(FRET_bg_crop,[cellDir, filesep, 'FRET_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+%                     
+%                      CFP_bg_crop = imcrop(uint16(bg_CFP_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+%                  %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
+%             imwrite(CFP_bg_crop,[cellDir, filesep, 'CFP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+%             
+              mRuby_bg_crop = imcrop(uint16(bg_gCAMP_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+                 %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
+            imwrite(mRuby_bg_crop,[cellDir, filesep, 'mRuby_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
             
             
-           
+              cyto_bg_crop = imcrop(uint16(bg_cyto_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+                 %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
+            imwrite(cyto_bg_crop,[cellDir, filesep, 'cyto_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+                    
                     %close(fg);
             clear stack;
   close all; 
-  
-
-  %% cell_mask generation
-
   
     
