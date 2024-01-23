@@ -14,7 +14,7 @@
 clc; 
 clear; 
 
-root= 'F:\231212_2D_stopper_migration\seph version analysis'; 
+root= 'Y:\Baishali\GCAMP single cell edge tracking 17_01_2024\seph version'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
@@ -22,7 +22,7 @@ makeTiffStacks = 1;
  channel =  ["gCAMP"]; 
 channel1= {'gCAMP'};
 
-frames = 24; 
+frames = 150; 
 
 bgdir = [root, filesep, 'background']; 
 if  ~exist(bgdir)
@@ -121,17 +121,14 @@ end
 
 %% tiff stacks 
 if makeTiffStacks == 1
-    
+
     
  for row=1 % 1:(size(ND2files,1)-1)
     
     for col = 1
-        for site =16
-            
-          
-           
-writeTiffStacks(root, channel, row, col, site, frames); 
-        end 
+      
+writeTiffStacks(root, channel, row, col, num_sites, frames); 
+       
     end 
 end   
 end 
@@ -145,12 +142,12 @@ for chan=1:numel(channel1')
     disp(num2str(chan));
 end
 
-%% 
+%% crop file setup
 
 
  tiffDir = ([root, filesep,'tiff_stacks']); 
 
-cropdir=[root,filesep,'cropped', filesep, 'WT'];
+cropdir=[root,filesep,'cropped', filesep, 'cntrl'];
 if ~exist(cropdir)
          mkdir(cropdir); 
 end  
@@ -176,7 +173,7 @@ filekey = '1_1_1';
 bggCAMP = ([root, filesep, 'background\AVG_bggCAMP.tif']); 
 gCAMP= ([tiffDir,filesep, strcat(filekey,'_gCAMP_stacked.tif')]); 
 
-bg_gCAMP_image = double(readTIFFstack(bgmRuby)); 
+bg_gCAMP_image = double(readTIFFstack(bggCAMP)); 
 
             cropSite = 0;
 
@@ -210,6 +207,19 @@ bg_gCAMP_image = double(readTIFFstack(bgmRuby));
   
 
   %% cell_mask generation
+numCells = 1; % specify the number of cells in your current CropDir
 
-  
-    
+Threshold = 2; 
+  for i = 1:numCells
+
+ CellDir = ([cropdir, filesep, num2str(i)]);
+ dataDir = ([CellDir, filesep, 'output']); 
+ if  ~exist(dataDir)
+    mkdir(dataDir)
+end 
+
+ getMaskData_stacked(i, CellDir,dataDir, Threshold)
+
+  end 
+
+ 

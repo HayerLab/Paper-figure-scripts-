@@ -1,4 +1,4 @@
-function getMaskData_stacked(cellNum,rawdir,datadir, threshold)
+function getMaskData_stacked(cellNum,CellDir,datadir, threshold)
 
 
 % Used non built-in subfunctions: 
@@ -18,21 +18,21 @@ if ~exist([datadir,filesep,'MaskData_raw.mat'])
 
 %%%%%% Call background images
 
-gCAMPbg_raw=double(imread([rawdir,filesep,'gCAMP_bg.tif']));
+gCAMPbg_raw=double(imread([CellDir,filesep,'gCAMP_bg.tif']));
         
 
 
 
-cellFiles=getFilenames([rawdir],'.tif');
+%cellFiles=double(imread([CellDir,filesep,'gCAMP.tif']));
 
 %check here order of cellFiles!!! 
- gCAMP_stack=double(readTIFFstack([rawdir,filesep,cellFiles{1}]));
+ gCAMP_stack=double(readTIFFstack([CellDir,filesep,'gCAMP.tif']));
  
  
   
 %%%%%% Loop through frames
 maskFinal={};cellCoors={};  
-for frameNum=1:size(CFP_stack,3)
+for frameNum=1:size(gCAMP_stack,3)
     disp(num2str(frameNum));
     imgCAMP_raw=gCAMP_stack(:,:,frameNum);
  
@@ -60,7 +60,7 @@ end
 %%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay
 
 for frameNum= 1:length(imgCAMP_raw)
-   bleach_raw(frameNum)=nanmean(vect(imgCAMP_raw{frameNum}));
+   bleach_raw(frameNum)=nanmean(vect(imgCAMP_raw(frameNum)));
    
 end
 save([datadir,filesep,'MaskData_raw.mat'],'maskFinal','cellCoors','gCAMPOutline','-v7.3'); 
