@@ -138,15 +138,15 @@ for frameNum=1:size(mRuby_stack,3)
      im_cytoTEMP(~mask)=nan; 
     im_cyto_raw{frameNum}=im_cytoTEMP;
 
-     imRatio_EzrinTemp=im_mRubyTEMP./im_cytoTEMP;
-     imRatio_EzrinTemp(~mask)=nan;
-     imEzrin_raw{frameNum}=imRatio_EzrinTemp;
+%      imRatio_EzrinTemp=im_mRubyTEMP./im_cytoTEMP;
+%      imRatio_EzrinTemp(~mask)=nan;
+%      imEzrin_raw{frameNum}=imRatio_EzrinTemp;
      
     % imEzrin_raw{frameNum}(isnan(imEzrin_raw{frameNum}))=0; 
-     bounds =[(prctile(imEzrin_raw{frameNum}, 1, 'all')),prctile(imEzrin_raw{frameNum}, 99, 'all')];  
+     %bounds =[(prctile(imEzrin_raw{frameNum}, 1, 'all')),prctile(imEzrin_raw{frameNum}, 99, 'all')];  
      
-    imEzrin_raw{frameNum}(imEzrin_raw{frameNum}< bounds(1,1))=bounds(1,1);
-   imEzrin_raw{frameNum}(imEzrin_raw{frameNum}> bounds(1,2))=bounds(1,2);
+    %imEzrin_raw{frameNum}(imEzrin_raw{frameNum}< bounds(1,1))=bounds(1,1);
+  % imEzrin_raw{frameNum}(imEzrin_raw{frameNum}> bounds(1,2))=bounds(1,2);
      
      
     %%%%%% Generate and write files for raw ratio and outlined objects - optional
@@ -164,7 +164,7 @@ for frameNum= 1:length(im_mRuby_raw)
    bleach_raw_mRuby(frameNum)= nanmean(vect(im_mRuby_raw{frameNum}));
    bleach_raw_cyto(frameNum)= nanmean(vect(im_cyto_raw{frameNum}));
 end
-save([datadir,filesep,'RatioData_raw.mat'],'maskFinal','cellCoors','im_mRuby_raw','im_cyto_raw','imEzrin_raw', 'imFRETOutline','-v7.3'); %'imRatio_raw'
+save([datadir,filesep,'RatioData_raw.mat'],'maskFinal','cellCoors','im_mRuby_raw','im_cyto_raw', 'imFRETOutline','-v7.3'); %'imRatio_raw''imEzrin_raw'
 save([datadir,filesep,'Bleach_raw.mat'] , 'bleach_raw_mRuby', 'bleach_raw_cyto'); %,'bleach_raw'
 end
 
