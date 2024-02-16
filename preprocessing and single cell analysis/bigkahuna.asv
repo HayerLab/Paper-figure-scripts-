@@ -283,7 +283,7 @@ end
 for k=1:length(position)
   %getFRETDataHCS_1chan(position{k},bgdir,rawdir,datadir,threshold); 
 getFRETDataHCS(position{k},bgdir,rawdir,datadir,1.3); 
-getFRETDataHCS_2ChanFRET(position{k},bgdir,rawdir,datadir,1.3); 
+getFRETDataHCS_2(position{k},bgdir,rawdir,datadir,1.3); 
   %getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,5)
   %getFRETDataHCS_4chan(position{k},bgdir,rawdir,datadir,threshold)
 end
