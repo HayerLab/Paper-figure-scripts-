@@ -11,6 +11,7 @@
 % Seph Marshall Feb 2023
 
 %hi omaima
+
 %% setup and initialization. 
 clc; 
 clear; 
@@ -20,6 +21,7 @@ root= 'F:\omaima practise';
 % if you want to create Tiff Stacks =1 if you dont =0; 
 makeTiffStacks = 1; 
 
+%input channel names you are using 
  channels = {'CFP'; 'FRET'}; 
  channel = ["FRET"; "CFP"]; 
  channel1= {'CFP' 'FRET'}; 
@@ -257,7 +259,7 @@ subplot(1,2,2); imagesc(dyMat1); colorbar
 save([bgdir,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
 end 
 
-%% generate raw FRET Data baby 
+%% generate raw FRET Data
 %only do this section if you want FRET movies of the entire field of view 
 
 %load([bgdir,filesep,'alignment parameters pX pY.mat']);
