@@ -203,7 +203,7 @@ if makeTiffStacks == 1
             
           
            
-writeTiffStacks(root, channel, row, col, site, 20); %frames
+writeTiffStacks(root, channel, row, col, site, frames); 
         end 
     end 
 end   
@@ -278,10 +278,9 @@ end
 
 %pick which one you need 
 for k=1:length(position)
-  %getFRETDataHCS_1chan(position{k},bgdir,rawdir,datadir,threshold); 
-  getFRETDataHCS_2ChanFRET(position{k},bgdir,rawdir,datadir,threshold); 
-  %getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,threshold)
-  %getFRETDataHCS_4chan(position{k},bgdir,rawdir,datadir,threshold)
+  getFRETDataHCS_1chan(position{k},bgdir,rawdir,datadir,threshold); 
+  getFRETDataHCS_3chan(position{k},bgdir,rawdir,datadir,threshold)
+  getFRETDataHCS_4chan(position{k},bgdir,rawdir,datadir,threshold)
 end
 disp('done!');
 clc; clear; 
