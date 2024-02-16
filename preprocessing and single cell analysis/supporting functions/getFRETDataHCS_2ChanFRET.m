@@ -53,7 +53,7 @@ CFPbg_raw=double(imread([bgdir,filesep,'AVG_bgCFP.tif']));
 FRETbg_raw=double(imread([bgdir,filesep,'AVG_bgFRET.tif']));
  
 bg1(:,:,1)=CFPbg_raw; bg1(:,:,2)=FRETbg_raw;
-bg2=dualviewAlignFromFittedSurface(bg1,pX,pY,binning);
+bg2=dualviewAlignFromFittedSurfaceCrop(bg1,pX,pY,binning);
 CFPbg=bg2(:,:,1);
 FRETbg=bg2(:,:,2);
 
@@ -76,7 +76,7 @@ for frameNum=1:length(CFP_files)
 
     %%%%%% Align CFP/FRET images
     imstack(:,:,1)=imCFP_raw; imstack(:,:,2)=imFRET_raw;
-    imaligned=dualviewAlignFromFittedSurface(imstack,pX,pY,1);
+    imaligned=dualviewAlignFromFittedSurfaceCrop(imstack,pX,pY,1);
     imCFP_raw=imaligned(:,:,1);
     imFRET_raw=imaligned(:,:,2);
 %     

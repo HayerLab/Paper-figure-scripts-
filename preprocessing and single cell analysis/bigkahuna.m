@@ -263,7 +263,7 @@ end
 %only do this section if you want FRET movies of the entire field of view 
 
 %load([bgdir,filesep,'alignment parameters pX pY.mat']);
-
+threshold = 2; 
 k=0;
 for row=1: (size(ND2files,1)-1)
 %     
@@ -286,7 +286,9 @@ end
 disp('done!');
 clc; clear; 
 
-%% bleaching correction
+%% bleaching correction 
+% this is to run for videos with no drug addition - if you want FRET full
+% field of view with drug additions, open the file plotFRET_response
 
 bleach_raw_all=[];
 for k=1:length(position)

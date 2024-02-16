@@ -146,10 +146,10 @@ getFRETDataHCS_stacked(k,rawdir,datadir,1.5); % last number the threshold for se
 % getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 
 
-% choose which one you want - this is if no drug treatments 
+% choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
 %  correctBleachingExp2_stacked( fitpara, datadir); %fitparamRuby  % does FRET, and mRuby
-  correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
+%  correctBleachingExp_FRET_stacked(fitpara, datadir); %only does FRET
 % correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  
     
