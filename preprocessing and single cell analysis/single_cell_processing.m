@@ -1,8 +1,8 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'E:\omaima tutorial single cell';
- 
+ root = 'F:\230919 - Y2motility 2';
+ addpath(root); 
  tiffDir = ([root, filesep,'tiff_stacks']); 
  
 %  cellDir = ([root, filesep, 'cropped',filesep,'siERM', num2str(cell)]); 
@@ -10,7 +10,7 @@ clear; clc;
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped'];
+cropdir=[root,filesep,'cropped', filesep, 'cntrl_LIS'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
@@ -23,7 +23,7 @@ bgpath=[root,filesep,'background'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    
-cell= 1;
+cell= 25;
 filekey = '1_1_1'; 
 
 
