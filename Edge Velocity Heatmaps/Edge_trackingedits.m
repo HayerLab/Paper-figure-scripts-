@@ -247,39 +247,39 @@ protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWin
 
 %% display location of coordinates overlayed on cell mask images - optional for visualization
 %  % creates gif file for reference
-%     for mapper =1:size(thisTraj,1)
-%      
-%         window = windowCoors{1,mapper}; 
-%       if ~(isConnect)
-%       image = (imFRETOutline{1,thisTraj(mapper,5)+empty_count}); %slightly convoluted but lines up YFP raw image to the correct windowcoors
-%       else
-%            image = imread(imFRETOutline{1,thisTraj(mapper,4)+empty_count});
-%       end 
-%       h = figure('visible','off');
-%       hold on; 
-%       axis ij; 
-%      imagesc(image); 
+    for mapper =1:size(thisTraj,1)
+     
+        window = windowCoors{1,mapper}; 
+      if ~(isConnect)
+      image = (imFRETOutline{1,thisTraj(mapper,5)+empty_count}); %slightly convoluted but lines up YFP raw image to the correct windowcoors
+      else
+           image = imread(imFRETOutline{1,thisTraj(mapper,4)+empty_count});
+      end 
+      h = figure('visible','off');
+      hold on; 
+      axis ij; 
+     imagesc(image); 
    
-      %for num = 1:5:size(window,1)
-%       for num = 100:15:115
-%          image(window(num,1), window(num,2),1) = 255; 
-%          image(window(num,1), window(num,2),2) = 0; 
-%          image(window(num,1), window(num,2),3) = 0; 
-%          text(window(num,2),window(num,1),num2str(num), 'Color','r', 'FontSize', 8);
-%       end 
+     %for num = 1:15:size(window,1)
+      for num = 100:2:120
+         image(window(num,1), window(num,2),1) = 255; 
+         image(window(num,1), window(num,2),2) = 0; 
+         image(window(num,1), window(num,2),3) = 0; 
+         text(window(num,2),window(num,1),num2str(num), 'Color','r', 'FontSize', 8);
+      end 
      
-   %   frame = getframe(h);
-   %  im=frame2im(frame);
-    % [imind, cm] = rgb2ind(im,256);
+     frame = getframe(h);
+    im=frame2im(frame);
+    [imind, cm] = rgb2ind(im,256);
      
-%          if mapper ==1
-%              imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','Loopcount', inf);
-%          else
-%                    imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','WriteMode','append');
-%          end 
-   %    imwrite(image,[datadir,filesep,'Outline_label.tif'],'WriteMode','append','Compression','none');
+         if mapper ==1
+             imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','Loopcount', inf);
+         else
+                   imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','WriteMode','append');
+         end 
+      imwrite(image,[datadir,filesep,'Outline_label.tif'],'WriteMode','append','Compression','none');
 
-  %end 
+  end 
 % % %   
 
  
@@ -360,10 +360,10 @@ save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','prot
 
 %close all; clc;
 
-%end 
+end 
 clear; clc; 
 
-end 
+ 
 %% Polar plot of sum of all protrusions - all code after this is optional
 close all;
 protsum=sum(protvalsWindowF,2);
