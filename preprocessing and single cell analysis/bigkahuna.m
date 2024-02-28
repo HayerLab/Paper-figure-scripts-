@@ -14,17 +14,17 @@
 clc; 
 clear; 
 
-root= 'F:\231212_2D_stopper_migration\seph version analysis'; 
+root= 'F:\240216_ezrint567_random_motility'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
-%channels = {'cyto'; 'mRuby'};
- channels = {'CFP'; 'FRET'}; %'mRuby'; 'blank'}; 
+channels = {'cyto'; 'mRuby'};
+% channels = {'CFP'; 'FRET'}; %'mRuby'; 'blank'}; 
 
-%channel = ["mRuby"; "cyto"];
- channel = ["FRET"; "CFP"]; % "mRuby";"blank"]; 
-%channel1= {'cyto' 'mRuby'};
-channel1= {'CFP' 'FRET'}; % 'mRuby'}; 
+channel = ["mRuby"; "cyto"];
+ %channel = ["FRET"; "CFP"]; % "mRuby";"blank"]; 
+channel1= {'cyto' 'mRuby'};
+%channel1= {'CFP' 'FRET'}; % 'mRuby'}; 
 
 
 %  channels = {'mCit'}; 
@@ -32,7 +32,7 @@ channel1= {'CFP' 'FRET'}; % 'mRuby'};
 %  channel1= {'mCit'}; 
 
 threshold = 4; % for threshold based segmentation
-frames = 24; 
+frames = 150; 
 
 bgdir = [root, filesep, 'background']; 
 if  ~exist(bgdir)
@@ -87,9 +87,9 @@ for row = 1
         end 
             
        if size(channels, 1) ==2
-         [FRET, CFP]= nd2read_hayer_2chan(bgfilepath,finfo, counter,1); 
-         imwrite(CFP,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-         imwrite(FRET,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         [mRuby, cyto]= nd2read_hayer_2chan(bgfilepath,finfo, counter,1); 
+         imwrite(cyto,[bgdir,filesep,shot,'_cyto_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         imwrite(mRuby,[bgdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
        
        if size (channels,1) == 3
@@ -151,9 +151,9 @@ for row =  i %: %i
         end 
             
        if size(channels, 1) ==2
-         [FRET, CFP]= nd2read_hayer_2chan(filepath,finfo, counter,1); 
-         imwrite(CFP,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-         imwrite(FRET,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         [mRuby, cyto]= nd2read_hayer_2chan(filepath,finfo, counter,1); 
+         imwrite(cyto,[rawdir,filesep,shot,'_cyto_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         imwrite(mRuby,[rawdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
        
        if size (channels,1) == 3
@@ -199,7 +199,7 @@ if makeTiffStacks == 1
  for row=1 % 1:(size(ND2files,1)-1)
     
     for col = 1
-        for site =16
+        for site =11
             
           
            

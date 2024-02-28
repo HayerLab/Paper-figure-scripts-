@@ -14,23 +14,23 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [26];   
+cells = [2];   
 
 for place=1:size(cells,2)
-cells = [26];    
+cells = [2];    
 
 
 %for zwster = 1:6
 
 %clear; close all; clc;
  %for 20x no binning, or 40x 2x2 bin etc. 0.325 um/px
-depths = [3]; % 6,10,15,20,25]; 
+depths = [5]; % 6,10,15,20,25]; 
 
 % for 60x, 2x2 binning
 %depths = [5,9,15,23,30,38]; 
  
-root='F:\230919 - Y2motility 2';
-rawdir=([root,filesep,'cropped',filesep,'20uM_Y2',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
+root='F:\240216_ezrint567_random_motility';
+rawdir=([root,filesep,'cropped',filesep, strcat(num2str(cells(1,place))),filesep,'output', filesep, 'ezrin_data']); %
 datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(3))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
     mkdir(datadir)
@@ -57,17 +57,17 @@ binning=1;            %only change if binning is changed while using same object
 
 
 load([rawdir,filesep,'RatioData_raw.mat']);
-%load([rawdir,filesep,'CytoRatioData.mat']);
+load([rawdir,filesep,'CytoRatioData.mat']);
 
 % perform tracking of mask centroid
 % min(cellfun(@(x) size(x,1),cellCoors))    % changed it from min to max ? 
 %% %% delete flash glitch frames that mess FRET data - if needed 
 % % % % 
-flashFrame=1:29; 
-maskFinal(flashFrame)=[];
-imFRETOutline(flashFrame)=[];
-imRatio_raw(flashFrame)=[];
-cellCoors(flashFrame)=[]; 
+% flashFrame=1:29; 
+% maskFinal(flashFrame)=[];
+% imFRETOutline(flashFrame)=[];
+% imRatio_raw(flashFrame)=[];
+% cellCoors(flashFrame)=[]; 
 % % im_mRuby(flashFrame) = []; 
 % % % 
 % flashFrame=114; 
@@ -197,9 +197,9 @@ for imnum=start:start+size(thisTraj,1) -1
          
             for k=1:size(windowCoors{index},1)
                 
-                 fretvals(k,index)=mean(imRatio_raw{index+empty_count}(labelMask{index}==k));
+                % fretvals(k,index)=mean(imRatio_raw{index+empty_count}(labelMask{index}==k));
                %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
-               %  cyto(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
+                 cyto(k,index)=mean(ezrin_ratio_norm{index+empty_count}(labelMask{index}==k));
           
   
             end
@@ -228,15 +228,15 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
  
  % make it per minute so can compare different length movies 
  distance = distance/(size(imFRETOutline,2)*(2/3))
- avg_cell_area = cell_area/size(imRatio_raw,2)
+% avg_cell_area = cell_area/size(imRatio_raw,2)
  
  %% filtered protusionvalues
  
    % filtered protrusion values
 protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
-fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
+%fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
 % myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
-% cytoF=ndnanfilter(cyto,fspecial('disk',2),'replicate');
+ cytoF=ndnanfilter(cyto,fspecial('disk',2),'replicate');
 
 
 
@@ -247,39 +247,39 @@ protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWin
 
 %% display location of coordinates overlayed on cell mask images - optional for visualization
 %  % creates gif file for reference
-    for mapper =1:size(thisTraj,1)
-     
-        window = windowCoors{1,mapper}; 
-      if ~(isConnect)
-      image = (imFRETOutline{1,thisTraj(mapper,5)+empty_count}); %slightly convoluted but lines up YFP raw image to the correct windowcoors
-      else
-           image = imread(imFRETOutline{1,thisTraj(mapper,4)+empty_count});
-      end 
-      h = figure('visible','off');
-      hold on; 
-      axis ij; 
-     imagesc(image); 
-   
-     %for num = 1:15:size(window,1)
-      for num = 100:2:120
-         image(window(num,1), window(num,2),1) = 255; 
-         image(window(num,1), window(num,2),2) = 0; 
-         image(window(num,1), window(num,2),3) = 0; 
-         text(window(num,2),window(num,1),num2str(num), 'Color','r', 'FontSize', 8);
-      end 
-     
-     frame = getframe(h);
-    im=frame2im(frame);
-    [imind, cm] = rgb2ind(im,256);
-     
-         if mapper ==1
-             imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','Loopcount', inf);
-         else
-                   imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','WriteMode','append');
-         end 
-      imwrite(image,[datadir,filesep,'Outline_label.tif'],'WriteMode','append','Compression','none');
-
-  end 
+%     for mapper =1:size(thisTraj,1)
+%      
+%         window = windowCoors{1,mapper}; 
+%       if ~(isConnect)
+%       image = (imFRETOutline{1,thisTraj(mapper,5)+empty_count}); %slightly convoluted but lines up YFP raw image to the correct windowcoors
+%       else
+%            image = imread(imFRETOutline{1,thisTraj(mapper,4)+empty_count});
+%       end 
+%       h = figure('visible','off');
+%       hold on; 
+%       axis ij; 
+%      imagesc(image); 
+%    
+%      %for num = 1:15:size(window,1)
+%       for num = 100:2:120
+%          image(window(num,1), window(num,2),1) = 255; 
+%          image(window(num,1), window(num,2),2) = 0; 
+%          image(window(num,1), window(num,2),3) = 0; 
+%          text(window(num,2),window(num,1),num2str(num), 'Color','r', 'FontSize', 8);
+%       end 
+%      
+%      frame = getframe(h);
+%     im=frame2im(frame);
+%     [imind, cm] = rgb2ind(im,256);
+%      
+%          if mapper ==1
+%              imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','Loopcount', inf);
+%          else
+%                    imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','WriteMode','append');
+%          end 
+%       imwrite(image,[datadir,filesep,'Outline_label.tif'],'WriteMode','append','Compression','none');
+% 
+%   end 
 % % %   
 
  
@@ -302,7 +302,7 @@ protvalrange=[round(prctile(protvalsWindow(:),1),1),round(prctile(protvalsWindow
 %fretvalsrange=[round(prctile(fretvals(:),1),1),round(prctile(fretvals(:),99),1)];
  %myosinrange=[round(prctile(myosin(:),1),1),round(prctile(myosin(:),99),1)];
 
-ax1=subplot(2,2,3);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
+ax1=subplot(2,2,1);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
 colormap(ax1,cmap);
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
@@ -311,7 +311,7 @@ colormap(ax1,cmap);
    xticks([0 24 48 71 95 120 144])
    xticklabels({'0','10','20','30','40','50' '60'});
 
-ax2=subplot(2,2,1);imagesc(fretvalsF,[0.7 1.3] );title('DORA RhoB');
+ax2=subplot(2,2,4);imagesc(cyto,[0 2] );title('Ezrin');
 xlim([0 150]); 
  %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
 % colormap(ax2,cmap);
@@ -328,7 +328,7 @@ xlim([0 150]);
 
 protvalsWindowHigh=protvalsWindow>protthresh;
 
-ax3=subplot(2,2,4);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
+ax3=subplot(2,2,2);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
 colormap(ax3,cmap);
 xlim([0 150]); 
 %15s intervals 
@@ -339,7 +339,7 @@ xlim([0 150]);
   xticklabels({'0','10','20','30','40','50'});
 %protvalsWindowFHigh=protvalsWindowF>protthresh;
 
- ax4=subplot(2,2,2);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
+ ax4=subplot(2,2,3);imagesc(cytoF,[0 2]); title ('ezxrin');
  %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
@@ -355,7 +355,7 @@ saveas(f1,strcat(datadir,'\','edge_velocity_mapM.fig'))
 
 % save all new data into mat file 
 
-save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance','avg_cell_area','fretvals','fretvalsF') ; %'myosin','myosinF'); % 'cyto', 'cytoF');
+save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance', 'cyto', 'cytoF'); %'fretvals','fretvalsF') ; 'avg_cell_area'%'myosin','myosinF'); % ;
 
 
 %close all; clc;

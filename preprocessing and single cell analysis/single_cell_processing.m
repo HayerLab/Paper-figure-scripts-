@@ -1,7 +1,7 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\231113_RhoB_ezrin_ WTvsT567_10umNOC';
+ root = 'F:\240216_ezrint567_random_motility';
  
  tiffDir = ([root, filesep,'tiff_stacks']); 
  
@@ -10,7 +10,7 @@ clear; clc;
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped', filesep, 't567', filesep, '+10umNOC'];
+cropdir=[root,filesep,'cropped'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
@@ -24,7 +24,7 @@ bgpath=[root,filesep,'background'];
 % which orginal tiff stack to draw from 
    clc; 
 cell=2;
-filekey = '1_1_17'; 
+filekey = '1_1_3'; 
 
 
  cellDir = ([cropdir,filesep, num2str(cell)]); 
@@ -170,7 +170,7 @@ bgdir=[root,filesep,'background'];
 %% Parallel loop
 % number of cells you have in a for loop 
 for k=2
-    rawdir=[root,filesep,'cropped',  filesep,'t567\control', filesep, strcat( num2str(k))]; 
+    rawdir=[root,filesep,'cropped', filesep, strcat( num2str(k))]; 
     %load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
@@ -185,14 +185,14 @@ for k=2
  % and 4th channel if you want 
 %getFRETDataHCS_stacked(k,rawdir,datadir,4); 
  %getFRETDataHCS_stacked_3chan(k,rawdir,datadir,3.5, pX, pY); % FRET, CFP, mRuby
- getFRETDataHCS_stacked_4_chan(k,rawdir,datadir, 1.1); % FRET, CFP, mRuby
+ getFRETDataHCS_stacked_4_chan(k,rawdir,datadir, 1.3); % FRET, CFP, mRuby
 
 
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
 %correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
   %correctBleachingExp2_FRET_stacked(fitpara, datadir); %only does FRET
-% correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
+%correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  
     
 end
