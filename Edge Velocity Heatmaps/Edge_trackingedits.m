@@ -14,10 +14,10 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [26];   
+cells = [1 2 3];   
 
 for place=1:size(cells,2)
-cells = [26];    
+cells = [1 2 3];    
 
 
 %for zwster = 1:6
@@ -29,8 +29,8 @@ depths = [3]; % 6,10,15,20,25];
 % for 60x, 2x2 binning
 %depths = [5,9,15,23,30,38]; 
  
-root='F:\230919 - Y2motility 2';
-rawdir=([root,filesep,'cropped',filesep,'20uM_Y2',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
+root='D:\ARHGAP29\Random motility\GAP29 overexpression\mScarlet3-CAAX marked\sephsversion';
+rawdir=([root,filesep,'cropped',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
 datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(3))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
     mkdir(datadir)
@@ -46,7 +46,7 @@ pdSmoothing=10;%was 10                                      % Used with imclose 
 edgeDepthDist= 3;  %depths(1, zwster);   % Number of pixels deep for the windows for computing FRET values.
 
 startFrame=1;
-endFrame=120;
+endFrame=50;
 
 binning=1;            %only change if binning is changed while using same objective magnification!!
 
@@ -63,11 +63,11 @@ load([rawdir,filesep,'RatioData_raw.mat']);
 % min(cellfun(@(x) size(x,1),cellCoors))    % changed it from min to max ? 
 %% %% delete flash glitch frames that mess FRET data - if needed 
 % % % % 
-flashFrame=1:29; 
-maskFinal(flashFrame)=[];
-imFRETOutline(flashFrame)=[];
-imRatio_raw(flashFrame)=[];
-cellCoors(flashFrame)=[]; 
+% flashFrame=1:29; 
+% maskFinal(flashFrame)=[];
+% imFRETOutline(flashFrame)=[];
+% imRatio_raw(flashFrame)=[];
+% cellCoors(flashFrame)=[]; 
 % % im_mRuby(flashFrame) = []; 
 % % % 
 % flashFrame=114; 
