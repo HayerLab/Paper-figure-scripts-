@@ -311,8 +311,8 @@ colormap(ax1,cmap);
    xticks([0 24 48 71 95 120 144])
    xticklabels({'0','10','20','30','40','50' '60'});
 
-ax2=subplot(2,2,1);imagesc(fretvalsF,[400 430] );title('YFP');
-xlim([0 50]); 
+ax2=subplot(2,2,1);imagesc(fretvalsF,[0.7 1.3] );title('YFP');
+xlim([0 150]); 
  %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
 % colormap(ax2,cmap);
 %  rectangle('Position',[84,120,41,15],'LineWidth',2); 
@@ -339,13 +339,13 @@ xlim([0 150]);
   xticklabels({'0','10','20','30','40','50'});
 %protvalsWindowFHigh=protvalsWindowF>protthresh;
 
-%  ax4=subplot(2,2,2);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
-%  %15s intervals 
-% %  xticks([40 80 120 160 200]); 
-% % xticklabels({'0','10','20','30','40','50'}); 
-%  %25 s intervals 
-%   xticks([0 24 48 71 95 120 144])
-%   xticklabels({'0','10','20','30','40','50' '60'});
+ ax4=subplot(2,2,2);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
+ %15s intervals 
+%  xticks([40 80 120 160 200]); 
+% xticklabels({'0','10','20','30','40','50'}); 
+ %25 s intervals 
+  xticks([0 24 48 71 95 120 144])
+  xticklabels({'0','10','20','30','40','50' '60'});
 %
  hold off; 
 saveas(f1,strcat(datadir,'\','edge_velocity_map.png'))
