@@ -2,10 +2,10 @@
 
 %% use this section to get the averages out of an entire set 
 clc; clear; 
-root='F:\old data\data_200116 - Trial 3 Rho, Myosin\cropped';
+root='I:\Nada\sephsversion\cropped';
 %removed 2 and 35 here to test whats going on 
 %cells=[6,7,9,10,12,13,14,15,16,17,18]; %trial 1
-cells = [2,3,5,6,7,8,9,11,12,13]; % trial 2
+cells = [1,2,3]; % trial 2
 %cells =[2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19]; %trial 3
 %cells = [12,18,19,20,24,26,27,28,29,30,31,32,33]; %CDC42 t1
 %cells= [2,3,4,5,7,8,9,11]; % rac trial 1 
@@ -21,7 +21,7 @@ cells = [2,3,5,6,7,8,9,11,12,13]; % trial 2
 %cells = [10,15,19]; 
 %startarr = [40,30,35]; 
 %startarr = [40,40,40,50,40,50,30,35,40,40,30]; %trial 1
-startarr = [30,45,40,40,40,60,50,45,50,40]; %trial 2
+startarr = [2,2,2]; %trial 2
 %startarr = [30,30,50,30,60,30,40,40,40,35,40,40,50,30,60,40,35]; %trial 3
 %startarr = [2,2,2,2,2,2,2,2,2,2,25,2,2]; %CDC42 t1 
 %startarr= [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]; 
@@ -32,21 +32,21 @@ cell_arr=cell(1,size(cells,2),1);
 
 %%
 
-depth =3; 
+depth =9; 
 for loop=1:size(cells,2)
     
      
     
-    fileKey=strcat('cell_', num2str(cells(1,loop)));
+    fileKey=strcat(num2str(cells(1,loop)));
     
     start = startarr(1,loop);
     
-    load([root,filesep,fileKey,filesep,'edge_vels_normalized', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvalsF','protvalsWindowF','myosinF'); %'myosin', 'cytoF')
+    load([root,filesep,fileKey,filesep,'output',filesep,'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvalsF','protvalsWindowF'); %'myosin', 'cytoF')
  
 % This maps velocity vector from 1-2 with frame 2 of protein expression, etc    
-    edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
-    %edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
-  protExp_arr=myosinF(:,start:end);%here change either FRET or myosin
+%     edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
+    edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
+  protExp_arr=fretvalsF(:,start:end);%here change either FRET or myosin
     
  edgeVel_arr(isnan(edgeVel_arr))=0;
   protExp_arr(isnan(protExp_arr))=0; 
@@ -106,7 +106,7 @@ for loop=1:size(cells,2)
   
 end 
 
-save(['C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\supp fig 4\RhoB vs Myosin T2 depth 3.mat'],'cell_arr');
+save(['I:\Nada\sephsversion\cropped\RhoB vs Myosin T2 depth 9.mat'],'cell_arr');
    
 %%
 
@@ -129,7 +129,7 @@ f1=figure;
 
 hold on; 
 %grid on; 
-    title('RhoB vs. Ezrin XCorr');
+    title('ARHGAP29-R707A vs Retraction Onset XCorr (Edge depth = 9)');
     xlabel('Lag (min)','FontWeight','bold');
     ylabel('Correlation Coefficient', 'FontWeight','bold'); 
     xline(0, '--'); 

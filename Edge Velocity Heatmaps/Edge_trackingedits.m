@@ -24,14 +24,14 @@ cells = [1 2 3];
 
 %clear; close all; clc;
  %for 20x no binning, or 40x 2x2 bin etc. 0.325 um/px
-depths = [3]; % 6,10,15,20,25]; 
+depths = [9]; % 6,10,15,20,25]; 
 
 % for 60x, 2x2 binning
 %depths = [5,9,15,23,30,38]; 
  
 root='I:\Nada\sephsversion';
 rawdir=([root,filesep,'cropped',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
-datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(3))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
+datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(depths))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
     mkdir(datadir)
 end 
@@ -124,7 +124,7 @@ fprintf('%i trajectories.\n',length(traj));
 
 
 %% Manually select cell for analysis 
-selectedCell=1; %input which trajectory
+selectedCell=3; %input which trajectory
 isConnect = false; %true if you had to connect broken trajectories
 %deleteFrame =46; % manually input frame that needs to be deleted
 thisTraj=traj{selectedCell};
@@ -303,7 +303,7 @@ protvalrange=[round(prctile(protvalsWindow(:),1),1),round(prctile(protvalsWindow
  %myosinrange=[round(prctile(myosin(:),1),1),round(prctile(myosin(:),99),1)];
 
 ax1=subplot(2,2,3);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
-colormap(ax1,cmap);
+% colormap(ax1,cmap);
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
@@ -329,7 +329,7 @@ xlim([0 50]);
 protvalsWindowHigh=protvalsWindow>protthresh;
 
 ax3=subplot(2,2,4);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
-colormap(ax3,cmap);
+% colormap(ax3,cmap);
 xlim([0 50]); 
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
