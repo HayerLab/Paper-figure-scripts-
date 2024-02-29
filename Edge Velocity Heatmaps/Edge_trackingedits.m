@@ -308,8 +308,8 @@ colormap(ax1,cmap);
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
 %25 s intervals 
-   xticks([0 24 48 71 95 120 144])
-   xticklabels({'0','10','20','30','40','50' '60'});
+ xticks([0 25 50])
+ xticklabels({'0','25','50'});
 
 ax2=subplot(2,2,1);imagesc(fretvalsF,[400 430] );title('YFP');
 xlim([0 50]); 
@@ -321,8 +321,8 @@ xlim([0 50]);
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
 %25 s intervals 
- xticks([24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50'});
+ xticks([0 25 50])
+  xticklabels({'0','25','50'});
 
 
 
@@ -330,13 +330,13 @@ protvalsWindowHigh=protvalsWindow>protthresh;
 
 ax3=subplot(2,2,4);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
 colormap(ax3,cmap);
-xlim([0 150]); 
+xlim([0 50]); 
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
 %25 s intervals 
-  xticks([ 24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50'});
+ xticks([0 25 50])
+  xticklabels({'0','25','50'});
 %protvalsWindowFHigh=protvalsWindowF>protthresh;
 
 %  ax4=subplot(2,2,2);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
