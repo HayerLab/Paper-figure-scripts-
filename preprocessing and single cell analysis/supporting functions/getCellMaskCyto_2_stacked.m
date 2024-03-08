@@ -124,7 +124,7 @@ mask=bwareaopen(mask_init,minCellSize); % troublshoot this part
 %mask_filled1=imfill(mask,'holes');
 
 background = ~mask; 
-background = bwareaopen(background, 1000); % added this to take out little flickers inside cells 
+background = bwareaopen(background, 400); % added this to take out little flickers inside cells 
 mask_filled1 = ~background; % added this to take out little flickers inside cells 
 %imagesc(mask_filled1); 
 

@@ -1,4 +1,4 @@
-function getFRETDataHCS_4chan(position,bgdir,rawdir,datadir,jitter)
+function getFRETDataHCS_4chan(position,bgdir,rawdir,datadir,threshold)
 %function getFRETDataHCS( row,col,site )
 % image processing for FRET data analysis 
 % row=3;col=3;site=2;
@@ -110,7 +110,7 @@ for frameNum=1:length(CFP_files)
     imRubybg=subBG(imRuby_raw,bgmask_mRuby,mRubybg);
      imcytobg=subBG(imcyto_raw,bgmask_cyto,cytobg);
     %%%%%% Get mask from raw FRET image
-    [mask cellCoorsTemp]=getCellMaskCyto_2(imCFPbg,1000, frameNum); %+imCFPbg
+    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,2000, frameNum, position, threshold); %+imCFPbg
    %[mask cellCoorsTemp]=getCellMaskCyto_edits(2*(imFRET_raw),2000);% +imCFP_raw
     
     

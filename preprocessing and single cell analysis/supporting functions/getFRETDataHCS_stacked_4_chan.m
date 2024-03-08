@@ -1,4 +1,4 @@
-function getFRETDataHCS_stacked(cellNum,rawdir,datadir,threshold)
+function getFRETDataHCS_stacked(cellNum,rawdir,datadir,threshold, pX, pY)
 %function getFRETDataHCS( row,col,site )
 % image processing for FRET data analysis 
 % row=3;col=3;site=2;
@@ -49,84 +49,85 @@ if ~exist([datadir,filesep,'RatioData_raw.mat'])
 
 %%%%%% Call background images
 binning=1; % relevant if alingment images and data images were acquired using distinct binning settings
-%CFPbg_raw=double(imread([rawdir,filesep,'bgCFP.tif']));
-%FRETbg_raw=double(imread([rawdir,filesep,'bgFRET.tif']));
+CFPbg_raw=double(imread([rawdir,filesep,'CFP_bg.tif']));
+FRETbg_raw=double(imread([rawdir,filesep,'FRET_bg.tif']));
   mRubybg_raw=double(imread([rawdir,filesep,'mRuby_bg.tif']));
   cyto_raw=double(imread([rawdir,filesep,'cyto_bg.tif']));
-% bg1(:,:,1)=CFPbg_raw; bg1(:,:,2)=FRETbg_raw;
-% bg2=dualviewAlignFromFittedSurface(bg1,pX,pY,binning);
-% CFPbg=bg2(:,:,1);
-% FRETbg=bg2(:,:,2);
+bg1(:,:,1)=CFPbg_raw; bg1(:,:,2)=FRETbg_raw;
+bg2=dualviewAlignFromFittedSurface(bg1,pX,pY,binning);
+CFPbg=bg2(:,:,1);
+FRETbg=bg2(:,:,2);
 
-% pX = [0;0;0;0;0;0]; pY = [0;0;0;0;0;0]; 
-%  [m,n]=size(mRubybg_raw);
-%  bg3(:,:,1)=mRubybg_raw;bg3(:,:,2)=zeros(m,n);
-%  bg4=dualviewAlignFromFittedSurface(bg3,pX,pY,binning);
-%  mRubybg=bg4(:,:,1);
+%pX = [0;0;0;0;0;0]; pY = [0;0;0;0;0;0]; 
+ [m,n]=size(mRubybg_raw);
+ bg3(:,:,1)=mRubybg_raw;bg3(:,:,2)=zeros(m,n);
+ bg4=dualviewAlignFromFittedSurface(bg3,pX,pY,binning);
+ mRubybg=bg4(:,:,1);
 
-%   [s,t]=size(cyto_raw);
-%  bg5(:,:,1)=cyto_raw;bg5(:,:,2)=zeros(s,t);
-%  bg6=dualviewAlignFromFittedSurface(bg5,pX,pY,binning);
-% cytobg=bg6(:,:,1);
-mRubybg = mRubybg_raw;
-cytobg = cyto_raw; 
+  [s,t]=size(cyto_raw);
+ bg5(:,:,1)=cyto_raw;bg5(:,:,2)=zeros(s,t);
+ bg6=dualviewAlignFromFittedSurface(bg5,pX,pY,binning);
+cytobg=bg6(:,:,1);
+
+% mRubybg = mRubybg_raw;
+% cytobg = cyto_raw; 
 
 
 cellPath=strcat('cell_',num2str(cellNum));
 cellFiles=getFilenames([rawdir],'.tif');
 
-%  CFP_stack=double(readTIFFstack([rawdir,filesep,cellFiles{1}]));
-%  FRET_stack=double(readTIFFstack([rawdir,filesep,cellFiles{2}]));
-  mRuby_stack=double(readTIFFstack([rawdir,filesep,cellFiles{3}]));
-   cyto_stack=double(readTIFFstack([rawdir,filesep,cellFiles{1}]));
+  CFP_stack=double(readTIFFstack([rawdir,filesep,cellFiles{1}]));
+ FRET_stack=double(readTIFFstack([rawdir,filesep,cellFiles{3}]));
+  mRuby_stack=double(readTIFFstack([rawdir,filesep,cellFiles{7}]));
+ cyto_stack=double(readTIFFstack([rawdir,filesep,cellFiles{5}]));
  
   
 %%%%%% Loop through frames
-imRatio_raw={};maskFinal={};cellCoors={};   im_mRuby_raw={}; im_cyto_raw= {}; imEzrin_raw = {}; 
+imRatio_raw={};maskFinal={};cellCoors={};   im_mRuby_raw={}; im_cyto_raw= {}; %imEzrin_raw = {}; 
 for frameNum=1:size(mRuby_stack,3)
     disp(num2str(frameNum));
-%     imCFP_raw=CFP_stack(:,:,frameNum);
-%     imFRET_raw=FRET_stack(:,:,frameNum);
+     imCFP_raw=CFP_stack(:,:,frameNum);
+     imFRET_raw=FRET_stack(:,:,frameNum);
      imRuby_raw=mRuby_stack(:,:,frameNum);
      imcyto_raw = cyto_stack(:,:,frameNum); 
 
     %%%%%% Align CFP/FRET images
-%     imstack(:,:,1)=imCFP_raw; imstack(:,:,2)=imFRET_raw;
-%     imaligned=dualviewAlignFromFittedSurface(imstack,pX,pY,1);
-%     imCFP_raw=imaligned(:,:,1);
-%     imFRET_raw=imaligned(:,:,2);
+    imstack(:,:,1)=imCFP_raw; imstack(:,:,2)=imFRET_raw;
+    imaligned=dualviewAlignFromFittedSurface(imstack,pX,pY,1);
+    imCFP_raw=imaligned(:,:,1);
+    imFRET_raw=imaligned(:,:,2);
     
-%      imstack2(:,:,1)=imRuby_raw; imstack2(:,:,2)=zeros(m,n);
-%      imaligned2=dualviewAlignFromFittedSurface(imstack2,pX,pY,1);
-%      imRuby_raw=imaligned2(:,:,1);
+     imstack2(:,:,1)=imRuby_raw; imstack2(:,:,2)=zeros(m,n);
+     imaligned2=dualviewAlignFromFittedSurface(imstack2,pX,pY,1);
+     imRuby_raw=imaligned2(:,:,1);
 
-%      imstack3(:,:,1)=imcyto_raw; imstack3(:,:,2)=zeros(s,t);
-%      imaligned3=dualviewAlignFromFittedSurface(imstack3,pX,pY,1);
-%      imcyto_raw=imaligned3(:,:,1);
+     imstack3(:,:,1)=imcyto_raw; imstack3(:,:,2)=zeros(s,t);
+     imaligned3=dualviewAlignFromFittedSurface(imstack3,pX,pY,1);
+     imcyto_raw=imaligned3(:,:,1);
     %%%%%% Background-subtract CFP/FRET images
-    %bgmask=getBGMask(imCFP_raw+imFRET_raw);
+    bgmask=getBGMask(imCFP_raw+imFRET_raw);
      bgmask_MRuby=getBGMask(imRuby_raw);
     bgmask_cyto=getBGMask(imcyto_raw); % -- having issues here with
 
-%  imCFPbg=subBG(imCFP_raw,bgmask,CFPbg);
-%     imFRETbg=subBG(imFRET_raw,bgmask,FRETbg);
+  imCFPbg=subBG(imCFP_raw,bgmask,CFPbg);
+     imFRETbg=subBG(imFRET_raw,bgmask,FRETbg);
     imRubybg=subBG(imRuby_raw,bgmask_MRuby,mRubybg);
    imcytobg=subBG(imcyto_raw,bgmask_cyto,cytobg);
     %%%%%% Get mask from raw FRET image
-    s = cellNum; 
-   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imRuby_raw),1000, frameNum,s, threshold); % see here if its better taking away the imCFPbg
+    c = cellNum; 
+   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),6000, frameNum,c, threshold); % see here if its better taking away the imCFPbg
    %[mask cellCoorsTemp]=getCellMaskCyto_edits(imFRET_raw+imCFP_raw,2000); 
    % [mask]=segment_logMultiThresh(imFRETbg,1000); %added for mRuby channel,which did not have to undergo the channel alignment 
     maskFinal{frameNum}=mask;
    cellCoors{frameNum}=cellCoorsTemp;
     %%%%%% Detrmine ratio
-%     imFRETbg(~mask)=nan;
-%     imFRET=ndnanfilter(imFRETbg,fspecial('disk',3),'replicate');
-%     imCFPbg(~mask)=nan;
-%     imCFP=ndnanfilter(imCFPbg,fspecial('disk',3),'replicate');
-%     imRatioTemp=imFRET./imCFP;
-%     imRatioTemp(~mask)=nan;
-%     imRatio_raw{frameNum}=imRatioTemp;
+    imFRETbg(~mask)=nan;
+    imFRET=ndnanfilter(imFRETbg,fspecial('disk',3),'replicate');
+    imCFPbg(~mask)=nan;
+    imCFP=ndnanfilter(imCFPbg,fspecial('disk',3),'replicate');
+    imRatioTemp=imFRET./imCFP;
+    imRatioTemp(~mask)=nan;
+    imRatio_raw{frameNum}=imRatioTemp;
     
      imRubybg(~mask)=nan;
     im_mRubyTEMP=ndnanfilter(imRubybg,fspecial('disk',3),'replicate');
@@ -160,11 +161,11 @@ end
 %%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay
 % bleach_1=nanmean(vect(imRatio_raw{1}));
 for frameNum= 1:length(im_mRuby_raw)
-   %bleach_raw(frameNum)=nanmean(vect(imRatio_raw{frameNum}));
+   bleach_raw(frameNum)=nanmean(vect(imRatio_raw{frameNum}));
    bleach_raw_mRuby(frameNum)= nanmean(vect(im_mRuby_raw{frameNum}));
    bleach_raw_cyto(frameNum)= nanmean(vect(im_cyto_raw{frameNum}));
 end
-save([datadir,filesep,'RatioData_raw.mat'],'maskFinal','cellCoors','im_mRuby_raw','im_cyto_raw', 'imFRETOutline','-v7.3'); %'imRatio_raw''imEzrin_raw'
-save([datadir,filesep,'Bleach_raw.mat'] , 'bleach_raw_mRuby', 'bleach_raw_cyto'); %,'bleach_raw'
+save([datadir,filesep,'RatioData_raw.mat'],'maskFinal','cellCoors','imRatio_raw','im_mRuby_raw','im_cyto_raw', 'imFRETOutline','-v7.3'); %'imEzrin_raw'
+save([datadir,filesep,'Bleach_raw.mat'] ,'bleach_raw', 'bleach_raw_mRuby', 'bleach_raw_cyto'); %,
 end
 

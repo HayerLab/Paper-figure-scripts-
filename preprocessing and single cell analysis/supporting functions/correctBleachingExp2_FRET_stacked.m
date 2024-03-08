@@ -10,7 +10,7 @@ function correctBleachingExp2_FRET_stacked(fitpara,datadir)
 
 load([datadir,filesep, 'RatioData_raw.mat'],'imRatio_raw');
 load([datadir,filesep, 'Bleach_raw.mat']);
-timepts=1:length(imRatio_raw);
+timepts=1: 85 % length(imRatio_raw);
 
  corr=feval(fitpara,timepts); %use this one
  corr_norm=corr./median(corr); %use this one
@@ -21,7 +21,7 @@ timepts=1:length(imRatio_raw);
 
  imRatio= cell(1,size(imRatio_raw,2));
  
-for frameNum=1:length(imRatio_raw)
+for frameNum=1:85  %length(imRatio_raw)
    
     imRatio{frameNum}=imRatio_raw{frameNum}./(normfact*corr_norm(frameNum));
  colorRange = [0.7 1.3]; 
