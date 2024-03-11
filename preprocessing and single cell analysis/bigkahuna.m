@@ -14,17 +14,17 @@
 clc; 
 clear; 
 
-root= 'F:\231212_2D_stopper_migration\seph version analysis'; 
+root= 'D:\ARHGAP29\Random motility\GAP29 overexpression\mScarlet3-CAAX marked\03-05-24\with mCit-R707A_40X'; 
 
 % if you want to create Tiff Stacks 
 makeTiffStacks = 1; 
 %channels = {'cyto'; 'mRuby'};
- channels = {'CFP'; 'FRET'}; %'mRuby'; 'blank'}; 
+ channels = {'mCit'; 'mScarlet3'}; %'mRuby'; 'blank'}; 
 
 %channel = ["mRuby"; "cyto"];
- channel = ["FRET"; "CFP"]; % "mRuby";"blank"]; 
+ channel = ["mCit"; "mScarlet3"]; % "mRuby";"blank"]; 
 %channel1= {'cyto' 'mRuby'};
-channel1= {'CFP' 'FRET'}; % 'mRuby'}; 
+channel1= {'mCit' 'mScarlet3'}; % 'mRuby'}; 
 
 
 %  channels = {'mCit'}; 
@@ -32,7 +32,7 @@ channel1= {'CFP' 'FRET'}; % 'mRuby'};
 %  channel1= {'mCit'}; 
 
 threshold = 4; % for threshold based segmentation
-frames = 24; 
+frames = 120; 
 
 bgdir = [root, filesep, 'background']; 
 if  ~exist(bgdir)
@@ -87,29 +87,29 @@ for row = 1
         end 
             
        if size(channels, 1) ==2
-         [FRET, CFP]= nd2read_hayer_2chan(bgfilepath,finfo, counter,1); 
-         imwrite(CFP,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-         imwrite(FRET,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         [mCit, mScarlet3]= nd2read_hayer_2chan(bgfilepath,finfo, counter,1); 
+         imwrite(mCit,[bgdir,filesep,shot,'_mCit_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         imwrite(mScarlet3,[bgdir,filesep,shot,'_mScarlet3_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
        
        if size (channels,1) == 3
-              [FRET,CFP,mRuby]= nd2read_hayer(bgfilepath,finfo, counter,1); 
-              imwrite(CFP,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-        imwrite(FRET,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+              [mCit,mScarlet3,mRuby]= nd2read_hayer(bgfilepath,finfo, counter,1); 
+              imwrite(mScarlet3,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
+        imwrite(mCit,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
         imwrite(mRuby,[bgdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
   
        end 
             
        if size (channels,1) == 4
-              [FRET,CFP,mRuby,blank]= nd2read_hayer(bgfilepath,finfo, counter,1); 
-        imwrite(CFP,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-        imwrite(FRET,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+              [mCit,mScarlet3,mRuby,blank]= nd2read_hayer(bgfilepath,finfo, counter,1); 
+        imwrite(mScarlet3,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
+        imwrite(mCit,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
         imwrite(mRuby,[bgdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
             
       if size (channels,1) == 6
-             [mRuby, blank, cyto, blank2, FRET, CFP ] = nd2read_hayer_6chan(filepath,finfo,counter,1);
-    imwrite(CFP,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-        imwrite(FRET,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+             [mRuby, blank, cyto, blank2, mCit, mScarlet3 ] = nd2read_hayer_6chan(filepath,finfo,counter,1);
+    imwrite(mScarlet3,[bgdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
+        imwrite(mCit,[bgdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
         imwrite(mRuby,[bgdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
         imwrite(cyto,[bgdir,filesep,shot,'_cyto_',num2str(timept),'.tif'],'TIFF','Compression','None');
       end 
@@ -151,31 +151,31 @@ for row =  i %: %i
         end 
             
        if size(channels, 1) ==2
-         [FRET, CFP]= nd2read_hayer_2chan(filepath,finfo, counter,1); 
-         imwrite(CFP,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
-         imwrite(FRET,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         [mCit, mScarlet3]= nd2read_hayer_2chan(filepath,finfo, counter,1); 
+         imwrite(mScarlet3,[rawdir,filesep,shot,'_mScarlet3_',num2str(timept),'.tif'],'TIFF','Compression','None');
+         imwrite(mCit,[rawdir,filesep,shot,'_mCit_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
        
        if size (channels,1) == 3
-              [FRET,CFP,mRuby]= nd2read_hayer(filepath,finfo, counter,1); 
-        imwrite(FRET,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+              [mCit,mScarlet3,mRuby]= nd2read_hayer(filepath,finfo, counter,1); 
+        imwrite(mCit,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
         imwrite(mRuby,[rawdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
-        imwrite(CFP,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
+        imwrite(mScarlet3,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
             
        if size (channels,1) == 4
-              [FRET,CFP,mRuby,blank]= nd2read_hayer(filepath,finfo, counter,1); 
-           imwrite(FRET,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+              [mCit,mScarlet3,mRuby,blank]= nd2read_hayer(filepath,finfo, counter,1); 
+           imwrite(mCit,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
         imwrite(mRuby,[rawdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
-        imwrite(CFP,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
+        imwrite(mScarlet3,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
        end 
             
       if size (channels,1) == 6
-             [mRuby, blank, cyto, blank2, FRET, CFP ] = nd2read_hayer_6chan(filepath,finfo,counter,1);
+             [mRuby, blank, cyto, blank2, mCit, mScarlet3 ] = nd2read_hayer_6chan(filepath,finfo,counter,1);
      imwrite(mRuby,[rawdir,filesep,shot,'_mRuby_',num2str(timept),'.tif'],'TIFF','Compression','None');
      imwrite(cyto,[rawdir,filesep,shot,'_cyto_',num2str(timept),'.tif'],'TIFF','Compression','None');
-     imwrite(FRET,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
-       imwrite(CFP,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
+     imwrite(mCit,[rawdir,filesep,shot,'_FRET_',num2str(timept),'.tif'],'TIFF','Compression','None');
+       imwrite(mScarlet3,[rawdir,filesep,shot,'_CFP_',num2str(timept),'.tif'],'TIFF','Compression','None');
       end 
       %
       
@@ -199,9 +199,8 @@ if makeTiffStacks == 1
  for row=1 % 1:(size(ND2files,1)-1)
     
     for col = 1
-        for site =16
-            
-          
+        for site =12
+
            
 writeTiffStacks(root, channel, row, col, site, frames); 
         end 

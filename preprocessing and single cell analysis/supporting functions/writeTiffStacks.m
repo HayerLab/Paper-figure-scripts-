@@ -24,7 +24,7 @@ if ~exist(datadir)
 end
 
 
-for s = 1:size(channels,1)
+for s =2% 1:size(channels,1)
     
 for i =1:numsites
 

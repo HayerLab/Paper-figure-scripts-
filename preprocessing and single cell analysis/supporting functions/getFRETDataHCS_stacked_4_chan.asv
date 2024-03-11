@@ -77,7 +77,7 @@ cellFiles=getFilenames([rawdir],'.tif');
 
 %  CFP_stack=double(readTIFFstack([rawdir,filesep,cellFiles{1}]));
 %  FRET_stack=double(readTIFFstack([rawdir,filesep,cellFiles{2}]));
-  mScarlet3_stack=double(readTIFFstack([rawdir,filesep,cellFiles{3}]));
+  mScarlet3_stack=double(readTIFFstack([rawdir,filesep,cellFiles{2}]));
    mCit_stack=double(readTIFFstack([rawdir,filesep,cellFiles{1}]));
  
   
@@ -110,11 +110,12 @@ for frameNum=1:size(mScarlet3_stack,3)
 
 %  imCFPbg=subBG(imCFP_raw,bgmask,CFPbg);
 %     imFRETbg=subBG(imFRET_raw,bgmask,FRETbg);
-    immScarlet3bg=subBG(immScarlet3_raw,bgmask_mScarlet3,mScarlet3bg);
-   immCitbg=subBG(immCit_raw,bgmask_mCit,mCitbg);
+    immScarlet3bg=subBG(immScarlet3 ...
+        _raw,bgmask_MRuby,mScarlet3bg);
+   imcytobg=subBG(imcyto_raw,bgmask_cyto,cytobg);
     %%%%%% Get mask from raw FRET image
     s = cellNum; 
-   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*immScarlet3_raw),10000, frameNum,s, threshold); % see here if its better taking away the imCFPbg
+   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imRuby_raw),1000, frameNum,s, threshold); % see here if its better taking away the imCFPbg
    %[mask cellCoorsTemp]=getCellMaskCyto_edits(imFRET_raw+imCFP_raw,2000); 
    % [mask]=segment_logMultiThresh(imFRETbg,1000); %added for mRuby channel,which did not have to undergo the channel alignment 
     maskFinal{frameNum}=mask;
@@ -129,14 +130,14 @@ for frameNum=1:size(mScarlet3_stack,3)
 %     imRatio_raw{frameNum}=imRatioTemp;
     
      immScarlet3bg(~mask)=nan;
-    im_mScarlet3TEMP=ndnanfilter(immScarlet3bg,fspecial('disk',3),'replicate');
-     im_mScarlet3TEMP(~mask)=nan;
-     im_mScarlet3_raw{frameNum}=im_mScarlet3TEMP;
+    im_mRubyTEMP=ndnanfilter(immScarlet3bg,fspecial('disk',3),'replicate');
+     im_mRubyTEMP(~mask)=nan;
+     im_mRuby_raw{frameNum}=im_mRubyTEMP;
 % 
 %      imcytobg(~mask)=nan;
-   im_mCitTEMP =ndnanfilter(immCitbg,fspecial('disk',3),'replicate');
-     im_mCitTEMP(~mask)=nan; 
-    im_mCit_raw{frameNum}=im_mCitTEMP;
+   im_cytoTEMP =ndnanfilter(imcytobg,fspecial('disk',3),'replicate');
+     im_cytoTEMP(~mask)=nan; 
+    im_cyto_raw{frameNum}=im_cytoTEMP;
 
 %      imRatio_EzrinTemp=im_mRubyTEMP./im_cytoTEMP;
 %      imRatio_EzrinTemp(~mask)=nan;
@@ -152,19 +153,19 @@ for frameNum=1:size(mScarlet3_stack,3)
     %%%%%% Generate and write files for raw ratio and outlined objects - optional
     %%%%%% 
    % tempRATIO=ratio2RGB(imRatioTemp,colorRange);
-    immScarlet3Outline{frameNum}=DrawMaskOutline(immScarlet3_raw,mask);
+    imFRETOutline{frameNum}=DrawMaskOutline(imRuby_raw,mask);
 %     imRFPOutline=DrawMaskOutlineChy(imRFP_raw,mask);
-   imwrite(immScarlet3Outline{frameNum},[datadir,filesep,'Outline_prelim.tif'],'WriteMode','append','Compression','none');
+   imwrite(imFRETOutline{frameNum},[datadir,filesep,'Outline_prelim.tif'],'WriteMode','append','Compression','none');
     %imwrite(tempRATIO,[datadir,filesep,position,'_RATIO_raw_',num2str(colorRange(1)),'_',num2str(colorRange(2)),'.tif'],'WriteMode','append','Compression','none');
 end
 %%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay
 % bleach_1=nanmean(vect(imRatio_raw{1}));
-for frameNum= 1:length(im_mScarlet3_raw)
+for frameNum= 1:length(im_mRuby_raw)
    %bleach_raw(frameNum)=nanmean(vect(imRatio_raw{frameNum}));
-   bleach_raw_mScarlet3(frameNum)= nanmean(vect(im_mScarlet3_raw{frameNum}));
-   bleach_raw_mCit(frameNum)= nanmean(vect(im_mCit_raw{frameNum}));
+   bleach_raw_mRuby(frameNum)= nanmean(vect(im_mRuby_raw{frameNum}));
+   bleach_raw_cyto(frameNum)= nanmean(vect(im_cyto_raw{frameNum}));
 end
-save([datadir,filesep,'RatioData_raw.mat'],'maskFinal','cellCoors','im_mScarlet3_raw','im_mCit_raw', 'immScarlet3Outline','-v7.3'); %'imRatio_raw''imEzrin_raw'
-save([datadir,filesep,'Bleach_raw.mat'] , 'bleach_raw_mScarlet3', 'bleach_raw_mCit'); %,'bleach_raw'
+save([datadir,filesep,'RatioData_raw.mat'],'maskFinal','cellCoors','im_mRuby_raw','im_cyto_raw', 'imFRETOutline','-v7.3'); %'imRatio_raw''imEzrin_raw'
+save([datadir,filesep,'Bleach_raw.mat'] , 'bleach_raw_mRuby', 'bleach_raw_cyto'); %,'bleach_raw'
 end
 

@@ -24,12 +24,12 @@ cells = [1 2 3];
 
 %clear; close all; clc;
  %for 20x no binning, or 40x 2x2 bin etc. 0.325 um/px
-depths = [9]; % 6,10,15,20,25]; 
+depths = [3]; % 6,10,15,20,25]; 
 
 % for 60x, 2x2 binning
 %depths = [5,9,15,23,30,38]; 
  
-root='I:\Nada\sephsversion';
+root='D:\ARHGAP29\Random motility\GAP29 overexpression\mScarlet3-CAAX marked\03-05-24\with mCit-R707A_40X';
 rawdir=([root,filesep,'cropped',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
 datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(depths))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
@@ -46,7 +46,7 @@ pdSmoothing=10;%was 10                                      % Used with imclose 
 edgeDepthDist= 3;  %depths(1, zwster);   % Number of pixels deep for the windows for computing FRET values.
 
 startFrame=1;
-endFrame=50;
+endFrame=120;
 
 binning=1;            %only change if binning is changed while using same objective magnification!!
 

@@ -172,7 +172,7 @@ bgdir=[root,filesep,'background'];
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=17
+for k=3
     rawdir=[root,filesep,'cropped', filesep, strcat( num2str(k))]; 
     %load([rawdir,filesep,'alignment parameters pX pY.mat']);
     
