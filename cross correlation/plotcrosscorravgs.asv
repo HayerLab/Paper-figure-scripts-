@@ -41,12 +41,12 @@ for loop=1:size(cells,2)
     
     start = startarr(1,loop);
     
-    load([root,filesep,fileKey,filesep,'output',filesep,'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvals','protvalsWindowF'); %'myosin', 'cytoF')
+    load([root,filesep,fileKey,filesep,'output',filesep,'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvalsF','protvalsWindowF'); %'myosin', 'cytoF')
  
 % This maps velocity vector from 1-2 with frame 2 of protein expression, etc    
 %     edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
     edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
-  protExp_arr=fretvalsF(:,start:end);%here change either FRET or myosin
+%   protExp_arr=fretvalsF(:,start:end);%here change either FRET or myosin
     
  edgeVel_arr(isnan(edgeVel_arr))=0;
   protExp_arr(isnan(protExp_arr))=0; 
@@ -106,7 +106,7 @@ for loop=1:size(cells,2)
   
 end 
 
-save(['I:\Nada\cropped\edge depth 3\RhoB vs Myosin T2 depth 9.mat'],'cell_arr');
+save(['I:\Nada\sephsversion\cropped\RhoB vs Myosin T2 depth 9.mat'],'cell_arr');
    
 %%
 

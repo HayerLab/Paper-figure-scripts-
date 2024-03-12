@@ -56,7 +56,8 @@ binning=1;            %only change if binning is changed while using same object
 % Load previously determined sequence of masks
 
 
-load([rawdir,filesep,'RatioData_raw.mat']);
+
+
 %load([rawdir,filesep,'CytoRatioData.mat']);
 
 % perform tracking of mask centroid
@@ -197,7 +198,7 @@ for imnum=start:start+size(thisTraj,1) -1
          
             for k=1:size(windowCoors{index},1)
                 
-%                  fretvals(k,index)=mean(im_mScarlet_raw{index+empty_count}(labelMask{index}==k));
+                 fretvals(k,index)=mean(im_mCit_raw{index+empty_count}(labelMask{index}==k));
                %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
                %  cyto(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
           
@@ -234,14 +235,14 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
  
    % filtered protrusion values
 protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
-% fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
+fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
 % myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
 % cytoF=ndnanfilter(cyto,fspecial('disk',2),'replicate');
 
 
 
 protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWindowF(:),99),1)];
-%fretvalsrangeF=[round(prctile(fretvalsF(:),1),1),round(prctile(fretvalsF(:),99),1)];
+fretvalsrangeF=[round(prctile(fretvalsF(:),1),1),round(prctile(fretvalsF(:),99),1)];
 %myosinrangeF=[round(prctile(myosinF(:),1),1),round(prctile(myosinF(:),99),1)];
 
 
@@ -251,9 +252,9 @@ protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWin
      
         window = windowCoors{1,mapper}; 
       if ~(isConnect)
-      image = (imFRETOutline{1,thisTraj(mapper,5)+empty_count}); %slightly convoluted but lines up YFP raw image to the correct windowcoors
+      image = (immScarlet3Outline{1,thisTraj(mapper,5)+empty_count}); %slightly convoluted but lines up YFP raw image to the correct windowcoors
       else
-           image = imread(imFRETOutline{1,thisTraj(mapper,4)+empty_count});
+           image = imread(immScarlet3Outline{1,thisTraj(mapper,4)+empty_count});
       end 
       h = figure('visible','off');
       hold on; 
@@ -299,28 +300,29 @@ load('CMAP_blue_grey_yellow.mat');
 cmap_15s =cmap; 
 % cmap_15s(35:39,:)=[]; %adjusting "grey range" depending on thresholds
 protvalrange=[round(prctile(protvalsWindow(:),1),1),round(prctile(protvalsWindow(:),99),1)];
-%fretvalsrange=[round(prctile(fretvals(:),1),1),round(prctile(fretvals(:),99),1)];
+fretvalsrange=[round(prctile(fretvals(:),1),1),round(prctile(fretvals(:),99),1)];
  %myosinrange=[round(prctile(myosin(:),1),1),round(prctile(myosin(:),99),1)];
 
 ax1=subplot(2,2,3);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
+xlim([0 120]); 
 % colormap(ax1,cmap);
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
 %25 s intervals 
- xticks([0 25 50])
- xticklabels({'0','25','50'});
+ xticks([0 60 120])
+ xticklabels({'0','60','120'});
 
-ax2=subplot(2,2,1);imagesc(fretvalsF,[400 430] );title('YFP');
-xlim([0 50]); 
- %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
-% colormap(ax2,cmap);
-%  rectangle('Position',[84,120,41,15],'LineWidth',2); 
-%  rectangle('Position',[62,60,41,15],'LineWidth',2); 
- %15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
-%25 s intervals 
+ax2=subplot(2,2,1);imagesc(fretvalsF,[2 10] );title('ARHGAP29-R707A');
+xlim([0 120]); 
+%  %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
+% % colormap(ax2,cmap);
+% %  rectangle('Position',[84,120,41,15],'LineWidth',2); 
+% %  rectangle('Position',[62,60,41,15],'LineWidth',2); 
+%  %15s intervals 
+% %  xticks([40 80 120 160 200]); 
+% % xticklabels({'0','10','20','30','40','50'}); 
+% %25 s intervals 
  xticks([0 25 50])
   xticklabels({'0','25','50'});
 
@@ -330,13 +332,13 @@ protvalsWindowHigh=protvalsWindow>protthresh;
 
 ax3=subplot(2,2,4);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
 % colormap(ax3,cmap);
-xlim([0 50]); 
+xlim([0 120]); 
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
 %25 s intervals 
- xticks([0 25 50])
-  xticklabels({'0','25','50'});
+%  xticks([0 25 50])
+%   xticklabels({'0','25','50'});
 %protvalsWindowFHigh=protvalsWindowF>protthresh;
 
 %  ax4=subplot(2,2,2);imagesc(fretvalsF,[0.3 1.7]); title ('ezxrin');
@@ -355,7 +357,7 @@ saveas(f1,strcat(datadir,'\','edge_velocity_mapM.fig'))
 
 % save all new data into mat file 
 
-save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance');%,'avg_cell_area');%,'fretvals','fretvalsF') ; %'myosin','myosinF'); % 'cyto', 'cytoF');
+save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance','fretvals','fretvalsF');%,'avg_cell_area');%,'fretvals','fretvalsF') ; %'myosin','myosinF'); % 'cyto', 'cytoF');
 
 
 %close all; clc;
