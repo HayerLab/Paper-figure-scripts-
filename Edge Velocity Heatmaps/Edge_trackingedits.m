@@ -29,7 +29,7 @@ depths = [3]; % 6,10,15,20,25];
 % for 60x, 2x2 binning
 %depths = [5,9,15,23,30,38]; 
  
-root='D:\ARHGAP29\Random motility\GAP29 overexpression\mScarlet3-CAAX marked\03-05-24\with mCit-R707A_40X';
+root='I:\Nada';
 rawdir=([root,filesep,'cropped',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
 datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(depths))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
@@ -124,11 +124,11 @@ fprintf('%i trajectories.\n',length(traj));
 
 
 %% Manually select cell for analysis 
-selectedCell=3; %input which trajectory
+selectedCell=1; %input which trajectory
 isConnect = false; %true if you had to connect broken trajectories
 %deleteFrame =46; % manually input frame that needs to be deleted
 thisTraj=traj{selectedCell};
-centroid_coordinates=zeros(2,size(imFRETOutline,2));
+% centroid_coordinates=zeros(2,size(imFRETOutline,2));
 cell_area=0; 
 if ~(isConnect) %modifying this Traj code if you needed to correct broken trajectores
     start =thisTraj(1,5);
@@ -197,7 +197,7 @@ for imnum=start:start+size(thisTraj,1) -1
          
             for k=1:size(windowCoors{index},1)
                 
-                 fretvals(k,index)=mean(im_YFP_raw{index+empty_count}(labelMask{index}==k));
+%                  fretvals(k,index)=mean(im_mScarlet_raw{index+empty_count}(labelMask{index}==k));
                %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
                %  cyto(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
           
@@ -227,14 +227,14 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
  end 
  
  % make it per minute so can compare different length movies 
- distance = distance/(size(imFRETOutline,2)*(2/3))
- avg_cell_area = cell_area/size(im_YFP_raw,2)
+%  distance = distance/(size(imFRETOutline,2)*(2/3))
+%  avg_cell_area = cell_area/size(im_YFP_raw,2)
  
  %% filtered protusionvalues
  
    % filtered protrusion values
 protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
-fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
+% fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
 % myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
 % cytoF=ndnanfilter(cyto,fspecial('disk',2),'replicate');
 
@@ -355,7 +355,7 @@ saveas(f1,strcat(datadir,'\','edge_velocity_mapM.fig'))
 
 % save all new data into mat file 
 
-save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance','avg_cell_area','fretvals','fretvalsF') ; %'myosin','myosinF'); % 'cyto', 'cytoF');
+save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance');%,'avg_cell_area');%,'fretvals','fretvalsF') ; %'myosin','myosinF'); % 'cyto', 'cytoF');
 
 
 %close all; clc;
@@ -383,7 +383,7 @@ polarplot((1:2:360)*pi/180,protsum);rlim([-200 200]);
 % 
 % % smoothing
 % protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
-% %fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
+% fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
 % %redvalsF=ndnanfilter(redvals,fspecial('disk',2),'replicate');
 % protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWindowF(:),99),1)];
 % %fretvalsrangeF=[round(prctile(fretvalsF(:),1),1),round(prctile(fretvalsF(:),99),1)];

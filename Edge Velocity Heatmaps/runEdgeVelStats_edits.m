@@ -1,9 +1,9 @@
-  cells = [1,3,4,5,6,7,9,10,11,12,13]; 
+  cells = 1%[1,3,4,5,6,7,9,10,11,12,13]; 
 
  depths = [3]; 
  
- root = 'F:\230919 - Y2motility 2\cropped\20uM_Y2';
- for i = 2:26
+ root = 'I:\Nada\cropped';
+ for i = 1
     
 %      if i == 7 || i == 14 || i ==20
 %          continue; 
