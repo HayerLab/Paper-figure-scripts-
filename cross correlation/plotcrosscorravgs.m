@@ -5,7 +5,7 @@ clc; clear;
 root='I:\Nada\cropped';
 %removed 2 and 35 here to test whats going on 
 %cells=[6,7,9,10,12,13,14,15,16,17,18]; %trial 1
-cells = 1%[1,2,3]; % trial 2
+cells = [1,3, 4, 5, 6, 7, 9, 11, 12, 14, 17, 19, 21, 22, 23]; % trial 2
 %cells =[2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19]; %trial 3
 %cells = [12,18,19,20,24,26,27,28,29,30,31,32,33]; %CDC42 t1
 %cells= [2,3,4,5,7,8,9,11]; % rac trial 1 
@@ -21,7 +21,7 @@ cells = 1%[1,2,3]; % trial 2
 %cells = [10,15,19]; 
 %startarr = [40,30,35]; 
 %startarr = [40,40,40,50,40,50,30,35,40,40,30]; %trial 1
-startarr = 2;%[2,2,2]; %trial 2
+startarr = [2,2,2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]; %trial 2
 %startarr = [30,30,50,30,60,30,40,40,40,35,40,40,50,30,60,40,35]; %trial 3
 %startarr = [2,2,2,2,2,2,2,2,2,2,25,2,2]; %CDC42 t1 
 %startarr= [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]; 
@@ -41,7 +41,7 @@ for loop=1:size(cells,2)
     
     start = startarr(1,loop);
     
-    load([root,filesep,fileKey,filesep,'output',filesep,'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvals','protvalsWindowF'); %'myosin', 'cytoF')
+    load([root,filesep,fileKey,filesep,'output',filesep,'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'fretvals','fretvalsF','protvalsWindowF'); %'myosin', 'cytoF')
  
 % This maps velocity vector from 1-2 with frame 2 of protein expression, etc    
 %     edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
@@ -137,11 +137,11 @@ hold on;
    
 for x= 1:size(cell_arr,2)
     
-    plot([-20:20],cell_arr{1,x});
+    plot(-20:20,cell_arr{1,x});
     
 end 
 
-plot([-20:20],overall_avg,'Color',[0,0,0], 'LineWidth', 3 ); 
+plot(-20:20,overall_avg,'Color',[0,0,0], 'LineWidth', 3 ); 
 
 yline(0,'--');
 xline(0,'--'); 

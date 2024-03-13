@@ -14,10 +14,10 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 % clc; clear; 
-cells = 20;   
+cells = 17;   
 
 for place=1:size(cells,2)
-cells = 20;    
+cells = 17;    
 
 
 %for zwster = 1:6

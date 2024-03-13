@@ -3,7 +3,7 @@
  depths = [3]; 
  
  root = 'I:\Nada\cropped';
- for i = 1
+ for i = [1 3 4 5 6 7 9 11 12 14 17 19]
     
 %      if i == 7 || i == 14 || i ==20
 %          continue; 
