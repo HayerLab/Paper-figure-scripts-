@@ -3,27 +3,32 @@
 
 %% Control section 
 clc; clear; 
-control_root = 'F:\231109 - 20x_2bin_hs578t_u466_trt'; 
+control_root = 'F:\240425_Rhoa2G_DORA_RhoA_drug_treat'; 
 %control_root1= 'F:\Seph\data\230313_20x_2x2_Rho_thrombin_NSC';
 %control_root2= 'F:\Seph\data\data_220104 - Trial 5 RhoB Myosin drug treatments';
 
-datadir =('F:\231109 - 20x_2bin_hs578t_u466_trt\drug response graphs');  
+datadir =('F:\240425_Rhoa2G_DORA_RhoA_drug_treat\drug response graphs cleaned');  
 %cellFiles=getFilenames([control_root],'_RatioData.mat');
 
-control_arr=zeros(4,120); 
+control_arr=zeros(14,60); 
  
 k = 0; 
-for row = 1
+for row = 1:4
     
 
     for col =1 
-        for site = 9:12
+        for site = 29:32
 %             
-%             if row ==1 && site==2
+%             if row ==2 && site==2
 %                 continue; 
 %             end 
-            
-           
+%             
+%             
+%             if row ==4 && site==3
+%                 continue; 
+%             end 
+%             
+%            
             k=k+1; 
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
         end 
@@ -35,7 +40,7 @@ for i = 1:size(position,2)    %(size(cellFiles,1))
    imRatio_raw={}; 
     load([control_root,filesep, 'data', filesep, position{i}, '_RatioData_raw.mat'],'imRatio_raw'); 
     
-    for j = 1:120
+    for j = 1:60
         
         temp_arr=imRatio_raw{1,j};
         
@@ -113,21 +118,26 @@ hypo_root = control_root;
 position = []; 
 k = 0; 
 
-hypo_arr=zeros(4, 120); 
+hypo_arr=zeros(16, 60); 
 
-for row = 1
+for row = 1:4
     
     for col =1 
-        for site = 13:16
+        for site =25:28
 %             
-%              
-%             if  site ==15 || site ==16 
+% %              
+            if   row == 2 && site ==23
+                continue; 
+            end 
+%             
+% 
+%             if   row == 2 && site ==20
 %                 continue; 
 %             end 
-%             
-% %      
+% %             
+% % %      
+% %           
 %           
-          
             k=k+1; 
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
         end 
@@ -142,7 +152,7 @@ for i = 1:(size(position,2))
     load([hypo_root,filesep, 'data', filesep, position{i}, '_RatioData_raw.mat'],'imRatio_raw'); 
     
     
-    for j = 1:120
+    for j = 1:60
         
         temp_arr2=imRatio_raw{1,j};
         
@@ -249,8 +259,10 @@ end
 
 %% correct the hyper and hypo, get averages
 % 
+
+frames_pre_addition = 5; 
  for i=1:size(control_arr,1)
-     meanval = mean(control_arr(i,1:10));
+     meanval = mean(control_arr(i,1:frames_pre_addition));
      control_arr(i,:)=control_arr(i,:)/meanval; 
  end 
  
@@ -260,9 +272,9 @@ end
     control_arr(i,:) = control_arr(i,:)./mean_control; 
  end 
  
-stats_arrCNTRL = zeros(3,120); 
+stats_arrCNTRL = zeros(3,60); 
 
- for k = 1:120
+ for k = 1:60
      
      % fitting normal dist to each lag 
     pd = fitdist(control_arr(:,k),'Normal'); 
@@ -278,7 +290,7 @@ stats_arrCNTRL = zeros(3,120);
 
 
 for i=1:size(hypo_arr,1)
-    meanval = mean(hypo_arr(i,1:10));
+    meanval = mean(hypo_arr(i,1:frames_pre_addition));
     hypo_arr(i,:)=hypo_arr(i,:)/meanval; 
 end 
 
@@ -289,9 +301,9 @@ end
  end 
  
  
-stats_arrTREAT = zeros(3,120); 
+stats_arrTREAT = zeros(3,60); 
 
- for k = 1:120
+ for k = 1:60
      
      % fitting normal dist to each lag 
     pd = fitdist(hypo_arr(:,k),'Normal'); 
@@ -310,20 +322,21 @@ f1=figure;
 
 
 %ylim([0.9 1.9])
-xlim([0 120]); 
+xlim([0 60]); 
 
 
  xline(10,'--'); 
- ylim([0.8  1.5]);
+ ylim([0.9  1.25]);
+ axis square; 
  hold on; 
  %title('Hs578t ROSA DORA RhoB Moesin KO, cntrl MA vs 20 nM U46619 @ 10 minutes'); 
-  title('Hs578t ROSA DORA RhoB MoesinKO, cntrl MA vs 20 nM U46619 @ 10 minutes');
- xlabel('TimePoint (30s)'); 
+  title('DORA-RhoA, control vs 20 uM Y2');
+ xlabel('TimePoint (1 min)'); 
  ylabel('Norm. Rho'); 
 
 for a=1:size(control_arr,1)
-    plot([1:120],control_arr(a,:), 'Color','k','DisplayName','CNTRL'); 
-   
+    plot([1:60],control_arr(a,:), 'Color','k','DisplayName','CNTRL'); 
+ 
 end 
 %     
 % for b=1:size(hyper_arr,1)
@@ -331,19 +344,22 @@ end
 % end
 
 for c=1:size(hypo_arr,1)
-    plot([1:120],hypo_arr(c,:), 'Color','r','DisplayName','+ML7 @5'); 
+    plot([1:60],hypo_arr(c,:), 'Color','r','DisplayName','+ML7 @5'); 
+   
 end 
  
 hold off; 
 
 f2= figure; 
- title('Hs578t ROSA DORA RhoB MoesinKO, cntrl MA vs 20 nM U46619 @ 10 minutes'); 
+ title('DORA-RhoA, control vs  + 20uM Y2'); 
  xlabel('TimePoint (1 min)'); 
  ylabel('Norm. RhoA'); 
  hold on; 
- ylim([0.8 1.5]);
- xlim([0 120]);
+ ylim([0.9 1.25]);
+ xlim([0 60]);
 xline(5,'--'); 
+
+axis square; 
 
 % for i=1:65 
 %     
@@ -356,22 +372,22 @@ xline(5,'--');
 % end 
  
 
-plot(1:120,(stats_arrCNTRL(1,:)),'Color',[0,0,0], 'LineWidth', 3 ); 
+plot(1:60,(stats_arrCNTRL(1,:)),'Color',[0,0,0], 'LineWidth', 3 ); 
 
-plot(1:120,stats_arrCNTRL(2,:),'Color',[0,0,0] );
-plot(1:120,stats_arrCNTRL(3,:),'Color',[0,0,0] );
+plot(1:60,stats_arrCNTRL(2,:),'Color',[0,0,0] );
+plot(1:60,stats_arrCNTRL(3,:),'Color',[0,0,0] );
 
-plot(1:120,(stats_arrTREAT(1,:)),'Color',[1,0,0], 'LineWidth', 3 ); 
-plot(1:120,(stats_arrTREAT(2,:)),'Color',[1,0,0] );
-plot(1:120,(stats_arrTREAT(3,:)),'Color',[1,0,0] );
+plot(1:60,(stats_arrTREAT(1,:)),'Color',[1,0,0], 'LineWidth', 3 ); 
+plot(1:60,(stats_arrTREAT(2,:)),'Color',[1,0,0] );
+plot(1:60,(stats_arrTREAT(3,:)),'Color',[1,0,0] );
 % 
 % hold off; 
 % for a=1:size(control_arr,1)
 %     plot([1:100],hyper_arr(a,:), 'Color','r','DisplayName','Hyper-osmotic'); 
 % end 
- U46619 = hypo_arr; 
-   save([datadir,filesep,'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis].mat'],'control_arr', 'U46619', 'stats_arrCNTRL', 'stats_arrTREAT'); 
-   saveas(f1, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis].fig'])); 
-    saveas(f1, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis].svg'])); 
-   saveas(f2, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis]avgSD.fig'])); 
-   saveas(f2, ([datadir, filesep, 'CNTRL vs. 20uM U46619 @10_MoesinKO[0.8 1.6 y axis]avgSD.svg'])); 
+ Y2 = hypo_arr; 
+    save([datadir,filesep,'DORA-RhoA CNTRL vs.20uM Y2 @5.mat'],'control_arr', 'Y2', 'stats_arrCNTRL', 'stats_arrTREAT'); 
+    saveas(f1, ([datadir, filesep, 'DORA-RhoA CNTRL vs.20uM Y2.fig'])); 
+     saveas(f1, ([datadir, filesep, 'DORA-RhoA CNTRL vs.  20uM Y2.svg'])); 
+    saveas(f2, ([datadir, filesep, 'DORA-RhoA CNTRL vs. 20uM Y2_avgSD.fig'])); 
+    saveas(f2, ([datadir, filesep, 'DORA-RhoA CNTRL vs. 20uM Y2_avgSD.svg'])); 

@@ -115,7 +115,7 @@ for frameNum=1:size(mRuby_stack,3)
    imcytobg=subBG(imcyto_raw,bgmask_cyto,cytobg);
     %%%%%% Get mask from raw FRET image
     c = cellNum; 
-   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),6000, frameNum,c, threshold); % see here if its better taking away the imCFPbg
+   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imRubybg),4000, frameNum,c, threshold); % see here if its better taking away the imCFPbg
    %[mask cellCoorsTemp]=getCellMaskCyto_edits(imFRET_raw+imCFP_raw,2000); 
    % [mask]=segment_logMultiThresh(imFRETbg,1000); %added for mRuby channel,which did not have to undergo the channel alignment 
     maskFinal{frameNum}=mask;

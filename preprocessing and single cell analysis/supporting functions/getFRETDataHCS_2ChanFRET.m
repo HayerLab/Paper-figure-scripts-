@@ -45,7 +45,7 @@ key=[datadir,filesep,position,'_RatioData_raw.mat'];
 if ~exist(key)
 %%%%%% Set up
 
-load([bgdir,filesep,'alignment parameters pX pY.mat'],'pX','pY');
+load([bgdir,filesep,'alignment parameters pX pY_day2.mat'],'pX','pY');
 
 %%%%%% Call background images
  binning=1; % relevant if alingment images and data images were acquired using distinct binning settings

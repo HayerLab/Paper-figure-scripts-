@@ -111,7 +111,7 @@ mask=bwareaopen(mask_init,minCellSize); % troublshoot this part
 %mask_filled1=imfill(mask,'holes');
 
  background = ~mask; 
- % background = bwareaopen(background, 800); % added this to take out little flickers inside cells 
+  background = bwareaopen(background, 400); % added this to take out little flickers inside cells 
  mask_filled1 = ~background; % added this to take out little flickers inside cells 
 %imagesc(mask_filled1); 
 
@@ -123,7 +123,7 @@ mask=bwareaopen(mask_init,minCellSize); % troublshoot this part
 % %     
     % maskFinal = mask | smallholes;
 
-mem_mask2 = imopen(mask_filled1,strel('disk',1)); %get rid of tiny fibers
+mem_mask2 = imopen(mask_filled1,strel('disk',2)); %get rid of tiny fibers
 maskFinal = mask_filled1 & mem_mask2; 
 
 maskFinal= bwareaopen(maskFinal,minCellSize);

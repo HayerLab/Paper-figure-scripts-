@@ -1,19 +1,19 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\240301_t567_motility_noco';
+ root = 'F:\Arnold 240508 single frame immunos T2\t567';
  
- tiffDir = ([root, filesep,'tiff_stacks']); 
+ tiffDir = ([root, filesep,'raw']); 
  
 %  cellDir = ([root, filesep, 'cropped',filesep,'siERM', num2str(cell)]); 
 %      if ~exist(cellDir)
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'\drug_response\cropped\5umNOC'];
+cropdir=[root,filesep,'cropped'];
 if ~exist(cropdir)
          mkdir(cropdir); 
-     end  
+end  
 bgpath=[root,filesep,'background'];
    
     %% crop cell files and accompanying background 
@@ -23,8 +23,8 @@ bgpath=[root,filesep,'background'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    clc; 
-cell=8;
-filekey = '1_1_8'; 
+cell=29; 
+filekey = '29_1_1'; 
 
 
  cellDir = ([cropdir,filesep, num2str(cell)]); 
@@ -33,89 +33,95 @@ filekey = '1_1_8';
      end   
      
      
-bgcyto = ([bgpath,filesep, 'AVG_bgcyto.tif']); 
-bgCFP= ([bgpath,filesep, 'AVG_bgCFP.tif']); 
+%bgcyto = ([bgpath,filesep, 'AVG_bgcyto.tif']); 
+%bgCAAX= ([bgpath,filesep, 'AVG_bgCAAX.tif']); 
 %bgCFP = ([bgpath, filesep, 'AVG-BG-CFP.tif']); 
 %bgFRET = ([root, filesep, 'background\AVG_bgFRET.tif']);
-bgFRET = ([bgpath,filesep,  'AVG_bgFRET.tif']);
-bgmRuby=([bgpath, filesep,  'AVG_bgmRuby.tif']);
+%bgFRET = ([bgpath,filesep,  'AVG_bgFRET.tif']);
+%bgmRuby=([bgpath, filesep,  'AVG_bgmRuby.tif']);
           
- FRET = ([tiffDir,filesep, strcat(filekey,'_FRET_stacked.tif')]);  
-  CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
-  mRuby= ([tiffDir,filesep, strcat(filekey,'_mRuby_stacked.tif')]); 
-    cyto= ([tiffDir,filesep, strcat(filekey,'_cyto_stacked.tif')]); 
+ %CAAX = ([tiffDir,filesep, strcat(filekey,'_CAAX_stacked.tif')]);  
+ % CFP= ([tiffDir,filesep, strcat(filekey,'_CFP_stacked.tif')]); 
+  mRuby= ([tiffDir,filesep, strcat(filekey,'_mRuby_1.tif')]); 
+    cyto= ([tiffDir,filesep, strcat(filekey,'_cyto_1.tif')]);  
+    pERM = ([tiffDir,filesep, strcat(filekey,'_pERM_1.tif')]);  
 
 %FRET = ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-YFP-FRET.tif')]);  
 %CFP= ([tiffDir,filesep, strcat('230816-03-20-WT-CPD31-CFP.tif')]); 
 
- bg_FRET_image = double(readTIFFstack(bgFRET)); 
- bg_CFP_image = double(readTIFFstack(bgCFP)); 
-bg_mRuby_image = double(readTIFFstack(bgmRuby)); 
-bg_cyto_image = double(readTIFFstack(bgcyto)); 
+ %bg_CAAX_image = double(readTIFFstack(bgCAAX)); 
+ %bg_CFP_image = double(readTIFFstack(bgCAAX)); 
+%bg_mRuby_image = double(readTIFFstack(bgmRuby)); 
+%bg_cyto_image = double(readTIFFstack(bgcyto)); 
      
             cropSite = 0;
 
-                     
-         FRET_stack=double(readTIFFstack(FRET));
-         
-         FRET_stack_1 = FRET_stack(:,:,1); 
-               
-         fg = figure;
-              
-         axis image;  
-             
-            
-      [stackFRET, cropArea] = serimcropold(FRET_stack,mean(FRET_stack,3));
-      
-                
-      Stack2TIFF(stackFRET, [cellDir, filesep,'FRET.tif']);
-
-%  cyto_stack=double(readTIFFstack(cyto));
+%                      
+%          CAAX_stack=double(readTIFFstack(CAAX));
 %          
-%         cyto_stack_1 = cyto_stack(:,:,1); 
+%          FRET_stack_1 = CAAX_stack(:,:,1); 
 %                
 %          fg = figure;
 %               
 %          axis image;  
 %              
 %             
-%       [stackcyto, cropArea] = serimcropold(cyto_stack,mean(cyto_stack,3));
+%       [stackCAAX, cropArea] = serimcropold(CAAX_stack,mean(CAAX_stack,3));
 %       
 %                 
-%       Stack2TIFF(stackcyto, [cellDir, filesep,'FRET.tif']);
-                    
-       stackCFP = readFileToStack(CFP); 
-       stackCFP = imcrop3(stackCFP, [cropArea(1), cropArea(2), 1,...
-       cropArea(3), cropArea(4), size(stackFRET,3)-1]);                    
-       Stack2TIFF(stackCFP, [cellDir, filesep, 'CFP.tif']);
-       
-       stackmRuby = readFileToStack(mRuby); 
-       stackmRuby = imcrop3(stackmRuby, [cropArea(1), cropArea(2), 1,...
-       cropArea(3), cropArea(4), size(stackmRuby,3)-1]);                    
-       Stack2TIFF(stackmRuby, [cellDir, filesep, 'mRuby.tif']);
+%       Stack2TIFF(stackCAAX, [cellDir, filesep,'CAAX.tif']);
+
+ mRuby_stack=double(readTIFFstack(mRuby));
+         
+        mRuby_stack_1 = mRuby_stack(:,:,1); 
+               
+         fg = figure;
+              
+         axis image;  
+             
             
+      [stackmRuby, cropArea] = serimcropold(mRuby_stack,mean(mRuby_stack,3));
+      
+                
+      Stack2TIFF(stackmRuby, [cellDir, filesep,'mRuby.tif']);
+                    
+%        stackCFP = readFileToStack(CFP); 
+%        stackCFP = imcrop3(stackCFP, [cropArea(1), cropArea(2), 1,...
+%        cropArea(3), cropArea(4), size(stackCAAX,3)-1]);                    
+%        Stack2TIFF(stackCFP, [cellDir, filesep, 'CFP.tif']);
        
-        stackcyto = readFileToStack(cyto); 
+       stackcyto = readFileToStack(cyto); 
        stackcyto = imcrop3(stackcyto, [cropArea(1), cropArea(2), 1,...
        cropArea(3), cropArea(4), size(stackcyto,3)-1]);                    
        Stack2TIFF(stackcyto, [cellDir, filesep, 'cyto.tif']);
+       
+        stackpERM = readFileToStack(pERM); 
+       stackpERM = imcrop3(stackpERM, [cropArea(1), cropArea(2), 1,...
+       cropArea(3), cropArea(4), size(stackpERM,3)-1]);                    
+       Stack2TIFF(stackpERM, [cellDir, filesep, 'pERM.tif']);
+            
+       
+%         stackcyto = readFileToStack(cyto); 
+%        stackcyto = imcrop3(stackcyto, [cropArea(1), cropArea(2), 1,...
+%        cropArea(3), cropArea(4), size(stackcyto,3)-1]);                    
+%        Stack2TIFF(stackcyto, [cellDir, filesep, 'cyto.tif']);
     
-                     FRET_bg_crop = imcrop(uint16(bg_FRET_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+                   %  CAAX_bg_crop = imcrop(uint16(bg_CAAX_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
 %                    % saveas(FRET_bg_crop, [cellDir, filesep, 'FRET_bg.tif']); 
-                     imwrite(FRET_bg_crop,[cellDir, filesep, 'FRET_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+                  %   imwrite(CAAX_bg_crop,[cellDir, filesep, 'CAAX_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
 %                     
-                      CFP_bg_crop = imcrop(uint16(bg_CFP_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+ %                     CFP_bg_crop = imcrop(uint16(bg_CFP_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
 %                  %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
-             imwrite(CFP_bg_crop,[cellDir, filesep, 'CFP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+%             imwrite(CFP_bg_crop,[cellDir, filesep, 'CFP_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
 %             
-              mRuby_bg_crop = imcrop(uint16(bg_mRuby_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+         %     mRuby_bg_crop = imcrop(uint16(bg_mRuby_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
                  %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
-            imwrite(mRuby_bg_crop,[cellDir, filesep, 'mRuby_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+      %      imwrite(mRuby_bg_crop,[cellDir, filesep, 'mRuby_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
             
             
-              cyto_bg_crop = imcrop(uint16(bg_cyto_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
+       %       cyto_bg_crop = imcrop(uint16(bg_cyto_image), [cropArea(1), cropArea(2), cropArea(3), cropArea(4)]); 
                  %   saveas(CFP_bg_crop, [cellDir, filesep, 'CFP_bg.tif']); 
-            imwrite(cyto_bg_crop,[cellDir, filesep, 'cyto_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
+       %     imwrite(cyto_bg_crop,[cellDir, filesep, 'cyto_bg.tif'] , "WriteMode", "overwrite", "Compression", "none");
                     
                     %close(fg);
             clear stack;
@@ -167,15 +173,15 @@ cellNum=1;% for now manually select cell folder
 
 bleachdir=([root,filesep,'data']);
 bgdir=[root,filesep,'background'];
-%  load([bleachdir,filesep,'bleachingcurve.mat']);
-%  load([bleachdir,filesep,'bleachingcurve_mRuby.mat']);
+  load([bleachdir,filesep,'bleachingcurve.mat']);
+  load([bleachdir,filesep,'bleachingcurve_mRuby.mat']);
  load([bgpath, filesep, 'alignment parameters pX pY.mat']); 
- %load([bleachdir,filesep,'bleachingcurve_cyto.mat']);
+ load([bleachdir,filesep,'bleachingcurve_cyto.mat']);
 
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=5
+for k=1:29
    % rawdir=[root,filesep,'cropped\t567_Cpd31', filesep, strcat( num2str(k))]; 
    rawdir=[cropdir,filesep, strcat( num2str(k))]; 
     %load([rawdir,filesep,'alignment parameters pX pY.mat']);
@@ -192,13 +198,14 @@ for k=5
  % and 4th channel if you want 
 %getFRETDataHCS_stacked(k,rawdir,datadir,4); 
  %getFRETDataHCS_stacked_3chan(k,rawdir,datadir,3.5, pX, pY); % FRET, CFP, mRuby
- getFRETDataHCS_stacked_4_chan(k,rawdir,datadir,3, pX, pY); % FRET, CFP, mRuby
+ %getFRETDataHCS_stacked_4_chan(k,rawdir,datadir,1.7, pX, pY); % FRET, CFP, mRuby
+getFRETDataHCS_stacked_ezrin_cyto_caax(k,rawdir,datadir,3)
 
 
 % choose which one you want 
 %correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
 %correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
-%  correctBleachingExp2_FRET_stacked(fitpara, datadir); %only does FRET
+ % correctBleachingExp2_FRET_stacked(fitpara, datadir); %only does FRET
 %correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  
     

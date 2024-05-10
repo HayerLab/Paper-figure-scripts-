@@ -110,7 +110,7 @@ for frameNum=1:length(CFP_files)
     imRubybg=subBG(imRuby_raw,bgmask_mRuby,mRubybg);
      imcytobg=subBG(imcyto_raw,bgmask_cyto,cytobg);
     %%%%%% Get mask from raw FRET image
-    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,2000, frameNum, position, threshold); %+imCFPbg
+    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,5000, frameNum, position, threshold); %+imCFPbg
    %[mask cellCoorsTemp]=getCellMaskCyto_edits(2*(imFRET_raw),2000);% +imCFP_raw
     
     

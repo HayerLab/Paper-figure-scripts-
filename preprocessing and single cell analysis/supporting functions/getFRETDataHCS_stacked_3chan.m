@@ -1,4 +1,4 @@
-function getFRETDataHCS_stacked_3chan(cellNum,rawdir,datadir, threshold, pX, pY)
+function getFRETDataHCS_stacked_ezrin_cyto_caax(cellNum,rawdir,datadir, threshold, pX, pY)
 
 if ~exist([datadir,filesep,'RatioData_raw.mat'])
 %%%%%% Set up

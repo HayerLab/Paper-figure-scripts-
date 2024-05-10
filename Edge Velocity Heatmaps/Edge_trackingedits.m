@@ -14,24 +14,25 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [2];   
+cells = [7];   
 
 for place=1:size(cells,2)
-cells = [2];    
+cells = [7];   
+     
 
 
-%for zwster = 1:6
+for zwster = 1
 
 %clear; close all; clc;
  %for 20x no binning, or 40x 2x2 bin etc. 0.325 um/px
-depths = [5]; % 6,10,15,20,25]; 
+depths = [15]; % ,10,15,20,25]; 
 
 % for 60x, 2x2 binning
-%depths = [5,9,15,23,30,38]; 
+
  
-root='F:\240216_ezrint567_random_motility';
-rawdir=([root,filesep,'cropped',filesep, strcat(num2str(cells(1,place))),filesep,'output', filesep, 'ezrin_data']); %
-datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(3))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
+root='F:\240404-Arnold new ezrin cells test data\run2';
+rawdir=([root,filesep,'cropped',filesep, strcat('t567a\',num2str(cells(1,place))),filesep,'output']); %
+datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(depths(1, zwster)))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
 if ~exist(datadir)
     mkdir(datadir)
 end 
@@ -43,10 +44,10 @@ edgeOversamplingParam=5;                            % How many times more points
 nPointsParam=nFretWindows*edgeOversamplingParam;    % Number of points to track on the cell edge
 pdSmoothing=10;%was 10                                      % Used with imclose to make the selection of points for tracking less dependent on noise or wrinkles in the cell edge
 
-edgeDepthDist= 3;  %depths(1, zwster);   % Number of pixels deep for the windows for computing FRET values.
+edgeDepthDist=depths(1, zwster);   % Number of pixels deep for the windows for computing FRET values.
 
 startFrame=1;
-endFrame=120;
+endFrame=150;
 
 binning=1;            %only change if binning is changed while using same objective magnification!!
 
@@ -57,17 +58,18 @@ binning=1;            %only change if binning is changed while using same object
 
 
 load([rawdir,filesep,'RatioData_raw.mat']);
-load([rawdir,filesep,'CytoRatioData.mat']);
+load([rawdir,filesep,'ezrin_data', filesep,'CytoRatioData.mat']);
 
 % perform tracking of mask centroid
 % min(cellfun(@(x) size(x,1),cellCoors))    % changed it from min to max ? 
 %% %% delete flash glitch frames that mess FRET data - if needed 
 % % % % 
-% flashFrame=1:29; 
-% maskFinal(flashFrame)=[];
-% imFRETOutline(flashFrame)=[];
-% imRatio_raw(flashFrame)=[];
-% cellCoors(flashFrame)=[]; 
+flashFrame=141:150; 
+maskFinal(flashFrame)=[];
+imCAAXOutline(flashFrame) = []; 
+ezrin_ratio(flashFrame)=[];
+membrane_cyto_ratio(flashFrame)=[];
+cellCoors(flashFrame)=[]; 
 % % im_mRuby(flashFrame) = []; 
 % % % 
 % flashFrame=114; 
@@ -128,7 +130,7 @@ selectedCell=1; %input which trajectory
 isConnect = false; %true if you had to connect broken trajectories
 %deleteFrame =46; % manually input frame that needs to be deleted
 thisTraj=traj{selectedCell};
-centroid_coordinates=zeros(2,size(imFRETOutline,2));
+centroid_coordinates=zeros(2,size(imCAAXOutline,2));
 cell_area=0; 
 if ~(isConnect) %modifying this Traj code if you needed to correct broken trajectores
     start =thisTraj(1,5);
@@ -199,7 +201,8 @@ for imnum=start:start+size(thisTraj,1) -1
                 
                 % fretvals(k,index)=mean(imRatio_raw{index+empty_count}(labelMask{index}==k));
                %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
-                 cyto(k,index)=mean(ezrin_ratio_norm{index+empty_count}(labelMask{index}==k));
+                 ezrin(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
+                 membrane_cyto(k,index)=mean(membrane_cyto_ratio{index+empty_count}(labelMask{index}==k));
           
   
             end
@@ -227,7 +230,7 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
  end 
  
  % make it per minute so can compare different length movies 
- distance = distance/(size(imFRETOutline,2)*(2/3))
+ %distance = distance/(size(imCAAXOutline,2)*(2/3))
 % avg_cell_area = cell_area/size(imRatio_raw,2)
  
  %% filtered protusionvalues
@@ -236,7 +239,8 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
 protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
 %fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
 % myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
- cytoF=ndnanfilter(cyto,fspecial('disk',2),'replicate');
+ ezrinF=ndnanfilter(ezrin,fspecial('disk',1),'replicate');
+ membranecytoF=ndnanfilter(membrane_cyto,fspecial('disk',1),'replicate');
 
 
 
@@ -284,6 +288,8 @@ protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWin
 
  
 %% Plot maps - with thresholds
+load('C:\Users\marsh\OneDrive - McGill University\Documents\GitHub\Rodrigo_Codes\Colormaps\BCWOR-256.mat'); 
+
 close all;
 
 protthresh=5;
@@ -303,7 +309,8 @@ protvalrange=[round(prctile(protvalsWindow(:),1),1),round(prctile(protvalsWindow
  %myosinrange=[round(prctile(myosin(:),1),1),round(prctile(myosin(:),99),1)];
 
 ax1=subplot(2,2,1);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
-colormap(ax1,cmap);
+
+colormap(ax1,BCWOR);
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
@@ -311,7 +318,7 @@ colormap(ax1,cmap);
    xticks([0 24 48 71 95 120 144])
    xticklabels({'0','10','20','30','40','50' '60'});
 
-ax2=subplot(2,2,4);imagesc(cyto,[0 2] );title('Ezrin');
+ax2=subplot(2,2,2);imagesc(ezrinF,[-1 3] );title('Ezrin');
 xlim([0 150]); 
  %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
 % colormap(ax2,cmap);
@@ -328,8 +335,8 @@ xlim([0 150]);
 
 protvalsWindowHigh=protvalsWindow>protthresh;
 
-ax3=subplot(2,2,2);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
-colormap(ax3,cmap);
+ax3=subplot(2,2,3);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
+colormap(ax3,BCWOR);
 xlim([0 150]); 
 %15s intervals 
 %  xticks([40 80 120 160 200]); 
@@ -339,7 +346,7 @@ xlim([0 150]);
   xticklabels({'0','10','20','30','40','50'});
 %protvalsWindowFHigh=protvalsWindowF>protthresh;
 
- ax4=subplot(2,2,3);imagesc(cytoF,[0 2]); title ('ezxrin');
+ ax4=subplot(2,2,4);imagesc(membranecytoF,[-10 10]); title ('membrane cyto ratio');
  %15s intervals 
 %  xticks([40 80 120 160 200]); 
 % xticklabels({'0','10','20','30','40','50'}); 
@@ -355,13 +362,14 @@ saveas(f1,strcat(datadir,'\','edge_velocity_mapM.fig'))
 
 % save all new data into mat file 
 
-save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance', 'cyto', 'cytoF'); %'fretvals','fretvalsF') ; 'avg_cell_area'%'myosin','myosinF'); % ;
+save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance', 'ezrin', 'ezrinF', 'membrane_cyto','membranecytoF') ; % 'avg_cell_area'%'myosin','myosinF'); % ;
 
 
 %close all; clc;
 
 end 
-clear; clc; 
+end 
+ clear; clc; 
 
  
 %% Polar plot of sum of all protrusions - all code after this is optional
