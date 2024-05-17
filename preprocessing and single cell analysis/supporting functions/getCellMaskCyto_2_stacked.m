@@ -50,7 +50,7 @@ pks=pks(log_pks); locs=locs(log_pks);
         plot((locs),pks,'k^','markerfacecolor',[1 0 0]);
  end 
  
- %if size(pks,2) ==1
+
 x_bgMax=locs(1,1); % picks the first peak (x-value of first peak)
 [~,ind]=find(f>(0.01*pks(1)),1); % returns the first value of f greater than 0.5% of its max
 x_1pct=xi(ind); % returns the corresponding intensity value
@@ -60,70 +60,31 @@ bgWidth=x_bgMax-x_1pct; % estimates the width of the background peak
       xline(x_bgMax+bgWidth); % to see how effective the estimation above of bg width is 
  end 
 %Determine threshold for distinction between foreground/background (most important part of the code here)
-% if frameNum <=9
+
 
 threshSeg=(x_bgMax+(threshold)*bgWidth);% number here adjustable: if having trouble with segmentation adjust based on fg/bg separation%xline(threshSeg,'--'); % again just for visualization 
-%   else 
- %  threshSeg=(x_bgMax+(3)*bgWidth);
-%   end 
+
 if frameNum ==1  && s ==1
           xline(threshSeg, '--'); 
           pause; 
                  hold off;
-% %               
+              
  end 
-% % 
-
-%  else 
-%      threshSeg = locs(1,1) + (locs(1,2)-locs(1,1))/2; 
-%      
-%      if frameNum ==1  %&& s ==1
-%           xline(threshSeg, '--'); 
-%           pause; 
-%                  hold off;
-% % %               
-%  end 
-% end 
-%% messy cell edge part 2 
-% uses average cell intensity instead of bg peak, and thresholds backwards
-% from this 
-%locs_cell_boolean=locs_cell>threshSeg;
-%locs_cell=locs_cell .*(locs_cell_boolean); 
-%pks_cell= pks_cell.*(locs_cell_boolean); 
-
-%finds cell peak through increased AROC on pixel intensity graph
-% for i =10:size(pks_cell,2)
-%     
-%   if (pks_cell(1,i)-pks_cell(1,i-9)) >= 0.001
-%       break; 
-%   end 
-%     
-% end 
-
-%[value, index] = max(pks_cell); 
 
 
- 
-%plot(locs_cell(1,index), pks_cell(1,index), 'k^','markerfacecolor',[1 0 0]);
 
 
-%threshSeg=(locs_cell(1,index)/1.8); % adjustable parameter
-%xline(threshSeg,'r:')
+%% masks the picture
 
-%hold off; 
-%% masks the picture, then removes small areas of
-%background less than 200 pixels surrounded by cell (usually mistakes);
-% if frameNum ==1
-%   pause;   
-% end 
 mask_init=imSmooth2>threshSeg;
-%imagesc(mask_init); 
-mask=bwareaopen(mask_init,minCellSize);% troublshoot this part 
-%imagesc(mask); 
-mask = bwareafilt(mask,1); % chooses the largest mask in the image - excludes small mask parts from other cells in periphery
-%imagesc(mask); 
+%imagesc(mask_init); %optional visualization
+mask=bwareaopen(mask_init,minCellSize); 
+%imagesc(mask); %optional visualization
 
-%mask_filled1=imfill(mask,'holes');
+mask = bwareafilt(mask,1); % chooses the largest mask in the image - excludes small mask parts from other cells in periphery
+%imagesc(mask); %optional visualization
+
+
 
 background = ~mask; 
 background = bwareaopen(background, 400); % added this to take out little flickers inside cells 
@@ -138,12 +99,8 @@ mask_filled1 = ~background; % added this to take out little flickers inside cell
 %     
 %     maskFinal = mask | smallholes;
 
-mem_mask2 = imopen(mask_filled1,strel('disk',2)); %get rid of tiny fibers
+mem_mask2 = imopen(mask_filled1,strel('disk',2)); %get rid of unwanted tiny fibers
 maskFinal = mask_filled1 & mem_mask2; 
-
-            % thisMask=imerode(maskFinal,strel('disk',1));
-            %thisMask=imdilate(thisMask,strel('disk',1));
-            % thisMask2=bwareaopen(thisMask,300);
 
 maskFinal= bwareaopen(maskFinal,minCellSize); %thisMask
 %imagesc(maskFinal);

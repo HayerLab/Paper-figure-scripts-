@@ -1,9 +1,9 @@
-function getFRETDataHCS_stacked_ezrin_cyto_caax(cellNum,rawdir,datadir, threshold, pX, pY)
+function getFRETDataHCS_stacked_3chan(cellNum,rawdir,datadir, threshold, pX, pY)
 
 if ~exist([datadir,filesep,'RatioData_raw.mat'])
 %%%%%% Set up
 
-%load([rawdir,filesep,'alignment parameters pX pY.mat'],'pX','pY');
+
 
 %%%%%% Call background images
 binning=1; % relevant if alingment images and data images were acquired using distinct binning settings
@@ -48,7 +48,7 @@ for frameNum=1:size(CFP_stack,3)
       imRuby_raw=imaligned2(:,:,1);
     %%%%%% Background-subtract CFP/FRET images
     bgmask=getBGMask(imCFP_raw+imFRET_raw);
-    bgmask_MRuby=getBGMask(imRuby_raw); % -- having issues here with
+    bgmask_MRuby=getBGMask(imRuby_raw); 
 
  imCFPbg=subBG(imCFP_raw,bgmask,CFPbg);
  imFRETbg=subBG(imFRET_raw,bgmask,FRETbg);
@@ -56,9 +56,9 @@ for frameNum=1:size(CFP_stack,3)
     %%%%%% Get mask from raw FRET image
     
     s= cellNum; 
-   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),1000, frameNum,s, threshold); % see here if its better taking away the imCFPbg
+   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),1000, frameNum,s, threshold); 
    
-    maskFinal{frameNum}=mask;
+   maskFinal{frameNum}=mask;
    cellCoors{frameNum}=cellCoorsTemp;
     %%%%%% Detrmine ratio
     imFRETbg(~mask)=nan;
@@ -70,20 +70,18 @@ for frameNum=1:size(CFP_stack,3)
     imRatio_raw{frameNum}=imRatioTemp;
     
      imRubybg(~mask)=nan;
-    %im_mRuby_raw=ndnanfilter(imRubybg,fspecial('disk',3),'replicate');
-   % im_mRuby_raw(~mask)=nan;
-    
-    im_mRuby_raw{frameNum}=imRubybg;
-    %%%%%% Determine scaling for representation
-    if frameNum==1
-       colorRange = [round(prctile(imRatioTemp(:),1),1),round(prctile(imRatioTemp(:),98),1)];
-    end
+   
+     %if you desire filtering of mRuby channel 
+     %im_mRuby_raw=ndnanfilter(imRubybg,fspecial('disk',3),'replicate');
+     im_mRuby_raw{frameNum}=imRubybg;
+
+
    
     imFRETOutline{frameNum}=DrawMaskOutline(imFRET_raw,mask);
     immRuby_outline{frameNum}=DrawMaskOutline(imRuby_raw,mask); 
 
    imwrite(imFRETOutline{frameNum},[datadir,filesep,'Outline_prelim.tif'],'WriteMode','append','Compression','none');
-    %  imwrite(immRuby_outline{frameNum},[datadir,filesep,'Outline_mRuby_prelim.tif'],'WriteMode','append','Compression','none');
+   %imwrite(immRuby_outline{frameNum},[datadir,filesep,'Outline_mRuby_prelim.tif'],'WriteMode','append','Compression','none');
     
 end
 %%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay

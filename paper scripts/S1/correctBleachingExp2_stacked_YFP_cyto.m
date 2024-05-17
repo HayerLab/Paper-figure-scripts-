@@ -5,8 +5,6 @@ function correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir )% fitpara_mRuby
 % bleaching correction by division by linear bleaching function normalized
 % by the median of its values. 
 
-%remember to add in/remove 'position' tag for all the file names depending
-%on if calling the stacked versions or not 
 
 load([datadir,filesep, 'RatioData_raw.mat'],'imRatio_raw','imFRETOutline','imYFP_raw');
 load([datadir,filesep,'Bleach_raw.mat']);
@@ -26,16 +24,9 @@ plot(bleach_YFP);
 timepts=1:length(imRatio_raw);
 
  corr=feval(fitpara,timepts); %use this one
-%corr = fitpara; 
-%corr=polyval([slope 1],timepts); have never used this one 
  corr_norm=corr./median(corr); %use this one
-%plot(timepts,corr_norm);
-
  normfact=nanmedian(bleach_raw); %use this one
-%corr=polyval([slope 1],timepts);
-%corr_norm=corr./median(corr);
-%colorRange=[0.8 1.2];
-%normalize RatioData_raw by median value
+
 
 %corr_m=feval(fitpara_YFP,timepts);
 

@@ -104,7 +104,8 @@ for frameNum=1:size(mRuby_stack,3)
      imstack3(:,:,1)=imcyto_raw; imstack3(:,:,2)=zeros(s,t);
      imaligned3=dualviewAlignFromFittedSurface(imstack3,pX,pY,1);
      imcyto_raw=imaligned3(:,:,1);
-    %%%%%% Background-subtract CFP/FRET images
+  
+     %%%%%% Background-subtract CFP/FRET images
     bgmask=getBGMask(imCFP_raw+imFRET_raw);
      bgmask_MRuby=getBGMask(imRuby_raw);
     bgmask_cyto=getBGMask(imcyto_raw); % -- having issues here with
@@ -116,7 +117,7 @@ for frameNum=1:size(mRuby_stack,3)
     %%%%%% Get mask from raw FRET image
     c = cellNum; 
    [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imRubybg),4000, frameNum,c, threshold); % see here if its better taking away the imCFPbg
-   %[mask cellCoorsTemp]=getCellMaskCyto_edits(imFRET_raw+imCFP_raw,2000); 
+  
    % [mask]=segment_logMultiThresh(imFRETbg,1000); %added for mRuby channel,which did not have to undergo the channel alignment 
     maskFinal{frameNum}=mask;
    cellCoors{frameNum}=cellCoorsTemp;

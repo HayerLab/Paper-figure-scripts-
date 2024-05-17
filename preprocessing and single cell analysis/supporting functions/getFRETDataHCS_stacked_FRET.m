@@ -1,4 +1,4 @@
-function getFRETDataHCS_stacked(cellNum,rawdir,datadir, threshold)
+function getFRETDataHCS_stacked_FRET(cellNum,rawdir,datadir, threshold, pX, pY)
 
 
 % Used non built-in subfunctions: 
@@ -16,7 +16,7 @@ if ~exist([datadir,filesep,'RatioData_raw.mat'])
 %%%%%% Set up
 
 load([rawdir,filesep,'alignment parameters pX pY.mat'],'pX','pY');
-%load([rawdir,filesep,'alignment parameters pX pY.mat'],'w','x');
+
 %%%%%% Call background images
 binning=1; % relevant if alingment images and data images were acquired using distinct binning settings
 CFPbg_raw=double(imread([rawdir,filesep,'CFP_bg.tif']));
@@ -24,7 +24,7 @@ FRETbg_raw=double(imread([rawdir,filesep,'FRET_bg.tif']));
 
 bg1(:,:,1)=CFPbg_raw; bg1(:,:,2)=FRETbg_raw;
 bg2=dualviewAlignFromFittedSurface(bg1,pX,pY,binning);
-%bg2=dualviewAlignFromFittedSurface(bg1,w,x,binning);
+
 
 CFPbg=bg2(:,:,1);
 FRETbg=bg2(:,:,2);
@@ -49,7 +49,7 @@ for frameNum=1:size(CFP_stack,3)
     %%%%%% Align CFP/FRET images
     imstack(:,:,1)=imCFP_raw; imstack(:,:,2)=imFRET_raw;
     imaligned=dualviewAlignFromFittedSurface(imstack,pX,pY,1);
-    %imaligned=dualviewAlignFromFittedSurface(imstack,w,x,1);
+    
     imCFP_raw=imaligned(:,:,1);
     imFRET_raw=imaligned(:,:,2);
     
@@ -66,8 +66,7 @@ for frameNum=1:size(CFP_stack,3)
     %%%%%% Get mask from raw FRET image
   imFRETbg(isnan(imFRETbg))=0; 
     s= cellNum; 
-   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),1000, frameNum,s, threshold); % see here if its better taking away the imCFPbg
-   
+   [mask cellCoorsTemp]=getCellMaskCyto_2_stacked((2*imFRETbg),1000, frameNum,s, threshold); 
     maskFinal{frameNum}=mask;
    cellCoors{frameNum}=cellCoorsTemp;
     %%%%%% Detrmine ratio
@@ -80,21 +79,18 @@ for frameNum=1:size(CFP_stack,3)
     imRatio_raw{frameNum}=imRatioTemp;
     
 
-    %%%%%% Determine scaling for representation
-    if frameNum==1
-       colorRange = [round(prctile(imRatioTemp(:),1),1),round(prctile(imRatioTemp(:),98),1)];
-    end
-    %%%%%% Generate and write files for raw ratio and outlined objects - optional
+   
     %%%%%% 
    % tempRATIO=ratio2RGB(imRatioTemp,colorRange);
     imFRETOutline{frameNum}=DrawMaskOutline(imFRET_raw,mask);
    imwrite(imFRETOutline{frameNum},[datadir,filesep,'Outline_prelim.tif'],'WriteMode','append','Compression','none');
    
 end
-%%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay
+%%%%%% Bleaching correction: Determine linear fit parameters for FRET/CFP decay
 
 for frameNum= 1:length(imRatio_raw)
    bleach_raw(frameNum)=nanmean(vect(imRatio_raw{frameNum}));
+  
    % if you want to see imRatio data right away
    imRatio_intermediate{frameNum} = imRatio_raw{frameNum}./ bleach_raw(frameNum); 
    tempRATIOforstack=ratio2RGB( imRatio_intermediate{frameNum},[0.7 1.3]);

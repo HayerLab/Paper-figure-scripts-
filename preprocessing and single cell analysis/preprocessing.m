@@ -391,9 +391,7 @@ for k=1:length(position)
     % for CFP/YFP FRET, and 1 non ratio channel
         % correctBleachingExp2(position{k},fitpara, datadir, fitpara_mRuby);
 
-    % for ezrin ratio calculations (needs mRuby and cyto marker) %need to
-    % modify this 
-         %correctBleachingExp2_cyto_ratio(position{k}, datadir, fitpara_mRuby, fitpara_cyto);
+   
 end 
 
 %% move to next section
