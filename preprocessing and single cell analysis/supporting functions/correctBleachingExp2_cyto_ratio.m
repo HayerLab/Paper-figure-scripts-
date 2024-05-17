@@ -18,11 +18,7 @@ normfact_m=nanmedian(bleach_raw_mRuby);
 
 corr_cyto=feval(fitpara_cyto,timepts);
 corr_norm_cyto=corr_m./median(corr_cyto);
-normfact_cyto=nanmedian(bleach_raw_cyto);
-
-
-
- 
+normfact_cyto=nanmedian(bleach_raw_cyto)
  
  ezrin_ratio = cell(1,size(im_mRuby_raw,2));
 
@@ -35,9 +31,7 @@ cyto = im_cyto_raw{frameNum}./(normfact_cyto*corr_norm_cyto(frameNum));
  %bounds_mruby =[(prctile(mRuby{frameNum}, 5, 'all')),prctile(mRuby{frameNum}, 95, 'all')]
  %bounds_cyto =[(prctile(cyto{frameNum}, 5, 'all')),prctile(cyto{frameNum}, 95, 'all')]
 
-%  Z_cyto=( (cyto{frameNum}-nanmean(cyto{frameNum}(:))) / std(cyto{frameNum}(:), 'omitnan'));
-%  Z_mruby=( (mRuby{frameNum}-nanmean(mRuby{frameNum}(:))) / std(mRuby{frameNum}(:), 'omitnan'));
-%  
+
   ezrin_ratio{frameNum} = mRuby ./ cyto; 
  ezrin_ratio{frameNum}(isnan(ezrin_ratio{frameNum}))=-100; 
   %bounds =[(prctile(ezrin_ratio{frameNum}, 5, 'all')),prctile(ezrin_ratio{frameNum}, 95, 'all')]

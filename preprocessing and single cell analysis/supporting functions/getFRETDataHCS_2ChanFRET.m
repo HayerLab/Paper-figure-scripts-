@@ -109,7 +109,7 @@ for frameNum=1:length(CFP_files)
 end
 %%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay
 bleach_1=nanmean(vect(imRatio_raw{1}));
-%bleach_raw = {}; bleach_raw_mRuby = {}; 
+bleach_raw = {};  
 for frameNum=1:length(imRatio_raw)
    bleach_raw(frameNum)=nanmean(vect(imRatio_raw{frameNum}));
  

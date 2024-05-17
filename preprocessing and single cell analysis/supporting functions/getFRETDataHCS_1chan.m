@@ -1,7 +1,7 @@
 function getFRETDataHCS_1chan(position,bgdir,rawdir,datadir,threshold)
 %function getFRETDataHCS( row,col,site )
 % image processing for FRET data analysis 
-% row=3;col=3;site=2;
+
 % Input: CFP/FRET images, background images,  and alignment parameters for
 % CFP/FRET images. 
 %
@@ -39,23 +39,19 @@ function getFRETDataHCS_1chan(position,bgdir,rawdir,datadir,threshold)
 %   DrawMaskOutline
 %   ratio2RGB
 %   vect
-%
-% Arnold, 24 May 2015
+
 key=[datadir,filesep,position,'_RatioData_raw.mat'];
 if ~exist(key)
 %%%%%% Set up
 
 
-%%%%%% Call background images
- binning=1; % relevant if alingment images and data images were acquired using distinct binning settings
-%mCitbg=double(imread([bgdir,filesep,'AVG_bgmCit.tif']));
 
 
-CFP_files=dir([rawdir,filesep,position,'_mCit_*']);
+mCit_files=dir([rawdir,filesep,position,'_mCit_*']);
 
 %%%%%% Loop through frames
 im_mCit={};maskFinal={};cellCoors={}; imOutline = {};   
-for frameNum=1:length(CFP_files)
+for frameNum=1:length(mCit_files)
    
     disp([position,'__',num2str(frameNum)]);
     im_mCit_raw=double(imread([rawdir,filesep,position,'_mCit_',num2str(frameNum),'.tif']));
@@ -63,22 +59,25 @@ for frameNum=1:length(CFP_files)
   
 
     %%%%%% Background-subtract CFP/FRET images
-%     bgmask=getBGMask(im_mCit_raw);
-%     im_mCitbg = subBG(im_mCit_raw,bgmask,mCitbg); 
-  
-  
-    im_mCitbg = im_mCit_raw; 
+    
+    bgmask=getBGMask(im_mCit_raw); % if performing background correction
+    im_mCitbg = subBG(im_mCit_raw,bgmask,mCitbg); % if performing background correction
+   % im_mCitbg = im_mCit_raw;  % if not perofrming background correction
+
+
     %%%%%% Get mask from raw FRET image
     [mask cellCoorsTemp]=getCellMaskCyto_2(im_mCitbg,1500, frameNum, position); 
    
-    % changing this from imFRET_raw and imCFP_raw, which are required if you are using getCellMaskCyto_edits
+    
     maskFinal{frameNum}=mask;
     cellCoors{frameNum}=cellCoorsTemp;
    
      im_mCitbg(~mask)=nan;
-     % if you want to filter the channel 
-  %  im_mCit_raw_=ndnanfilter(im_mCitbg,fspecial('disk',3),'replicate');
-   im_mCit{frameNum}=im_mCitbg;
+   % if you want to apply circular imaging filter to the channel  
+  % im_mCit_raw_=ndnanfilter(im_mCitbg,fspecial('disk',3),'replicate');
+   
+  % if you do not wish to apply any filters to channel 
+  im_mCit{frameNum}=im_mCitbg;
     
     
     
@@ -91,7 +90,7 @@ for frameNum=1:length(CFP_files)
 end
 
 
-%%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay
+%%%%%% Save data outputs 
 for frameNum=1:length(imRatio_raw)
    bleach_raw(frameNum)=nanmean(vect(im_mCit{frameNum}));
 

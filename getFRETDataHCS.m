@@ -109,7 +109,7 @@ for frameNum=1:length(CFP_files)
  
     
     %%%%%% Generate and write files for raw ratio and outlined objects
-   % tempRATIO=ratio2RGB(imRatio_raw{frameNum},colorRange);
+   
     imFRETOutline{frameNum}=DrawMaskOutline(imFRET_raw,mask);
     
     imwrite(imFRETOutline{frameNum},[datadir,filesep,position,'_Outline_prelim.tif'],'WriteMode','append','Compression','none');

@@ -58,19 +58,17 @@ bgWidth=x_bgMax-x_1pct; % estimates the width of the background peak
       xline(x_bgMax+bgWidth); % to see how effective the estimation above of bg width is 
  end 
 %Determine threshold for distinction between foreground/background (most important part of the code here)
-% if frameNum <=9
+
 
 threshSeg=(x_bgMax+(threshold)*bgWidth);% number here adjustable: if having trouble with segmentation adjust based on fg/bg separation%xline(threshSeg,'--'); % again just for visualization 
-%   else 
- %  threshSeg=(x_bgMax+(3)*bgWidth);
-%   end 
+
 if frameNum ==1 && a ==1
           xline(threshSeg, '--'); 
           pause; 
                  hold off;
-% %               
+              
  end 
-% % 
+
 %% messy cell edge part 2 
 % uses average cell intensity instead of bg peak, and thresholds backwards
 % from this 
@@ -100,20 +98,18 @@ if frameNum ==1 && a ==1
 %hold off; 
 %% masks the picture, then removes small areas of
 %background less than 200 pixels surrounded by cell (usually mistakes);
-% if frameNum ==1
-%   pause;   
-% end 
-mask_init=imSmooth2>threshSeg;
-%imagesc(mask_init); 
-mask=bwareaopen(mask_init,minCellSize); % troublshoot this part 
-%imagesc(mask); 
 
-%mask_filled1=imfill(mask,'holes');
+mask_init=imSmooth2>threshSeg;
+%imagesc(mask_init); %for visualization if necessary 
+mask=bwareaopen(mask_init,minCellSize); 
+%imagesc(mask); %for visualization if necessary 
+
+
 
  background = ~mask; 
   background = bwareaopen(background, 400); % added this to take out little flickers inside cells 
  mask_filled1 = ~background; % added this to take out little flickers inside cells 
-%imagesc(mask_filled1); 
+%imagesc(mask_filled1); %for visualization if necessary 
 
 % this section is for if masking a monolayer with holes in between cells 
 

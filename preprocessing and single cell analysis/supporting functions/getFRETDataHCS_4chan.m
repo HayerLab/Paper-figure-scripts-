@@ -110,11 +110,10 @@ for frameNum=1:length(CFP_files)
     imRubybg=subBG(imRuby_raw,bgmask_mRuby,mRubybg);
      imcytobg=subBG(imcyto_raw,bgmask_cyto,cytobg);
     %%%%%% Get mask from raw FRET image
-    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,5000, frameNum, position, threshold); %+imCFPbg
-   %[mask cellCoorsTemp]=getCellMaskCyto_edits(2*(imFRET_raw),2000);% +imCFP_raw
+    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,5000, frameNum, position, threshold); 
+   
     
-    
-    % changing this from imFRET_raw and imCFP_raw, which are required if you are using getCellMaskCyto_edits
+
     maskFinal{frameNum}=mask;
     cellCoors{frameNum}=cellCoorsTemp;
     %%%%%% Detrmine ratio
@@ -122,14 +121,10 @@ for frameNum=1:length(CFP_files)
     imFRET=ndnanfilter(imFRETbg,fspecial('disk',3),'replicate');
     imCFPbg(~mask)=nan;
     imCFP=ndnanfilter(imCFPbg,fspecial('disk',3),'replicate');
-%     imRatioTemp=imFRET./imCFP;
-%     imRatioTemp(~mask)=nan;
+
     imRatio_raw{frameNum}=imFRET./imCFP;
     imRatio_raw{frameNum}(~mask)=nan;
-    
-    %troubleshooting here to see the decay of each channel 
-%       CFP_raw{frameNum}=imCFP;
-%         FRET_raw{frameNum}=imFRET; 
+   
     
     
    imRubybg(~mask)=nan;
@@ -138,12 +133,10 @@ for frameNum=1:length(CFP_files)
     
    imcytobg(~mask)=nan;
     im_cyto_raw{frameNum}=imcytobg;
-    %%%%%% Determine scaling for representation
-    if frameNum==1
-       colorRange = [round(prctile(imRatio_raw{frameNum}(:),3),1),round(prctile(imRatio_raw{frameNum}(:),97),1)];
-    end
+   
+   
     %%%%%% Generate and write files for raw ratio and outlined objects
-    tempRATIO=ratio2RGB(imRatio_raw{frameNum},colorRange);
+   
     imFRETOutline{frameNum}=DrawMaskOutline(imFRET_raw,mask);
     
     imwrite(imFRETOutline{frameNum},[datadir,filesep,position,'_Outline_prelim.tif'],'WriteMode','append','Compression','none');
@@ -157,6 +150,6 @@ for frameNum=1:length(imRatio_raw)
   bleach_raw_cyto(frameNum)= nanmean(vect(im_cyto_raw{frameNum}));
 end
 save([datadir,filesep,position,'_RatioData_raw.mat'],'maskFinal','cellCoors','imRatio_raw','imFRETOutline','-v7.3','im_mRuby_raw', 'im_cyto_raw'); 
-%save([datadir,filesep,position,'_RatioData_raw.mat'],,'-v7.3');
+
 save([datadir,filesep,position,'_Bleach_raw.mat'],'bleach_raw','bleach_raw_mRuby', 'bleach_raw_cyto');  %'CFP_raw','FRET_raw'); %
 end  

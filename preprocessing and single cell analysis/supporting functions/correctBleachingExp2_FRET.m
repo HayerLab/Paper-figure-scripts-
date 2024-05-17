@@ -12,9 +12,9 @@ load([datadir,filesep,position, '_RatioData_raw.mat'],'imRatio_raw');
 load([datadir,filesep,position, '_Bleach_raw.mat']);
 timepts=1:length(imRatio_raw);
 
- corr=feval(fitpara,timepts); %use this one
- corr_norm=corr./median(corr); %use this one
- normfact=nanmedian(bleach_raw); %use this one
+ corr=feval(fitpara,timepts); 
+ corr_norm=corr./median(corr); 
+ normfact=nanmedian(bleach_raw);
  
 
 
@@ -24,18 +24,13 @@ timepts=1:length(imRatio_raw);
 for frameNum=1:length(imRatio_raw)
    
     imRatio{frameNum}=imRatio_raw{frameNum}./(normfact*corr_norm(frameNum));
- colorRange = [0.7 1.3]; 
  
- colorRange3 = [0.8 1.2]; 
-  %  imRatio{frameNum}=tempRATIO_corr;
-   % added this in to make some max intensity projections 
-   %tempRATIO_corr(tempRATIO_corr <1.1) = 0; 
-    tempRATIOforstack=ratio2RGB( imRatio{frameNum},colorRange);%Cdc42
+colorRange = [0.7 1.3]; 
+tempRATIOforstack=ratio2RGB( imRatio{frameNum},colorRange);
     
    
   imwrite(tempRATIOforstack,[datadir,filesep,position,  '_Rho-FRET','.tif'],'WriteMode','append','Compression','none');
- %  imwrite(tempRATIOforstack,[datadir,filesep, 'Rho-FRET','max intensity proj2','.tif'],'WriteMode','append','Compression','none');
-   
+
 
 end
 

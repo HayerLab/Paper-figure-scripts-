@@ -1,8 +1,7 @@
 function getFRETDataHCS_3chan(position,bgdir,rawdir,datadir,threshold)
-%function getFRETDataHCS( row,col,site )
-% image processing for FRET data analysis 
-% row=3;col=3;site=2;
-% Input: CFP/FRET images, background images,  and alignment parameters for
+
+
+% Input: CFP/FRET images, 1 non-ratio based channel, background images,  and alignment parameters for
 % CFP/FRET images. 
 %
 % Generates first a mask for background subtraction, subtracts background,
@@ -65,7 +64,7 @@ FRETbg=bg2(:,:,2);
 
 CFP_files=dir([rawdir,filesep,position,'_CFP_*']);
 %%%%%% Loop through frames
-imRatio_raw={};maskFinal={};cellCoors={}; imFRETOutline = {};   % im_mRuby_raw={};
+imRatio_raw={};maskFinal={};cellCoors={}; imFRETOutline = {};    im_mRuby_raw={};
 for frameNum=1:length(CFP_files)
    
   
@@ -88,6 +87,7 @@ for frameNum=1:length(CFP_files)
      imstack2(:,:,1)=imRuby_raw; imstack2(:,:,2)=zeros(m,n);
      imaligned2=dualviewAlignFromFittedSurfaceCrop(imstack2,pX,pY,1);
     imRuby_raw=imaligned2(:,:,1);
+   
     %%%%%% Background-subtract CFP/FRET images
     bgmask=getBGMask(imCFP_raw+imFRET_raw);
     bgmask_mRuby=getBGMask(imRuby_raw);
@@ -96,7 +96,7 @@ for frameNum=1:length(CFP_files)
    imRubybg=subBG(imRuby_raw,bgmask_mRuby,mRubybg);
    
    %%%%%% Get mask from raw FRET image
-    [mask cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,1500, frameNum, position, threshold); %+imCFPbg
+    [mask, cellCoorsTemp]=getCellMaskCyto_2(imFRETbg,1500, frameNum, position, threshold); 
  
     maskFinal{frameNum}=mask;
     cellCoors{frameNum}=cellCoorsTemp;
@@ -113,19 +113,21 @@ for frameNum=1:length(CFP_files)
     
     
    imRubybg(~mask)=nan;
-  %  im_mRuby_=ndnanfilter(imRubybg,fspecial('disk',3),'replicate');
-   im_mRuby_raw{frameNum}=imRubybg;
+%filtered image (optional)
+   % im_mRuby_=ndnanfilter(imRubybg,fspecial('disk',3),'replicate');
+ %no image filtering 
+   im_mRuby_raw{frameNum}=imRubybg; %no filtering 
     
     
     %%%%%% Generate and write files for raw ratio and outlined objects
-   % tempRATIO=ratio2RGB(imRatio_raw{frameNum},colorRange);
+   
     imFRETOutline{frameNum}=DrawMaskOutline(imFRET_raw,mask);
     
     imwrite(imFRETOutline{frameNum},[datadir,filesep,position,'_Outline_prelim.tif'],'WriteMode','append','Compression','none');
 end
 %%%%%% Bleaching correction: Detrmine linear fit parameters for FRET/CFP decay
 bleach_1=nanmean(vect(imRatio_raw{1}));
-%bleach_raw = {}; bleach_raw_mRuby = {}; 
+
 for frameNum=1:length(imRatio_raw)
    bleach_raw(frameNum)=nanmean(vect(imRatio_raw{frameNum}));
   bleach_raw_mRuby(frameNum)= nanmean(vect(im_mRuby_raw{frameNum}));
