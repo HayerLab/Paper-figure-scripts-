@@ -11,28 +11,32 @@
 %       ndnanfilter.m
 %       vect.m
 
+
+%need to add "Statistics and Machine Learning Toolbox" in MATLABS add-on
+%section. 
+
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [7];   
+cells = [1:1:20];   
 
 for place=1:size(cells,2)
-cells = [7];   
+cells = [1:1:60];   
      
 
 
-for zwster = 1
+for depth = 1:5 % number of edge depths you wish to analyze 
 
-%clear; close all; clc;
+
  %for 20x no binning, or 40x 2x2 bin etc. 0.325 um/px
-depths = [15]; % ,10,15,20,25]; 
+depths = [3,6,10,15,25]; 
 
-% for 60x, 2x2 binning
+
 
  
-root='F:\240404-Arnold new ezrin cells test data\run2';
-rawdir=([root,filesep,'cropped',filesep, strcat('t567a\',num2str(cells(1,place))),filesep,'output']); %
-datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(depths(1, zwster)))]); %'cropped', filesep,  strcat(num2str(cells(1,place))), filesep,
+root='F:\example_dataset_240522';
+rawdir=([root,filesep,'cropped',filesep, strcat(num2str(cells(1,place))),filesep,'output']); %
+datadir=([rawdir,filesep,'edge_vels', filesep,  strcat('edge vel mapping_',num2str(depths(1, depth)))]); 
 if ~exist(datadir)
     mkdir(datadir)
 end 
@@ -42,16 +46,14 @@ end
 nFretWindows=180;                                   % Number of windows to use for FRET vs edge correlation measurements
 edgeOversamplingParam=5;                            % How many times more points should the edge of the cell be tracked at ("subwindow")
 nPointsParam=nFretWindows*edgeOversamplingParam;    % Number of points to track on the cell edge
-pdSmoothing=10;%was 10                                      % Used with imclose to make the selection of points for tracking less dependent on noise or wrinkles in the cell edge
+pdSmoothing=10;                                   % Used with imclose to make the selection of points for tracking less dependent on noise or wrinkles in the cell edge
 
-edgeDepthDist=depths(1, zwster);   % Number of pixels deep for the windows for computing FRET values.
+edgeDepthDist=depths(1, depth);   % Number of pixels deep for the windows for computing FRET values.
 
-startFrame=1;
-endFrame=150;
 
 binning=1;            %only change if binning is changed while using same objective magnification!!
 
-%colormap('parula');
+
 
 
 % Load previously determined sequence of masks
@@ -60,10 +62,11 @@ binning=1;            %only change if binning is changed while using same object
 load([rawdir,filesep,'RatioData_raw.mat']);
 load([rawdir,filesep,'ezrin_data', filesep,'CytoRatioData.mat']);
 
-% perform tracking of mask centroid
-% min(cellfun(@(x) size(x,1),cellCoors))    % changed it from min to max ? 
-%% %% delete flash glitch frames that mess FRET data - if needed 
-% % % % 
+
+%% %% delete unwanted frames (optional!!) 
+% ie if cell touches another cell at the end of the movie and you wish to
+% exclude it from edge tracking analysis  
+
 flashFrame=141:150; 
 maskFinal(flashFrame)=[];
 imCAAXOutline(flashFrame) = []; 
@@ -71,33 +74,15 @@ ezrin_ratio(flashFrame)=[];
 membrane_cyto_ratio(flashFrame)=[];
 cellCoors(flashFrame)=[]; 
 % % im_mRuby(flashFrame) = []; 
-% % % 
-% flashFrame=114; 
-% maskFinal(flashFrame)=[];
-% imFRETOutline(flashFrame)=[];
-% imRatio(flashFrame)=[];
-% cellCoors(flashFrame)=[]; 
-% % % im_mRuby(flashFrame) = []; 
-% % % % 
-% flashFrame=53; 
-% maskFinal(flashFrame)=[];
-% imFRETOutline(flashFrame)=[];
-% imRatio(flashFrame)=[];
-% cellCoors(flashFrame)=[]; 
-% % % im_mRuby(flashFrame)=[]; 
-% 
-% flashFrame=1:19; 
-% maskFinal(flashFrame)=[];
-% imFRETOutline(flashFrame)=[];
-% imRatio(flashFrame)=[];
-% cellCoors(flashFrame)=[]; 
 
-%%
+
+%% determines cell trajectories. 
+% Will create multiple if there are multiple masked cells per crop 
+% in your loadeddata 
 
 %first checks if any trajectories exist, and then skips through any empty
 %cells at the beginning 
 
-%added iterations that deal with empty frames before cells are dropped,
 %begins edge tracking at the first non-empty cell in the array cellCoors
 
 
@@ -111,9 +96,9 @@ if  ~isempty(cellCoors)
              empty_count=empty_count+1;
              continue; 
 
-           else  %here need to add in 'mem' arg with number of frames you want it to skip, otherwise you need to take it out 
-            traj=ultTrackAnnSearch(cellCoors(1,empty_count+1:end),'pairrule','fwdbckmtch','maxdisp',100,'minlength',5,'verbose',false); %wanting to add in a min length? - see if it changes anything 
-         end %min(cellfun(@(x) size(x,1),cellCoors))>0
+           else   
+            traj=ultTrackAnnSearch(cellCoors(1,empty_count+1:end),'pairrule','fwdbckmtch','maxdisp',100,'minlength',5,'verbose',false); 
+         end 
     end 
 else
     traj={};
@@ -128,11 +113,11 @@ fprintf('%i trajectories.\n',length(traj));
 %% Manually select cell for analysis 
 selectedCell=1; %input which trajectory
 isConnect = false; %true if you had to connect broken trajectories
-%deleteFrame =46; % manually input frame that needs to be deleted
+
 thisTraj=traj{selectedCell};
 centroid_coordinates=zeros(2,size(imCAAXOutline,2));
 cell_area=0; 
-if ~(isConnect) %modifying this Traj code if you needed to correct broken trajectores
+if ~(isConnect) 
     start =thisTraj(1,5);
 else
     
@@ -141,9 +126,7 @@ else
     for z = start:start+size(thisTraj,1) -1
         thisTraj(z,4)=z;
     end 
-%     maskFinal(deleteFrame)=[]; 
-%     imFRETOutline(deleteFrame)=[];
-%     imRatio(deleteFrame)=[];
+
 end
 
 index = 1;
@@ -175,21 +158,14 @@ for imnum=start:start+size(thisTraj,1) -1
             thisMask_raw(objects(cellNum).PixelIdxList)=true; % sets values of object 2 to 1
 
             thisMask = thisMask_raw;
-            % Smooth mask - move this into the getCellCyto function, so you
-            % can see what the cell actually looks like 
-%             thisMask=imerode(thisMask_raw,strel('disk',4));
-%             thisMask=imdilate(thisMask,strel('disk',4));
-%             thisMask=bwareaopen(thisMask,300);% Clean up smoothing artifacts (remove objects smaller than 500 pixels). 
+            
 
                 % Parametrize cell edge and compute protrusion values
                 if index ==1
                     [edgeCoors{index}, edgeCoorsSmoothed{index}]=parametrizeCellEdge(thisMask,nPointsParam,round(pdSmoothing/binning));
-
-                 %   plot(edgeCoors{1,index}(:,1),edgeCoors{1,index}(:,2)); hold on; 
-                  %  plot(edgeCoorsSmoothed{1,index}(:,1),edgeCoorsSmoothed{1,index}(:,2))
                 else
                     [edgeCoors{index},edgeCoorsSmoothed{index}]=parametrizeCellEdge(thisMask,nPointsParam,round(pdSmoothing/binning),edgeCoors{index-1});
-                    %windowCoors{frameCount}=edgeCoors{frameCount}((edgeOversamplingParam+1)/2:edgeOversamplingParam:end,:);
+                   
                     protvals(:,index-1)=vect(computeProtrusionValues(edgeCoors{index-1},edgeCoorsSmoothed{index-1},edgeCoors{index}));
                 end
                 windowCoors{index}=edgeCoors{index}((edgeOversamplingParam+1)/2:edgeOversamplingParam:end,:);
@@ -199,8 +175,9 @@ for imnum=start:start+size(thisTraj,1) -1
          
             for k=1:size(windowCoors{index},1)
                 
-                % fretvals(k,index)=mean(imRatio_raw{index+empty_count}(labelMask{index}==k));
-               %myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
+                %comment out as needed for specific data 
+                 fretvals(k,index)=mean(imRatio_raw{index+empty_count}(labelMask{index}==k));
+                 myosin(k,index)=mean(im_mRuby{index+empty_count}(labelMask{index}==k));
                  ezrin(k,index)=mean(ezrin_ratio{index+empty_count}(labelMask{index}==k));
                  membrane_cyto(k,index)=mean(membrane_cyto_ratio{index+empty_count}(labelMask{index}==k));
           
@@ -229,136 +206,59 @@ protvalsWindow=zeros(nFretWindows,size(protvals,2));
   distance = distance+ sqrt((dx^2)+(dy^2));       
  end 
  
- % make it per minute so can compare different length movies 
- %distance = distance/(size(imCAAXOutline,2)*(2/3))
-% avg_cell_area = cell_area/size(imRatio_raw,2)
- 
  %% filtered protusionvalues
  
    % filtered protrusion values
 protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
-%fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
-% myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
- ezrinF=ndnanfilter(ezrin,fspecial('disk',1),'replicate');
+fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate'); 
+myosinF=ndnanfilter(myosin,fspecial('disk',2),'replicate');
+ezrinF=ndnanfilter(ezrin,fspecial('disk',1),'replicate');
  membranecytoF=ndnanfilter(membrane_cyto,fspecial('disk',1),'replicate');
-
-
-
-protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWindowF(:),99),1)];
-%fretvalsrangeF=[round(prctile(fretvalsF(:),1),1),round(prctile(fretvalsF(:),99),1)];
-%myosinrangeF=[round(prctile(myosinF(:),1),1),round(prctile(myosinF(:),99),1)];
-
-
-%% display location of coordinates overlayed on cell mask images - optional for visualization
-%  % creates gif file for reference
-%     for mapper =1:size(thisTraj,1)
-%      
-%         window = windowCoors{1,mapper}; 
-%       if ~(isConnect)
-%       image = (imFRETOutline{1,thisTraj(mapper,5)+empty_count}); %slightly convoluted but lines up YFP raw image to the correct windowcoors
-%       else
-%            image = imread(imFRETOutline{1,thisTraj(mapper,4)+empty_count});
-%       end 
-%       h = figure('visible','off');
-%       hold on; 
-%       axis ij; 
-%      imagesc(image); 
-%    
-%      %for num = 1:15:size(window,1)
-%       for num = 100:2:120
-%          image(window(num,1), window(num,2),1) = 255; 
-%          image(window(num,1), window(num,2),2) = 0; 
-%          image(window(num,1), window(num,2),3) = 0; 
-%          text(window(num,2),window(num,1),num2str(num), 'Color','r', 'FontSize', 8);
-%       end 
-%      
-%      frame = getframe(h);
-%     im=frame2im(frame);
-%     [imind, cm] = rgb2ind(im,256);
-%      
-%          if mapper ==1
-%              imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','Loopcount', inf);
-%          else
-%                    imwrite(imind,cm,strcat(datadir,'\','Coordinate_Windows'),'gif','WriteMode','append');
-%          end 
-%       imwrite(image,[datadir,filesep,'Outline_label.tif'],'WriteMode','append','Compression','none');
-% 
-%   end 
-% % %   
 
  
 %% Plot maps - with thresholds
-load('C:\Users\marsh\OneDrive - McGill University\Documents\GitHub\Rodrigo_Codes\Colormaps\BCWOR-256.mat'); 
-
+load('desired colormap.mat'); %any existing colormap can be used for visualization
+load('CMAP_blue_grey_yellow.mat'); %default one used in paper 
 close all;
 
-protthresh=5;
-retthresh=-5;
+
 f1=figure; 
 
 
 hold on;
-% load custom parula colour map for protrusion/retraction visualization
-%load('F:\Seph\code\supporting_functions\trackingcode\CMAP_blue_grey_yellow.mat'); 
-load('CMAP_blue_grey_yellow.mat');
-% do this if imaging done at different time interval than 25s
-cmap_15s =cmap; 
-% cmap_15s(35:39,:)=[]; %adjusting "grey range" depending on thresholds
-protvalrange=[round(prctile(protvalsWindow(:),1),1),round(prctile(protvalsWindow(:),99),1)];
-%fretvalsrange=[round(prctile(fretvals(:),1),1),round(prctile(fretvals(:),99),1)];
- %myosinrange=[round(prctile(myosin(:),1),1),round(prctile(myosin(:),99),1)];
+
+
+%following code creates 2 by 2 subplot where edge velocity, FRET activity, 
+% and other protein localization can be observed. Must specify which data
+% you want to plot where 
 
 ax1=subplot(2,2,1);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
-
-colormap(ax1,BCWOR);
-%15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
+colormap(ax1,BCWOR); 
 %25 s intervals 
    xticks([0 24 48 71 95 120 144])
    xticklabels({'0','10','20','30','40','50' '60'});
 
 ax2=subplot(2,2,2);imagesc(ezrinF,[-1 3] );title('Ezrin');
 xlim([0 150]); 
- %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
-% colormap(ax2,cmap);
-%  rectangle('Position',[84,120,41,15],'LineWidth',2); 
-%  rectangle('Position',[62,60,41,15],'LineWidth',2); 
- %15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
-%25 s intervals 
  xticks([24 48 71 95 120 144])
   xticklabels({'0','10','20','30','40','50'});
 
 
-
-protvalsWindowHigh=protvalsWindow>protthresh;
-
 ax3=subplot(2,2,3);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
 colormap(ax3,BCWOR);
 xlim([0 150]); 
-%15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
-%25 s intervals 
-  xticks([ 24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50'});
-%protvalsWindowFHigh=protvalsWindowF>protthresh;
+xticks([ 24 48 71 95 120 144])
+xticklabels({'0','10','20','30','40','50'});
 
- ax4=subplot(2,2,4);imagesc(membranecytoF,[-10 10]); title ('membrane cyto ratio');
- %15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
- %25 s intervals 
-  xticks([0 24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50' '60'});
-%
+ ax4=subplot(2,2,4);imagesc(myosinF,[0 3]); title ('Myosin localization');
+ xlim([0 150]); 
+ xticks([0 24 48 71 95 120 144])
+ xticklabels({'0','10','20','30','40','50' '60'});
+
  hold off; 
 saveas(f1,strcat(datadir,'\','edge_velocity_map.png'))
 saveas(f1,strcat(datadir,'\','edge_velocity_mapM.fig'))
 
-%save('protrusionpeaks.mat','protvalsWindowF','protvalsWindowFHigh')
 
 % save all new data into mat file 
 
