@@ -5,6 +5,7 @@ trial_1_seph = [0.14 0.12 0.71 0.5];
 tria1_2_nada= [0.04  0.06 0.3924 0.2216]; 
 trial_3_seph = [0.23 0.23 0.63 0.55] ; 
 trial_4_seph = [0.10 0.08 0.42 0.26]; 
+trial_5_arnold = [0.074 0.066 0.51 0.37]; 
 
 x = [1 2 3 4];
 
@@ -21,10 +22,11 @@ plot(x, trial_1_seph, '*-', 'LineWidth', 3);
 plot(x,tria1_2_nada, '*-',  'LineWidth', 3); 
 plot(x, trial_3_seph, '*-',  'LineWidth', 3); 
 plot(x, trial_4_seph, '*-',  'LineWidth', 3); 
+plot(x, trial_5_arnold, '*-',  'LineWidth', 3); 
 
-legend('T1', 'T2', 'T3', 'T4'); 
+legend('T1', 'T2', 'T3', 'T4', 'T5'); 
 
-save('C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\Version231221_SciAdv_submitted\Revision\blebbing siRNA trials\meanvalues.mat','conditions', 'trial_1_seph', 'tria1_2_nada', 'trial_3_seph', 'trial_4_seph'); 
+save('C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\Version231221_SciAdv_submitted\Revision\blebbing siRNA trials\meanvalues.mat','conditions', 'trial_1_seph', 'tria1_2_nada', 'trial_3_seph', 'trial_4_seph', 'trial_5_arnold'); 
 
 %% repeated measures ANOVA 
 clc; 
