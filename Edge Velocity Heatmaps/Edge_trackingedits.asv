@@ -18,10 +18,10 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [1:1:20];   
+cells = [1:1:20];   %number of cropped cells that you wich to analyze 
 
 for place=1:size(cells,2)
-cells = [1:1:60];   
+cells = [1:1:20];   
      
 
 
@@ -229,7 +229,8 @@ hold on;
 
 
 %following code creates 2 by 2 subplot where edge velocity, FRET activity, 
-% and othe 
+% and other protein localization can be observed. Must specify which data
+% you want to plot where 
 
 ax1=subplot(2,2,1);imagesc(protvalsWindow,[-13,13]);title('Edge Velocity');
 colormap(ax1,BCWOR); 
@@ -239,14 +240,6 @@ colormap(ax1,BCWOR);
 
 ax2=subplot(2,2,2);imagesc(ezrinF,[-1 3] );title('Ezrin');
 xlim([0 150]); 
- %ax2 =subplot(2,2,2);imagesc(protvalsWindowF,[-13,13]);title('Edge Velocity');
-% colormap(ax2,cmap);
-%  rectangle('Position',[84,120,41,15],'LineWidth',2); 
-%  rectangle('Position',[62,60,41,15],'LineWidth',2); 
- %15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
-%25 s intervals 
  xticks([24 48 71 95 120 144])
   xticklabels({'0','10','20','30','40','50'});
 
@@ -254,31 +247,22 @@ xlim([0 150]);
 ax3=subplot(2,2,3);imagesc(protvalsWindowF, [-13 13]); title ('Filtered');
 colormap(ax3,BCWOR);
 xlim([0 150]); 
-%15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
-%25 s intervals 
-  xticks([ 24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50'});
-%protvalsWindowFHigh=protvalsWindowF>protthresh;
+xticks([ 24 48 71 95 120 144])
+xticklabels({'0','10','20','30','40','50'});
 
- ax4=subplot(2,2,4);imagesc(membranecytoF,[-10 10]); title ('membrane cyto ratio');
- %15s intervals 
-%  xticks([40 80 120 160 200]); 
-% xticklabels({'0','10','20','30','40','50'}); 
- %25 s intervals 
-  xticks([0 24 48 71 95 120 144])
-  xticklabels({'0','10','20','30','40','50' '60'});
-%
+ ax4=subplot(2,2,4);imagesc(myosinF,[0 3]); title ('Myosin localization');
+ xlim([0 150]); 
+ xticks([0 24 48 71 95 120 144])
+ xticklabels({'0','10','20','30','40','50' '60'});
+
  hold off; 
 saveas(f1,strcat(datadir,'\','edge_velocity_map.png'))
 saveas(f1,strcat(datadir,'\','edge_velocity_mapM.fig'))
 
-%save('protrusionpeaks.mat','protvalsWindowF','protvalsWindowFHigh')
 
 % save all new data into mat file 
 
-save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance', 'ezrin', 'ezrinF', 'membrane_cyto','membranecytoF') ; % 'avg_cell_area'%'myosin','myosinF'); % ;
+save(strcat(datadir,'\','Protrusion and FRET Values.mat'),'protvalsWindow','protvalsWindowF','distance', 'ezrin', 'ezrinF', 'membrane_cyto','membranecytoF', 'fretvals', 'fretvalsF'); % 'avg_cell_area'%'myosin','myosinF'); % ;
 
 
 %close all; clc;
@@ -287,223 +271,33 @@ end
 end 
  clear; clc; 
 
+ %% count number of protrusions and retraction event/cell 
+ % this section calls on function getEdgeVelStats_edits 
+ % which identifies number of protrusion and retraction events per cell
+ % that are above a certain size and speed threshold 
+
+ cells = [1:1:20]; 
+
+ depths = [3]; %specify edge depth you wish to use 
  
-%% Polar plot of sum of all protrusions - all code after this is optional
-close all;
-protsum=sum(protvalsWindowF,2);
-polarplot((1:2:360)*pi/180,protsum);rlim([-200 200]);
-
-%% Plot maps. 
-% close all;
-% % edge velocity/RhoA maps
-% load('E:\supporting_functions\trackingcode\CMAP_blue_grey_yellow.mat');
-% %protvalrange=[round(prctile(protvalsWindow(:),1),1),round(prctile(protvalsWindow(:),99),1)];
-% %fretvalsrange=[round(prctile(fretvals(:),1),1),round(prctile(fretvals(:),99),1)];
-% %redvalsrange=[round(prctile(redvals(:),1),1),round(prctile(redvals(:),99),1)];
-% ax1=subplot(2,2,1);imagesc(protvalsWindow, [-12 12]);title('protrusion');
-% colormap(ax1,cmap);
-% %ax2=subplot(2,2,2);imagesc(fretvals,fretvalsrange);title('FRET');
-% %subplot(2,3,3);imagesc(redvals,redvalsrange);
-% 
-% % smoothing
-% protvalsWindowF=ndnanfilter(protvalsWindow,fspecial('disk',2),'replicate');
-% %fretvalsF=ndnanfilter(fretvals,fspecial('disk',2),'replicate');
-% %redvalsF=ndnanfilter(redvals,fspecial('disk',2),'replicate');
-% protvalsrangeF=[round(prctile(protvalsWindowF(:),1),1),round(prctile(protvalsWindowF(:),99),1)];
-% %fretvalsrangeF=[round(prctile(fretvalsF(:),1),1),round(prctile(fretvalsF(:),99),1)];
-% %redvalsrangeF=[round(prctile(redvalsF(:),1),1),round(prctile(redvalsF(:),99),1)];
-% 
-% ax3=subplot(2,2,3);imagesc(protvalsWindowF, protvalsrangeF);
-% colormap(ax3,cmap); title('Protrusiuons-Smoothed');
-% % subplot(2,3,5);imagesc(fretvalsF,fretvalsrangeF);
-% %ax4=subplot(2,2,4);imagesc(fretvalsF,fretvalsrangeF);
-% %subplot(2,3,6);imagesc(redvalsF,redvalsrangeF);
-% 
-
-% 
-% 
-% 
-% 
-% % Redvalsdiff:
-% %redvalsFdiff=diff(redvalsF,[],2);
-% %redvalsFdiffrange=[round(prctile(redvalsFdiff(:),1),1),round(prctile(redvalsFdiff(:),99),1)];
-% 
-% %subplot(2,3,6);imagesc(redvalsFdiff,redvalsFdiffrange);
-%% plot area change of cell over time 
-%x= linspace(1,1,size(thisTraj,1));
-x = thisTraj(:,5);
-y=thisTraj(:,3);
-f2 =figure;
-hold on; 
-yyaxis left
-title('Area Change vs. Mean Protrusion Length');
-xlabel('frame number');
-ylabel('cell area');
-
-
-plot(x,y)
-var_coeff = zeros(size(thisTraj, 1),1);
-prot_mean=zeros(size(thisTraj, 1),1);
-standard_dev=zeros(size(thisTraj, 1),1);
-variance = zeros(size(thisTraj, 1),1);
-
-for loop = 1:size(protvalsWindow, 2)
-    standard_dev(loop+1,1) = std(protvalsWindowF(:,loop));
-    prot_mean(loop+1,1) = mean(protvalsWindowF(:,loop));
-    variance(loop+1,1)=var(protvalsWindowF(:,loop)); 
-    var_coeff(loop+1,1) = (standard_dev(loop+1,1)/abs(prot_mean(loop+1,1))*100);
-end 
-
-yyaxis right
-plot (x,prot_mean)
-hold off; 
-ylabel('mean protrusion length');
-
-saveas(f2, strcat(datadir,'\','Area vs mean.png')); 
-
-%getProbDensity(protvalsWindowF, 25); %here manually input which frame you want
-
+ root = 'F:example_dataset_240522\cropped';
+ for i = 1:20
     
-%% Plot top 10% of velocity of protrusion, spreading area
-for frame=1:(endFrame-start)
-    SpeedTemp=protvalsWindowF(:,frame);
-    SpeedTemp=sort(SpeedTemp,'descend');
-    spreadingArea(frame,:)=sum(vect(MaskThisCell{frame}));
-    protvalsFast(frame,:)=median(SpeedTemp(1:ceil(0.1*length(SpeedTemp))));
-    %protvalsFast(frame,:)=median(protvalsWindow(:,frame)>prctile(protvalsWindow(:,frame),90),1);
-end
-yyaxis left;
-plot(protvalsFast);
-
-yyaxis right;
-plot(spreadingArea);axis([0 90 15000 20000]);
-
-
-%% quiver plot of edge velocities
-
-for frameNum=1:(endFrame-start-1)
-     close all; 
-   % imagesc(MaskThisCell{frameNum}); hold on;
-    
-    image = imFRETOutline{1,frameNum};
-           
-      h = figure('visible','on');
-      hold on; 
-      axis ij; 
-     imagesc(image);
-    
+     for j= 1:size(depths,2)
+         
+         
+      celldir = ([root, filesep, strcat(num2str(i)),filesep, strcat('output', filesep,'edge_vels', filesep, 'edge vel mapping_', num2str(depths(1,1)))]);       
+         
+         
+     getEdgeVelStats_edits(celldir,1,2.5,-2.5,25);
      
-    normV=computeNormalVectorsFromParametrizedCellEdge(edgeCoorsSmoothed{frameNum});
-    protvals=(computeProtrusionValues(edgeCoors{frameNum},edgeCoorsSmoothed{frameNum},edgeCoors{frameNum+1}));
-    %plot(edgeCoors{frameNum}(:,2),edgeCoors{frameNum}(:,1)); quiver(edgeCoors{frameNum}(:,2),edgeCoors{frameNum}(:,1),0.2*normV(:,2),0.2*normV(:,1));
-    protvect=normV.*protvals;
-    
-    % filter protvect with moving average of windowSize 5
-    windowSize=3;
-    b=(1/windowSize)*ones(1,windowSize);
-    a=1;
-    
-    protvectF(:,1)=filter(b,a,protvect(:,1));
-    protvectF(:,2)=filter(b,a,protvect(:,2));
-    
-    plot(edgeCoors{frameNum}(:,2),edgeCoors{frameNum}(:,1)); quiver(edgeCoors{frameNum}(:,2),edgeCoors{frameNum}(:,1),0.2*protvect(:,2),0.2*protvect(:,1),'Color',[1 0 0]);
-    plot(edgeCoors{frameNum}(:,2),edgeCoors{frameNum}(:,1)); quiver(edgeCoors{frameNum}(:,2),edgeCoors{frameNum}(:,1),0.2*protvectF(:,2),0.2*protvectF(:,1),'Color',[0 1 0]);
+     
+     end 
+     
+     
+     
+     
+ end 
  
-   
-    
-    
-    plot(windowCoors{frameNum}(:,2),windowCoors{1}(:,1));hold on;
-    plot(edgeCoors{frameNum}(:,2),edgeCoors{frameNum}(:,1));
-    plot(edgeCoorsSmoothed{frameNum}(:,2),edgeCoorsSmoothed{frameNum}(:,1));
-    qp.edgePos=windowCoors{frameNum};
-    qp.edgeVel=6*(windowCoors{frameNum+1}-windowCoors{frameNum});
-    quiver(qp.edgePos(:,2)',qp.edgePos(:,1)',qp.edgeVel(:,2)',qp.edgeVel(:,1)');hold off;%,'Color',[1 1 1]
-    pause;  
-end
 
-
-%% overlay maps as greyscales into image
-figure;
-% fretred(:,:,1)=mat2gray(fretvalsF(:,1:end-1),fretvalsrangeF);
-% fretred(:,:,2)=mat2gray(redvalsFdiff,redvalsFdiffrange);
-% fretred(:,:,3)=zeros(size(fretred(:,:,1),1),size(fretred(:,:,1),2));
-% subplot(1,3,1);imshow(fretred);axis square; title('red=fret, green=F-actin');
-
-edgefret(:,:,1)=mat2gray(protvalsWindowF,protvalsrangeF);
-%edgefret(:,:,2)=mat2gray(fretvalsF(:,1:end-1),fretvalsrangeF);
-edgefret(:,:,2)=zeros(size(edgefret(:,:,1),1),size(edgefret(:,:,1),2));
-imshow(edgefret);axis square; title('red=edge velocity, green=fret');
-
-% edgered(:,:,1)=mat2gray(protvalsWindowF,protvalsrangeF);
-% edgered(:,:,2)=mat2gray(redvalsFdiff,redvalsFdiffrange);
-% edgered(:,:,3)=zeros(size(edgefret(:,:,1),1),size(edgefret(:,:,1),2));
-% subplot(1,3,3);imshow(edgered);axis square; title('red=edge velocity, green=F-actin');
-
-%% Scatter the top 20% of RhoB pixels over edge velocity
-close all;
-
-FREThigh=fretvalsF(:,1:end-1)>round(prctile(fretvalsF(:),80),1);
-FRETlow=fretvalsF(:,1:end-1)<round(prctile(fretvalsF(:),20),1);
-FRETlowhigh=single(or(FREThigh,FRETlow));
-
-FREThigh=single(FREThigh);FREThigh(FREThigh==0)=NaN;
-FRETlow=single(FRETlow);FRETlow(FRETlow==0)=NaN;
-
-FRETlowhigh(FRETlowhigh==0)=NaN;
-subplot(2,2,1);imagesc(fretvalsF(:,1:end-1),fretvalsrangeF);title('Cdc42 FRET/CFP');ylabel('peripheral windows');
-subplot(2,2,2);imagesc((fretvalsF(:,1:end-1).*FRETlowhigh),fretvalsrangeF);title('Cdc42 FRET/CFP, top/bottom 20%');
-
-
-subplot(2,2,3);imagesc(protvalsWindowF,protvalsrangeF);title('edge velocity');ylabel('peripheral windows');xlabel('frames (1/20s)');
-subplot(2,2,4);imagesc((protvalsWindowF.*FRETlowhigh),protvalsrangeF);title('edge velocity, in top/bottom 20% Cdc42 FRET/CFP');xlabel('frames (1/20s)');
-
-%subplot(2,2,4);dscatter(fretvalsF(FREThigh),protvalsWindowF(FREThigh));
-
-figure; 
-
-subplot(1,2,1);dscatter(vect(fretvalsF(:,1:end-1)),vect(protvalsWindowF));xlabel('Rac FRET/CFP');ylabel('edge velocity');
-subplot(1,2,2);dscatter(vect(fretvalsF(:,1:end-1).*FRETlowhigh),vect(protvalsWindowF.*FRETlowhigh));xlabel('Rac FRET/CFP');ylabel('edge velocity');
-nanmean(vect(protvalsWindowF.*FRETlow))
-nanmean(vect(protvalsWindowF.*FREThigh))
-lo=~isnan(vect(FRETlowhigh));
-prot=vect(protvalsWindowF.*FRETlowhigh);prot=prot(lo);
-fret=vect(fretvalsF(:,1:end-1).*FRETlowhigh);fret=fret(lo);
-[R,P]=corrcoef(fret,prot)
-
-
-
-
-%% Scatter the top 20% of edge velocity pixels over FRET
-close all;
-
-EDGEhigh=protvalsWindowF>round(prctile(protvalsWindowF(:),80),1);
-EDGElow=protvalsWindowF<round(prctile(protvalsWindowF(:),20),1);
-EDGElowhigh=single(or(EDGEhigh,EDGElow));
-
-EDGEhigh=single(EDGEhigh);EDGEhigh(EDGEhigh==0)=NaN;
-EDGElow=single(EDGElow);EDGElow(EDGElow==0)=NaN;
-
-EDGElowhigh(EDGElowhigh==0)=NaN;
-
-subplot(2,2,1);imagesc(protvalsWindowF,protvalsrangeF);title('edge velocity');ylabel('peripheral windows');
-subplot(2,2,2);imagesc((protvalsWindowF.*EDGElowhigh),protvalsrangeF);title('edge velocity, top/bottom 20%');
-
-subplot(2,2,3);imagesc(fretvalsF(:,1:end-1),fretvalsrangeF);title('Rac FRET/CFP');ylabel('peripheral windows');xlabel('frames (1/20s)');
-subplot(2,2,4);imagesc((fretvalsF(:,1:end-1).*EDGElowhigh),fretvalsrangeF);title('Rac FRET/CFP, in top/bottom 20% edge velocity');xlabel('frames (1/20s)');
-
-%subplot(2,2,4);dscatter(fretvalsF(FREThigh),protvalsWindowF(FREThigh));
-
-figure; 
-
-subplot(1,2,1);dscatter(vect(fretvalsF(:,1:end-1)),vect(protvalsWindowF));
-subplot(1,2,2);dscatter(vect(fretvalsF(:,1:end-1).*EDGElowhigh),vect(protvalsWindowF.*EDGElowhigh));
-nanmean(vect(fretvalsF(:,1:end-1).*EDGElow))
-nanmean(vect(fretvalsF(:,1:end-1).*EDGEhigh))
-
-lo=~isnan(vect(EDGElowhigh));
-prot=vect(protvalsWindowF.*EDGElowhigh);prot=prot(lo);
-fret=vect(fretvalsF(:,1:end-1).*EDGElowhigh);fret=fret(lo);
-[R,P]=corrcoef(fret,prot)
-
-
-
+ open("runEdgeVelStats_edits.m"); 

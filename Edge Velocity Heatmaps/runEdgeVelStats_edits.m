@@ -1,4 +1,6 @@
-  cells = [1,3,4,5,6,7,9,10,11,12,13]; 
+%dummy script to run the function get
+
+cells = [1,3,4,5,6,7,9,10,11,12,13]; 
 
  depths = [3]; 
  
