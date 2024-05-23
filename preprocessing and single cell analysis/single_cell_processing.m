@@ -155,10 +155,9 @@ getFRETDataHCS_stacked_FRET(k,rawdir,datadir,threshold, pX, pY); %FRET, CFP
 
 
 % choose which one you need
-%correctBleachingExp2_stacked_YFP_cyto(fitpara,datadir); %fitpara_mRuby
-%%potentially remove this 
+
 %correctBleachingExp2_stacked(fitpara, datadir, fitpara_mRuby); %  % does FRET, and mRuby
- % correctBleachingExp2_FRET_stacked(fitpara, datadir); %only does FRET
+correctBleachingExp2_FRET_stacked(fitpara, datadir); %only does FRET
 %correctBleachingExp2_cyto_ratio_stacked(datadir, fitpara_mRuby, fitpara_cyto); % for ezrin ratio calculations 
  
     

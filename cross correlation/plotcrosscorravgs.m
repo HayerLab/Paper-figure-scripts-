@@ -2,54 +2,25 @@
 
 %% use this section to get the averages out of an entire set 
 clc; clear; 
-root='F:\240404-Arnold new ezrin cells test data\run2\cropped\t567a';
-%removed 2 and 35 here to test whats going on 
-%cells=[6,7,9,10,12,13,14,15,16,17,18]; %trial 1
-cells = [5]; % trial 2
-%cells =[2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19]; %trial 3
-%cells = [12,18,19,20,24,26,27,28,29,30,31,32,33]; %CDC42 t1
-%cells= [2,3,4,5,7,8,9,11]; % rac trial 1 
-%cells =[1,2,4,6,7,8,10,12,13,14,15,16,17,18,19]; %cdc42 t2
-%cells = [1, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17,18, 21, 22]; 
- %cells =[1,2,3,4,6,7,12,13,14,16,17,18,19,20];
- %cells = [1,2,4,5,8,9,10,11]; 
-% cells =[1,2,3,6,7,13,14,16,17,18,19] ; 
- %cells =[2,3,4,5,6,7,8,9,10,11,12,13,14,16,28,20,21,23,24,26,27,28,29];
-% cells= [1,2,3,4,5,6,7,8,9,10,11,13,14,15,16]; 
-% no longer necessary - see google sheets for summary 
-%cells = [3];
-%cells = [10,15,19]; 
-%startarr = [40,30,35]; 
-%startarr = [40,40,40,50,40,50,30,35,40,40,30]; %trial 1
-%startarr = [30,45,40,40,40,60,50,45,50,40]; %trial 2
-%startarr = [30,30,50,30,60,30,40,40,40,35,40,40,50,30,60,40,35]; %trial 3
-%startarr = [2,2,2,2,2,2,2,2,2,2,25,2,2]; %CDC42 t1 
-%startarr= [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]; 
-%startarr =[2,2,2,30,2,2,2,2];% rac trial 1 
-%startarr=[30,45,40,40,40,60,50,45,50,40]; 
-%startarr= [2]; 
+root='f:\example dataset ';
+cells = [1:1:20]; %number of cropped cells in dataset 
+
 cell_arr=cell(1,size(cells,2),1);
 
 %%
 
-depth =15; 
+depth =6; %specify edge depth data you wish to analyze 
+
 for loop=1:size(cells,2)
-    
-     
-    
+   
     fileKey=strcat(num2str(cells(1,loop)));
     
-    start =  2; %startarr(1,loop);
+    start =  2; 
     
     load([root,filesep,fileKey,filesep,'output', filesep, 'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'ezrinF','protvalsWindowF','membranecytoF'); %'myosin', 'cytoF')
  
 % This maps velocity vector from 1-2 with frame 2 of protein expression, etc    
-    %edgeVel_arr =fretvalsF(:,start:end);% use this one when FRET myosin is being compared 
-   % edgeVel_arr =protvalsWindowF(:,start-1:end);   %use this one for when edge vel is the first variable  % can also do a -1 here 
-%   protExp_arr=ezrinF(:,start:end);%here change either FRET or myosin
-%     
-%  edgeVel_arr(isnan(edgeVel_arr))=0;
-%   protExp_arr(isnan(protExp_arr))=0; 
+  
     
  %velocity vector created by averaging vectors before and after protein
  %expression frame 
@@ -61,21 +32,19 @@ for loop=1:size(cells,2)
         end 
     end 
      edgeVel_arr_adjusted = temporary(:,start-1:end); 
-    % protExp_arr=ezrinF(:,start:end-1);
-    protExp_arr=membranecytoF(:,start:end-1);%because edge Velocity map now 2 frames smaller than protein expression (first and last frame cut off);
+     protExp_arr=efretvalsF(:,start:end-1);
+    %because edge Velocity map now 2 frames smaller than protein expression (first and last frame cut off);
     
    protExp_arr(isnan(protExp_arr))=0; 
     
     
     %using CLT to shift each distribution to a normal distribution
-     Z_edge=( (edgeVel_arr_adjusted-nanmean(edgeVel_arr_adjusted(:))) / std(edgeVel_arr_adjusted(:)));
-   % Z_edge=( (edgeVel_arr-nanmean(edgeVel_arr(:))) / std(edgeVel_arr(:)));
-   
-     Z_prot=( (protExp_arr-nanmean(protExp_arr(:))) / std(protExp_arr(:)));
-     
-    %generating cross correlation for each specific coordinate window 
     
-   
+    Z_edge=( (edgeVel_arr_adjusted-nanmean(edgeVel_arr_adjusted(:))) / std(edgeVel_arr_adjusted(:))); 
+    Z_prot=( (protExp_arr-nanmean(protExp_arr(:))) / std(protExp_arr(:)));
+     
+    
+    %generating cross correlation for each specific coordinate window 
     avg_table = NaN(180,size(protExp_arr,2)); 
      for i = 1:size(Z_edge,1) % 
   
@@ -85,7 +54,7 @@ for loop=1:size(cells,2)
     
      end 
      
-     %compiling average for a given cell  
+  %compiling average for a given cell  
   for c = 1:size(avg_table,2)
       meanval(1,c) = nanmean(avg_table(:,c)); 
   end    
@@ -107,9 +76,9 @@ for loop=1:size(cells,2)
   
 end 
 
-%save(['C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\supp fig 4\RhoB vs Myosin T2 depth 3.mat'],'cell_arr');
+
    
-%%
+%% plot all xcorrs from a trial 
 
 overall_avg = zeros(1,41); 
 for c =1:41
@@ -130,7 +99,7 @@ f1=figure;
 
 hold on; 
 %grid on; 
-    title('Edge Vel vs.membranecyto XCorr');
+    title('Edge Vel vs.Rho FRET XCorr');
     xlabel('Lag (min)','FontWeight','bold');
     ylabel('Correlation Coefficient', 'FontWeight','bold'); 
     xline(0, '--'); 
@@ -151,7 +120,4 @@ xticklabels({'-8' '' '-6' '' '-4' '' '-2' '' '0' '' '2' '' '4' '' '6' '' '8'});
 
 hold off; 
 
-% saveas(f1,strcat(root,'\CrossCorrelation_15','\','edge vel_ezrin adjusted.png'))
-% save([root,'\CrossCorrelation_15\edge vel ezrin.mat'],'overall_avg');
-%  % saveas(f1,strcat('F:\Seph\research paper\Fig 4','\','EdgeVel Actin xcorr+Y2 adjusted.svg'))
-  % save(['F:\Seph\research paper\Fig 4\EdgeVel Actin xcorr+Y2 adjusted.mat'],'overall_avg');
+% save data where desired 

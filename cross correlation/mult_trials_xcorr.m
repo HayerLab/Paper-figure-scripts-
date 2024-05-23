@@ -1,18 +1,19 @@
 %% Figure 2 plotting 
-% Seph Marshall, Nov 2020
+
 %can combine multiple  independant trial data, plots 2 graphs: individual
 %cell traces w average bolded, and trial average w 95 conf intervals 
 
-%% Combined Xcorrelation, 2 independant trials w SEM intervals 
+%% Combined Xcorrelation, example 2 independant trials w SEM intervals 
  % data initialization
  
 clear; clc; 
 
 close all; 
 
-root = 'C:\Users\marsh\OneDrive - McGill University\research paper\results good_Feb2023\supp fig 4'; 
+root = 'where to find data'; 
 
-load([root, filesep,'RhoB vs Myosin depth 20.mat']); 
+% this data is saved from plotcrosscorravgs.m script
+load([root, filesep,'trial 1 data.mat']); 
 
 averages_T1 = cell_arr; 
 
@@ -24,7 +25,7 @@ end
 
 cell_arr =[]; 
 
-load([root, filesep,'RhoB vs Myosin T2 depth 20.mat'])
+load([root, filesep,'trial 2 data.mat'])
 
 averages_T2 = cell_arr; 
 
@@ -89,8 +90,6 @@ xticklabels({'-8' '' '-6' '' '-4' '' '-2' '' '0' '' '2' '' '4' '' '6' '' '8'});
 
 
 
-save([root,filesep,'Rho myosin_xcorr_n=27_depth20_stats.mat'], 'stats_arr', 'plotting_table'); 
-saveas(f1,[root,filesep,'Rho myosin_xcorr_n=27_depth20.svg']); 
-% 
-% saveas(f2,[root,filesep,'Rho_avg+SEM_n=27_depth6.svg']); 
+save([root,filesep,'stats.mat'], 'stats_arr', 'plotting_table'); 
+saveas(f1,[root,filesep,'graph.svg']); 
 

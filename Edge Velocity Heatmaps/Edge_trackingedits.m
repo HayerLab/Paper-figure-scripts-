@@ -67,12 +67,12 @@ load([rawdir,filesep,'ezrin_data', filesep,'CytoRatioData.mat']);
 % ie if cell touches another cell at the end of the movie and you wish to
 % exclude it from edge tracking analysis  
 
-flashFrame=141:150; 
-maskFinal(flashFrame)=[];
-imCAAXOutline(flashFrame) = []; 
-ezrin_ratio(flashFrame)=[];
-membrane_cyto_ratio(flashFrame)=[];
-cellCoors(flashFrame)=[]; 
+% flashFrame=141:150; 
+% maskFinal(flashFrame)=[];
+% imCAAXOutline(flashFrame) = []; 
+% ezrin_ratio(flashFrame)=[];
+% membrane_cyto_ratio(flashFrame)=[];
+% cellCoors(flashFrame)=[]; 
 % % im_mRuby(flashFrame) = []; 
 
 
@@ -302,12 +302,7 @@ end
      getEdgeVelStats_edits(celldir,1,2.5,-2.5,25);
      
      
-     end 
-     
-     
-     
+     end
      
  end 
  
-
- open("runEdgeVelStats_edits.m"); 
