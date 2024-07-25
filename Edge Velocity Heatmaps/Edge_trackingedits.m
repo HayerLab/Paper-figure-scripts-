@@ -18,10 +18,10 @@
 %saves following figures: labelled cell mask with coordinates, area change,
 %and edge velocity heat maps 
 clc; clear; 
-cells = [1:1:20];   %number of cropped cells that you wich to analyze 
+cells = [1];   %number of cropped cells that you wich to analyze 
 
 for place=1:size(cells,2)
-cells = [1:1:20];   
+cells = [1];   
      
 
 
@@ -29,7 +29,7 @@ for depth = 1:5 % number of edge depths you wish to analyze
 
 
  %for 20x no binning, or 40x 2x2 bin etc. 0.325 um/px
-depths = [3,6,10,15,25]; 
+depths = [6; 
 
 
 
