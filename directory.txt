@@ -1,12 +1,54 @@
-
+figure specific scripts: functions and scripts used in the paper to generate figures and data. 
 
 preprocessing and single cell analysis: 
+- preprocessing (run first) starts with ND2 files, and outputs tiffstacks, background alignment parameters, and bleach corrected segmented channel data for full FOV. 
 
-- pre processing: starts with ND2 files, and outputs tiffstacks, background correction, channel alignment, and bleach corrected segmented channel data for full FOV. 
+- single_cell_processing: crops cells from Tiff Stacks,  outputs bleach-corrected data for individual cells. 
 
-- single_cell_processing: crops cells from Tiff Stacks, outputs bleach-corrected , segmented and background corrected data for individual cells. 
+Edge Velocity Heatmaps:
+- Edge_trackingedits: performs coordinate window analysis on single cells. 
+- getEdgeVelStats_edits: outputs protrusionlist and retractionlist matlab structures. 
+  can set the parameters for what is indluced based on pixel size and average speed. 
+  Default is 25 pixels minimum,  > 5 px/frame &  <-5 px/frame 
 
-These two master scripts are essential and must be run to perform the majority of the code in other folders. Other generally named folders contain scripts and functions used throughout the paper, with notes on where they were used. 
+ equivalent to > 1.625 um/frame & < -1.625 um/frame at 0.325 um/px. 
+equivalent to > 3.86 um/min & < -3.86 um/min at 25 s intervals 
+
+ - plotFRET_retractions: plots compiled protrusion and retraction events for 1 or more trials  
+   if you want, makes probability distributions and boxplots.
+
+buildup plots
+- FRETbuildup: manually select protrusion retraction transition events for a single cell. 
+               Can specify how many frames on either side from T=0, transition point that you 
+		want. 
+-FRETbuildupplot: to compile individual buildup events from multiple trials, etc. You choose 
+		a specific edge depth and roll with it. 
+
+cross correlation
+-plotcrosscorravgs: plots cross correlations for a single trial. The start array is which frame 
+you wish to start at. Previously due to cell spreading they would be in the middle of the movie. 
+For a regular cell choose 2. Velocity array is adjusted so that for a given frame n  of protein activity, 
+the velocity is an average vector from n-1-> n and n -> n+1. Not perfect but the closest you can get. 
+
+Each dataset uses the Central Limit Theorem to shift each distribution to normal with mean 0 and SD 1. 
+
+-mult_trials_xcorr: for making plots for multiple independant trials
+
+drug trial graphs and videos: 
+ -get_granularity: 
+ first section is used to make videos of drug additions. Uses RatioData_raw file structures. Normalizes 
+ to frames pre-drug addition instead of normal bleaching correction. 
+second section can be used to calculate specific values and granularity for a region of interest. 
+
+- plotOsmoticRho: used to make drug resposne graphs. Control section is control, treated section labelled as hypo 
+section. Hyper section currently commented out but can be used if you want to plot 2 different treatments compared to control 
+at the same time. Does the same thing - normalizes to pre-frames drug addition, and for the treated cells to the entire control 
+average. 
 
 
-figure specific scripts: specialized functions and scripts used in the paper to generate individual figures and data. 
+
+
+
+
+
+
