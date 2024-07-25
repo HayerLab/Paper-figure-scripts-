@@ -5,13 +5,14 @@
 clc; clear; 
 control_root = 'F:example dataset';
 
-datadir =('where to store data path');  
+datadir =('F:where to store data path');  
 
 %first number is num sites per condition, 2nd is number of frames 
 control_arr=zeros(20,60); 
  
 k = 0; 
-%specify the sites 
+%specify the sites as determined by ND2 aquisition
+
 for row = 1:4
     for col =1 
         for site = 1:5          
@@ -65,7 +66,7 @@ for i = 1:(size(position,2))
     load([condition1_root,filesep, 'data', filesep, position{i}, '_RatioData_raw.mat'],'imRatio_raw'); 
     
     
-    for j = 1:60
+    for j = 1:60 %j goes to total number of frames
         
         temp_arr2=imRatio_raw{1,j};
         

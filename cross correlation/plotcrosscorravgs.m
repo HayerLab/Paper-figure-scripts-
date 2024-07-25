@@ -18,12 +18,11 @@ for loop=1:size(cells,2)
     start =  2; 
     
     load([root,filesep,fileKey,filesep,'output', filesep, 'edge_vels', filesep, 'edge vel mapping_',num2str(depth),filesep,'Protrusion and FRET values.mat'],'ezrinF','protvalsWindowF','membranecytoF'); %'myosin', 'cytoF')
- 
-% This maps velocity vector from 1-2 with frame 2 of protein expression, etc    
-  
     
- %velocity vector created by averaging vectors before and after protein
- %expression frame 
+  
+ %velocity vector created by averaging vectors before and after frame of
+ %interest
+ 
     edgeVel_arr =protvalsWindowF;  
     temporary = NaN(180,size(protvalsWindowF,2)-1);
     for row = 1: size(protvalsWindowF,1)
