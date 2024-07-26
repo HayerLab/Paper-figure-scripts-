@@ -26,8 +26,7 @@ for frameNum=1:length(im_mRuby_raw)
   
 mRuby{frameNum}=im_mRuby_raw{frameNum}./(normfact_m*corr_norm_m(frameNum));
 cyto{frameNum} = im_cyto_raw{frameNum}./(normfact_cyto*corr_norm_cyto(frameNum));    
-% bounds_mruby =[(prctile(mRuby{frameNum}, 5, 'all')),prctile(mRuby{frameNum}, 95, 'all')]
- %bounds_cyto =[(prctile(cyto{frameNum}, 5, 'all')),prctile(cyto{frameNum}, 95, 'all')]
+
 
 
  ezrin_ratio{frameNum} = mRuby{frameNum} ./ cyto{frameNum}; 

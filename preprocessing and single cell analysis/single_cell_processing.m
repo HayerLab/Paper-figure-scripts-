@@ -1,4 +1,4 @@
-%% single cell cell preprocessing before edge tracking
+re%% single cell cell preprocessing before edge tracking
 % manually crops cells of interest from tiff_stacks 
 %generates cell masks, and FRET/fluorescent channel data 
 
@@ -149,7 +149,8 @@ for k=1:29
  % and 4th channel if you want 
 getFRETDataHCS_stacked_FRET(k,rawdir,datadir,threshold, pX, pY); %FRET, CFP
  %getFRETDataHCS_stacked_3chan(k,rawdir,datadir,3.5, pX, pY); % FRET, CFP, mRuby
- %getFRETDataHCS_stacked_4_chan(k,rawdir,datadir,1.7, pX, pY); % FRET, CFP, mRuby, cyto
+ %getFRETDataHCS_stacked_4_chan(k,rawdir,datadir,1.7, pX, pY); % FRET, CFP,
+ %mRuby, cyto used in RhoB sensor ezrin ratio 
 %getFRETDataHCS_stacked_ezrin_cyto_caax(k,rawdir,datadir,3) % for ezrin
 %ratio calculations, also has option for extra channel, in this case a membrane marker 
 

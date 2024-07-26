@@ -55,7 +55,7 @@ threshSeg=(x_bgMax+(8)*bgWidth);% 8 chosen as arbitrary threshold
 
 
  
- %% section to segment hotspots 
+ %% continued section to segment hotspots with percentile thresholding option
  % 2 methods: histo uses > 8x bg intensity, while 95 uses > 95% percentile
  % values. You choose which you desire 
  

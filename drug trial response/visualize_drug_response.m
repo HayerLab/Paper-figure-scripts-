@@ -1,11 +1,12 @@
-%% calculates granularity of actin or myosin of an ROI before/ after drug treatment 
+%% visualizes FRET changes post-drug addition, creation of tiff stacks
+% second section calculates granularity of actin or myosin of an ROI before/ after drug treatment 
 %SM December 2022 
 clear; clc; 
 
 root = 'F:\example dataset'; 
 datadir= 'F:\desired saving location'; 
 
- %% control scection
+ %% control section
 k = 0; 
 for row =2
     for col=1
@@ -34,12 +35,12 @@ for i= 1:size(position,2)
         FRET_mean = nanmean(imRatio_raw{1,k}, 'all'); 
         average = [average; FRET_mean];
         
-      %  myosin_mean = nanmean(im_mRuby_raw{1,k}, 'all'); 
-     %   average_m = [average_m;myosin_mean];
+     %  myosin_mean = nanmean(im_mRuby_raw{1,k}, 'all'); 
+     %  average_m = [average_m;myosin_mean];
      end
      
      mean_FRET = mean(average);
-   %  mean_m = mean(average_m); 
+  %  mean_m = mean(average_m); 
         
         colorRange1 = [0.5 1.5]; 
         %colorRange2 = [0 3]; 

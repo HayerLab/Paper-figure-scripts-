@@ -5,8 +5,8 @@ clear;
 clc; 
 
 root = 'F:\example set 1\FRET buildup - retractions'; 
- root2= 'F:\example set 2\FRET buildup - retractions'; 
- root3 = 'F:\example set 3\FRET buildup - retractions'; 
+root2= 'F:\example set 2\FRET buildup - retractions'; 
+root3 = 'F:\example set 3\FRET buildup - retractions'; 
 
 datadir ='C:\save where you desire'; 
 
