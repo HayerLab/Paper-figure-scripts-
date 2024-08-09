@@ -345,15 +345,15 @@ plot(1:num_frames,stats_arrCNTRL(3,:),'Color',[0,0,0] );
 
 plot(1:num_frames,(stats_arrTREAT(1,:)),'Color',[1,0,0], 'LineWidth', 3 ); 
 plot(1:num_frames,(stats_arrTREAT(2,:)),'Color',[1,0,0] );
-plot(1:num_frames,(stats_arrTREAT(3,:)),'Color',[1,0,0] );
+plot(1:60,(stats_arrTREAT(3,:)),'Color',[1,0,0] );
 % 
 % hold off; 
 % for a=1:size(control_arr,1)
 %     plot([1:100],hyper_arr(a,:), 'Color','r','DisplayName','Hyper-osmotic'); 
 % end 
-% Thrombin = hypo_arr; 
-%   save([datadir,filesep,'CNTRL vs. 1 U thrombin @5[0.8 2.2 y axis].mat'],'control_arr', 'Thrombin', 'stats_arrCNTRL', 'stats_arrTREAT'); 
-%    saveas(f1, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5[0.8 2.2 y axis].fig'])); 
-%    saveas(f1, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5[0.8 2.2 y axis].svg'])); 
-%   saveas(f2, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5 avgSD[0.8 2.2 y axis].fig'])); 
-%   saveas(f2, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5 avgSD_[0.8 2.2 y axis].svg'])); 
+Thrombin = hypo_arr; 
+  save([datadir,filesep,'CNTRL vs. 1 U thrombin @5[0.8 2.2 y axis].mat'],'control_arr', 'Thrombin', 'stats_arrCNTRL', 'stats_arrTREAT'); 
+   saveas(f1, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5[0.8 2.2 y axis].fig'])); 
+   saveas(f1, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5[0.8 2.2 y axis].svg'])); 
+  saveas(f2, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5 avgSD[0.8 2.2 y axis].fig'])); 
+  saveas(f2, ([datadir, filesep, 'CNTRL vs. 1 U thrombin @5 avgSD_[0.8 2.2 y axis].svg'])); 

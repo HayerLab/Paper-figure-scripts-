@@ -2,14 +2,14 @@
 %SM December 2022 
 clear; clc; 
 
-root = 'E:\omaima tutorial single cell\data'; 
-datadir= 'E:\omaima tutorial single cell\data'; 
+root = 'E:\omaima\TEST'; 
+datadir= 'E:\omaima\TEST\data'; 
 %datadir1 = ([datadir, filesep, 'data']); 
 %% control scection
 k = 0; 
 for row =1
     for col=1
-        for site=1
+        for site=10
 
             k=k+1;
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
@@ -21,7 +21,7 @@ for i= 1:size(position,2)
     
      average =[]; 
      average_m = []; 
-     load([root, filesep, position{i}, '_RatioData_raw.mat'])
+     load([datadir, filesep, position{i}, '_RatioData_raw.mat'])
      
  
  % number of control frames you have before drug addition
@@ -38,7 +38,7 @@ for i= 1:size(position,2)
      mean_FRET = mean(average);
     % mean_m = mean(average_m); 
         
-        colorRange1 = [0.8 1.2]; 
+        colorRange1 = [0.7 1.3]; 
         %colorRange2 = [0 3]; 
        
         %correct the images by normalizing them to pre-drug addition
@@ -56,7 +56,7 @@ for i= 1:size(position,2)
         %    tempmRubyforstack=ratio2RGB(tempest1,colorRange2);%Cdc42             tempmRubyforstack(tempmRubyforstack < 0) = 0; 
     
          
-           imwrite(tempRATIOforstack,[datadir,filesep, position{i},  '_Rho-FRET_redo',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
+           imwrite(tempRATIOforstack,[datadir,filesep, position{i},  '_Rho-FRET_',num2str(colorRange1(1)),'_',num2str(colorRange1(2)),'.tif'],'WriteMode','append','Compression','none');     %
            %imwrite(tempmRubyforstack,[datadir, filesep, position{1,1}, '_mRuby_',num2str(colorRange2(1)),'_',num2str(colorRange2(2)),'.tif'],'WriteMode','append','Compression','none');    %
     end
 
