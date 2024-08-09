@@ -1,16 +1,17 @@
 % single cell analysis before edge tracking
 %% initiatialization
 clear; clc; 
- root = 'F:\230919 - Y2motility 2';
+ root = 'E:\omaima\TEST';
  addpath(root); 
- tiffDir = ([root, filesep,'tiff_stacks']); 
+  tiffDir = ([root, filesep,'tiff_stacks']); 
+  bgdir = ([root, filesep,'background']); 
  
 %  cellDir = ([root, filesep, 'cropped',filesep,'siERM', num2str(cell)]); 
 %      if ~exist(cellDir)
 %          mkdir(cellDir); 
 %      end      
      
-cropdir=[root,filesep,'cropped', filesep, 'cntrl_LIS'];
+cropdir=[root,filesep,'cropped', filesep, 'test'];
 if ~exist(cropdir)
          mkdir(cropdir); 
      end  
@@ -23,8 +24,8 @@ bgpath=[root,filesep,'background'];
 % which specifies which folder to save under and filekey which specifies 
 % which orginal tiff stack to draw from 
    
-cell= 25;
-filekey = '1_1_1'; 
+cell= 2;
+filekey = '1_1_20'; 
 
 
  cellDir = ([cropdir,filesep, num2str(cell)]); 
@@ -80,36 +81,36 @@ bg_CFP_image = double(readTIFFstack(bgCFP));
   
     
     
-%% background alignment 
+%% background alignment ( unecessary )
     
-for i=1:3
-
-channels={'CFP' 'FRET'};
- 
-    cellPath=strcat(num2str(i));
-    cellFiles=getFilenames([cropdir,filesep,cellPath],'.tif');
-    
-    %note: need to change numbers here depending on if you have an extra
-    %channel like myosin- changes order of files in cropped folder
-    CFP_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{1}]));
-    FRET_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{3}]));
-  
-    
-alignStack(:,:,2)=(FRET_stack(:,:,75)); % choose arbitrary framenumber, here 75, to generate the alignment parameters 
-alignStack(:,:,1)=(CFP_stack(:,:,75));
-[pX,pY,dxMat1,dyMat1]=dualviewComputeAlignmentFromGridImages(alignStack);
-figure;
-subplot(1,2,1); imagesc(dxMat1); colorbar
-subplot(1,2,2); imagesc(dyMat1); colorbar
-
-save([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
-
-alignStack = []; 
-CFP_stack= []; 
-FRET_stack = []; 
-dxMat1=[]; 
-dyMat1 = []; 
-end 
+% for i=1:3
+% 
+% channels={'CFP' 'FRET'};
+% 
+%     cellPath=strcat(num2str(i));
+%     cellFiles=getFilenames([cropdir,filesep,cellPath],'.tif');
+% 
+%     %note: need to change numbers here depending on if you have an extra
+%     %channel like myosin- changes order of files in cropped folder
+%     CFP_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{1}]));
+%     FRET_stack=double(readTIFFstack([cropdir,filesep,cellPath,filesep,cellFiles{3}]));
+% 
+% 
+% alignStack(:,:,2)=(FRET_stack(:,:,75)); % choose arbitrary framenumber, here 75, to generate the alignment parameters 
+% alignStack(:,:,1)=(CFP_stack(:,:,75));
+% [pX,pY,dxMat1,dyMat1]=dualviewComputeAlignmentFromGridImages(alignStack);
+% figure;
+% subplot(1,2,1); imagesc(dxMat1); colorbar
+% subplot(1,2,2); imagesc(dyMat1); colorbar
+% 
+% save([cropdir,filesep,cellPath,filesep,'alignment parameters pX pY.mat'],'pX','pY','dxMat1','dyMat1');
+% 
+% alignStack = []; 
+% CFP_stack= []; 
+% FRET_stack = []; 
+% dxMat1=[]; 
+% dyMat1 = []; 
+% end 
 
 
 %% FRET data 
@@ -127,9 +128,10 @@ end
 
 %% Parallel loop
 % number of cells you have in a for loop 
-for k=2
-    rawdir=[root,filesep,'cropped', filesep, strcat(num2str(k))]; 
-    load([rawdir,filesep,'alignment parameters pX pY.mat']);
+for k=1:2
+    bgdir =[root,filesep,'background'];
+    rawdir=[root,filesep,'cropped', filesep, 'test', filesep,strcat(num2str(k))]; 
+    load([bgdir,filesep,'alignment parameters pX pY.mat']);
     
    datadir=[rawdir,filesep,'output'];
 
@@ -141,7 +143,7 @@ for k=2
  
  % this one has FRET/CFP configured, commented out are options for a 3rd
  % and 4th channel if you want 
-getFRETDataHCS_stacked(k,rawdir,datadir,1.5); % last number the threshold for segmentation
+getFRETDataHCS_stacked(k,rawdir,datadir,1.5, pX, pY); % last number the threshold for segmentation
 % getFRETDataHCS_stacked_3chan(k,rawdir,datadir); % FRET, CFP, mRuby
 % getFRETDataHCS_stacked_4chan(k,rawdir,datadir); % FRET, CFP, mRuby
 

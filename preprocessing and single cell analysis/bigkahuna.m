@@ -16,7 +16,7 @@
 clc; 
 clear; 
 
-root= 'E:\omaima tutorial single cell'; 
+root= 'E:\omaima\TEST'; 
 
 % if you want to create Tiff Stacks =1 if you dont =0; 
 makeTiffStacks = 1; 
@@ -268,7 +268,7 @@ k=0;
 for row=1: (size(ND2files,1)-1)
 %     
     for col=1
-        for site=1: num_sites
+        for site=1: 20 %num_sites
 
             k=k+1;
             position{k}=[num2str(row),'_',num2str(col),'_',num2str(site)];
